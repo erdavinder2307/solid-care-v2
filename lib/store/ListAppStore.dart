@@ -1,4 +1,4 @@
-import 'package:kivicare_flutter/model/user_model.dart';
+import 'package:solidcare/model/user_model.dart';
 import 'package:mobx/mobx.dart';
 
 part 'ListAppStore.g.dart';

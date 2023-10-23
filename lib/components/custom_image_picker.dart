@@ -1,10 +1,10 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:kivicare_flutter/utils/app_common.dart';
-import 'package:kivicare_flutter/utils/extensions/enums.dart';
-import 'package:kivicare_flutter/utils/extensions/string_extensions.dart';
-import 'package:kivicare_flutter/utils/images.dart';
+import 'package:solidcare/utils/app_common.dart';
+import 'package:solidcare/utils/extensions/enums.dart';
+import 'package:solidcare/utils/extensions/string_extensions.dart';
+import 'package:solidcare/utils/images.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 import '../main.dart';
@@ -14,7 +14,12 @@ class CustomImagePicker extends StatefulWidget {
   final Function(String value)? onRemoveClick;
   final List<String>? selectedImages;
 
-  CustomImagePicker({Key? key, required this.onFileSelected, this.selectedImages, this.onRemoveClick}) : super(key: key);
+  CustomImagePicker(
+      {Key? key,
+      required this.onFileSelected,
+      this.selectedImages,
+      this.onRemoveClick})
+      : super(key: key);
 
   @override
   _CustomImagePickerState createState() => _CustomImagePickerState();
@@ -98,7 +103,10 @@ class _CustomImagePickerState extends State<CustomImagePicker> {
             child: Container(
               padding: EdgeInsets.all(26),
               alignment: Alignment.center,
-              decoration: boxDecorationWithShadow(blurRadius: 0, backgroundColor: context.cardColor, borderRadius: radius()),
+              decoration: boxDecorationWithShadow(
+                  blurRadius: 0,
+                  backgroundColor: context.cardColor,
+                  borderRadius: radius()),
               child: Column(
                 children: [
                   ic_no_photo.iconImage(size: 46),

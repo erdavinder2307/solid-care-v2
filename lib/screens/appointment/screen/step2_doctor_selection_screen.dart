@@ -2,20 +2,20 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:kivicare_flutter/components/empty_error_state_component.dart';
-import 'package:kivicare_flutter/components/loader_widget.dart';
-import 'package:kivicare_flutter/components/no_data_found_widget.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/model/user_model.dart';
-import 'package:kivicare_flutter/network/doctor_list_repository.dart';
-import 'package:kivicare_flutter/screens/appointment/appointment_functions.dart';
-import 'package:kivicare_flutter/screens/receptionist/screens/doctor/component/doctor_list_component.dart';
-import 'package:kivicare_flutter/screens/shimmer/components/doctor_shimmer_component.dart';
-import 'package:kivicare_flutter/utils/app_common.dart';
-import 'package:kivicare_flutter/utils/common.dart';
-import 'package:kivicare_flutter/utils/constants.dart';
-import 'package:kivicare_flutter/utils/extensions/string_extensions.dart';
-import 'package:kivicare_flutter/utils/images.dart';
+import 'package:solidcare/components/empty_error_state_component.dart';
+import 'package:solidcare/components/loader_widget.dart';
+import 'package:solidcare/components/no_data_found_widget.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/model/user_model.dart';
+import 'package:solidcare/network/doctor_list_repository.dart';
+import 'package:solidcare/screens/appointment/appointment_functions.dart';
+import 'package:solidcare/screens/receptionist/screens/doctor/component/doctor_list_component.dart';
+import 'package:solidcare/screens/shimmer/components/doctor_shimmer_component.dart';
+import 'package:solidcare/utils/app_common.dart';
+import 'package:solidcare/utils/common.dart';
+import 'package:solidcare/utils/constants.dart';
+import 'package:solidcare/utils/extensions/string_extensions.dart';
+import 'package:solidcare/utils/images.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class Step2DoctorSelectionScreen extends StatefulWidget {
@@ -23,13 +23,16 @@ class Step2DoctorSelectionScreen extends StatefulWidget {
   final bool isForAppointment;
   final int? doctorId;
 
-  Step2DoctorSelectionScreen({this.clinicId, this.isForAppointment = false, this.doctorId});
+  Step2DoctorSelectionScreen(
+      {this.clinicId, this.isForAppointment = false, this.doctorId});
 
   @override
-  _Step2DoctorSelectionScreenState createState() => _Step2DoctorSelectionScreenState();
+  _Step2DoctorSelectionScreenState createState() =>
+      _Step2DoctorSelectionScreenState();
 }
 
-class _Step2DoctorSelectionScreenState extends State<Step2DoctorSelectionScreen> {
+class _Step2DoctorSelectionScreenState
+    extends State<Step2DoctorSelectionScreen> {
   Future<List<UserModel>>? future;
 
   TextEditingController searchCont = TextEditingController();
@@ -103,7 +106,9 @@ class _Step2DoctorSelectionScreenState extends State<Step2DoctorSelectionScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBarWidget(
-        !widget.isForAppointment.validate() ? locale.lblSelectDoctor : locale.lblAddNewAppointment,
+        !widget.isForAppointment.validate()
+            ? locale.lblSelectDoctor
+            : locale.lblAddNewAppointment,
         textColor: Colors.white,
         systemUiOverlayStyle: defaultSystemUiOverlayStyle(context),
       ),
@@ -150,7 +155,11 @@ class _Step2DoctorSelectionScreenState extends State<Step2DoctorSelectionScreen>
                     },
                   ),
                   16.height,
-                  stepCountWidget(name: locale.lblChooseYourDoctor, currentCount: isPatient() ? 2 : 1, totalCount: isReceptionist() ? 2 : 3, percentage: 0.50),
+                  stepCountWidget(
+                      name: locale.lblChooseYourDoctor,
+                      currentCount: isPatient() ? 2 : 1,
+                      totalCount: isReceptionist() ? 2 : 3,
+                      percentage: 0.50),
                 ],
               ).paddingSymmetric(vertical: 8),
             SnapHelperWidget<List<UserModel>>(
@@ -175,11 +184,14 @@ class _Step2DoctorSelectionScreenState extends State<Step2DoctorSelectionScreen>
               },
               errorWidget: ErrorStateWidget(),
               onSuccess: (snap) {
-                snap.retainWhere((element) => element.userStatus.toInt() == ACTIVE_USER_INT_STATUS);
+                snap.retainWhere((element) =>
+                    element.userStatus.toInt() == ACTIVE_USER_INT_STATUS);
                 if (snap.isEmpty && !appStore.isLoading) {
                   return SingleChildScrollView(
                     child: NoDataFoundWidget(
-                      text: searchCont.text.isEmpty ? locale.lblNoActiveDoctorAvailable : locale.lblCantFindDoctorYouSearchedFor,
+                      text: searchCont.text.isEmpty
+                          ? locale.lblNoActiveDoctorAvailable
+                          : locale.lblCantFindDoctorYouSearchedFor,
                     ),
                   ).center();
                 }
@@ -213,14 +225,24 @@ class _Step2DoctorSelectionScreenState extends State<Step2DoctorSelectionScreen>
 
                     return GestureDetector(
                       onTap: () {
-                        if (appointmentAppStore.mDoctorSelected != null ? appointmentAppStore.mDoctorSelected!.iD.validate() == data.iD.validate() : false) {
+                        if (appointmentAppStore.mDoctorSelected != null
+                            ? appointmentAppStore.mDoctorSelected!.iD
+                                    .validate() ==
+                                data.iD.validate()
+                            : false) {
                           appointmentAppStore.setSelectedDoctor(null);
                         } else {
                           appointmentAppStore.setSelectedDoctor(data);
                         }
                       },
                       child: Observer(builder: (context) {
-                        return DoctorListComponent(data: data, isSelected: appointmentAppStore.mDoctorSelected?.iD.validate() == data.iD.validate()).paddingSymmetric(vertical: 8);
+                        return DoctorListComponent(
+                                data: data,
+                                isSelected: appointmentAppStore
+                                        .mDoctorSelected?.iD
+                                        .validate() ==
+                                    data.iD.validate())
+                            .paddingSymmetric(vertical: 8);
                       }),
                     );
                   },
@@ -232,7 +254,9 @@ class _Step2DoctorSelectionScreenState extends State<Step2DoctorSelectionScreen>
         ).paddingOnly(left: 16, right: 16, top: 16);
       }),
       floatingActionButton: FloatingActionButton(
-        child: Icon(widget.isForAppointment ? Icons.arrow_forward_outlined : Icons.done),
+        child: Icon(widget.isForAppointment
+            ? Icons.arrow_forward_outlined
+            : Icons.done),
         onPressed: () {
           if (appointmentAppStore.mDoctorSelected == null) {
             toast(locale.lblSelectOneDoctor);

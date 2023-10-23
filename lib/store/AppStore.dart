@@ -2,12 +2,12 @@ import 'dart:convert';
 
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
-import 'package:kivicare_flutter/config.dart';
-import 'package:kivicare_flutter/locale/app_localizations.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/model/dashboard_model.dart';
-import 'package:kivicare_flutter/utils/colors.dart';
-import 'package:kivicare_flutter/utils/constants.dart';
+import 'package:solidcare/config.dart';
+import 'package:solidcare/locale/app_localizations.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/model/dashboard_model.dart';
+import 'package:solidcare/utils/colors.dart';
+import 'package:solidcare/utils/constants.dart';
 import 'package:mobx/mobx.dart';
 import 'package:nb_utils/nb_utils.dart';
 
@@ -145,7 +145,8 @@ abstract class AppStoreBase with Store {
   }
 
   @action
-  Future<void> setBookedFromDashboard(bool value) async => isBookedFromDashboard = value;
+  Future<void> setBookedFromDashboard(bool value) async =>
+      isBookedFromDashboard = value;
 
   @action
   Future<void> setDemoDoctor(String value, {bool initialize = false}) async {
@@ -154,7 +155,8 @@ abstract class AppStoreBase with Store {
   }
 
   @action
-  Future<void> setDemoReceptionist(String value, {bool initialize = false}) async {
+  Future<void> setDemoReceptionist(String value,
+      {bool initialize = false}) async {
     if (initialize) setValue(DEMO_RECEPTIONIST, value);
     demoReceptionist = value;
   }
@@ -166,13 +168,15 @@ abstract class AppStoreBase with Store {
   }
 
   @action
-  Future<void> setRestrictAppointmentPost(int value, {bool initialize = false}) async {
+  Future<void> setRestrictAppointmentPost(int value,
+      {bool initialize = false}) async {
     if (initialize) setValue(RESTRICT_APPOINTMENT_POST, value);
     restrictAppointmentPost = value;
   }
 
   @action
-  Future<void> setRestrictAppointmentPre(int value, {bool initialize = false}) async {
+  Future<void> setRestrictAppointmentPre(int value,
+      {bool initialize = false}) async {
     if (initialize) setValue(RESTRICT_APPOINTMENT_PRE, value);
     restrictAppointmentPre = value;
   }
@@ -188,14 +192,16 @@ abstract class AppStoreBase with Store {
   }
 
   @action
-  Future<void> setCurrencyPostfix(String value, {bool initialize = false}) async {
+  Future<void> setCurrencyPostfix(String value,
+      {bool initialize = false}) async {
     if (initialize) setValue(CURRENCY_POST_FIX, value);
 
     currencyPostfix = value;
   }
 
   @action
-  Future<void> setCurrencyPrefix(String value, {bool initialize = false}) async {
+  Future<void> setCurrencyPrefix(String value,
+      {bool initialize = false}) async {
     if (initialize) setValue(CURRENCY_PRE_FIX, value);
 
     currencyPrefix = value;
@@ -215,7 +221,8 @@ abstract class AppStoreBase with Store {
     userProEnabled = value;
   }
 
-  Future<void> setGlobalDateFormat(String value, {bool initialize = false}) async {
+  Future<void> setGlobalDateFormat(String value,
+      {bool initialize = false}) async {
     if (initialize) setValue(GLOBAL_DATE_FORMAT, value);
 
     globalDateFormat = value;

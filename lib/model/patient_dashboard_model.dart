@@ -1,7 +1,7 @@
-import 'package:kivicare_flutter/model/service_model.dart';
-import 'package:kivicare_flutter/model/upcoming_appointment_model.dart';
-import 'package:kivicare_flutter/model/user_model.dart';
-import 'package:kivicare_flutter/screens/patient/models/news_model.dart';
+import 'package:solidcare/model/service_model.dart';
+import 'package:solidcare/model/upcoming_appointment_model.dart';
+import 'package:solidcare/model/user_model.dart';
+import 'package:solidcare/screens/patient/models/news_model.dart';
 
 class PatientDashboardModel {
   List<UserModel>? doctor;
@@ -22,11 +22,23 @@ class PatientDashboardModel {
 
   factory PatientDashboardModel.fromJson(Map<String, dynamic> json) {
     return PatientDashboardModel(
-      doctor: json['doctor'] != null ? (json['doctor'] as List).map((i) => UserModel.fromJson(i)).toList() : null,
-      news: json['news'] != null ? (json['news'] as List).map((i) => NewsData.fromJson(i)).toList() : null,
-      serviceList: json['service'] != null ? (json['service'] as List).map((i) => ServiceData.fromJson(i)).toList() : null,
+      doctor: json['doctor'] != null
+          ? (json['doctor'] as List).map((i) => UserModel.fromJson(i)).toList()
+          : null,
+      news: json['news'] != null
+          ? (json['news'] as List).map((i) => NewsData.fromJson(i)).toList()
+          : null,
+      serviceList: json['service'] != null
+          ? (json['service'] as List)
+              .map((i) => ServiceData.fromJson(i))
+              .toList()
+          : null,
       totalAppointment: json['total_appointment'],
-      upcomingAppointment: json['upcoming_appointment'] != null ? (json['upcoming_appointment'] as List).map((i) => UpcomingAppointmentModel.fromJson(i)).toList() : null,
+      upcomingAppointment: json['upcoming_appointment'] != null
+          ? (json['upcoming_appointment'] as List)
+              .map((i) => UpcomingAppointmentModel.fromJson(i))
+              .toList()
+          : null,
       upcomingAppointmentTotal: json['upcoming_appointment_total'],
     );
   }
@@ -45,7 +57,8 @@ class PatientDashboardModel {
       data['service'] = this.serviceList!.map((v) => v.toJson()).toList();
     }
     if (this.upcomingAppointment != null) {
-      data['upcoming_appointment'] = this.upcomingAppointment!.map((v) => v.toJson()).toList();
+      data['upcoming_appointment'] =
+          this.upcomingAppointment!.map((v) => v.toJson()).toList();
     }
     return data;
   }

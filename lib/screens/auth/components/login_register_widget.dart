@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kivicare_flutter/utils/colors.dart';
+import 'package:solidcare/utils/colors.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class LoginRegisterWidget extends StatelessWidget {
@@ -22,7 +22,12 @@ class LoginRegisterWidget extends StatelessWidget {
         Text(title.validate(), style: secondaryTextStyle()),
         TextButton(
           onPressed: onTap,
-          child: Text(subTitle.validate(), style: primaryTextStyle(color: appSecondaryColor, size: 14, decoration: TextDecoration.underline, fontStyle: FontStyle.italic)),
+          child: Text(subTitle.validate(),
+              style: primaryTextStyle(
+                  color: appSecondaryColor,
+                  size: 14,
+                  decoration: TextDecoration.underline,
+                  fontStyle: FontStyle.italic)),
         )
       ],
     );

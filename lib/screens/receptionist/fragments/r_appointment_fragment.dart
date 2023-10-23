@@ -2,19 +2,19 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:kivicare_flutter/components/empty_error_state_component.dart';
-import 'package:kivicare_flutter/components/loader_widget.dart';
-import 'package:kivicare_flutter/components/no_data_found_widget.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/model/upcoming_appointment_model.dart';
-import 'package:kivicare_flutter/network/appointment_repository.dart';
-import 'package:kivicare_flutter/screens/appointment/appointment_functions.dart';
-import 'package:kivicare_flutter/screens/appointment/components/appointment_widget.dart';
-import 'package:kivicare_flutter/screens/doctor/fragments/appointment_fragment.dart';
-import 'package:kivicare_flutter/components/appointment_fragment_status_compoent.dart';
-import 'package:kivicare_flutter/screens/shimmer/screen/appointment_fragment_shimmer.dart';
-import 'package:kivicare_flutter/utils/cached_value.dart';
-import 'package:kivicare_flutter/utils/images.dart';
+import 'package:solidcare/components/empty_error_state_component.dart';
+import 'package:solidcare/components/loader_widget.dart';
+import 'package:solidcare/components/no_data_found_widget.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/model/upcoming_appointment_model.dart';
+import 'package:solidcare/network/appointment_repository.dart';
+import 'package:solidcare/screens/appointment/appointment_functions.dart';
+import 'package:solidcare/screens/appointment/components/appointment_widget.dart';
+import 'package:solidcare/screens/doctor/fragments/appointment_fragment.dart';
+import 'package:solidcare/components/appointment_fragment_status_compoent.dart';
+import 'package:solidcare/screens/shimmer/screen/appointment_fragment_shimmer.dart';
+import 'package:solidcare/utils/cached_value.dart';
+import 'package:solidcare/utils/images.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class RAppointmentFragment extends StatefulWidget {
@@ -43,7 +43,8 @@ class _RAppointmentFragmentState extends State<RAppointmentFragment> {
     if (appStore.isLoading) {
       appStore.setLoading(false);
     }
-    updateAppointmentApi = appointmentStreamController.stream.listen((streamData) {
+    updateAppointmentApi =
+        appointmentStreamController.stream.listen((streamData) {
       page = 1;
       init();
       setState(() {});
@@ -171,10 +172,16 @@ class _RAppointmentFragmentState extends State<RAppointmentFragment> {
                     },
                   ).paddingSymmetric(vertical: 8);
                 }).toList(),
-              ).visible(snap.isNotEmpty, defaultWidget: NoDataFoundWidget(text: locale.lblNoAppointmentsFound).center().visible(snap.isEmpty && !appStore.isLoading));
+              ).visible(snap.isNotEmpty,
+                  defaultWidget:
+                      NoDataFoundWidget(text: locale.lblNoAppointmentsFound)
+                          .center()
+                          .visible(snap.isEmpty && !appStore.isLoading));
             },
           ).paddingTop(100),
-          Observer(builder: (context) => LoaderWidget().visible(appStore.isLoading).center())
+          Observer(
+              builder: (context) =>
+                  LoaderWidget().visible(appStore.isLoading).center())
         ],
       ),
       floatingActionButton: FloatingActionButton(

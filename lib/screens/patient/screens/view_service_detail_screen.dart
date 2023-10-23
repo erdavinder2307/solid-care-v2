@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:kivicare_flutter/components/cached_image_widget.dart';
+import 'package:solidcare/components/cached_image_widget.dart';
 // ignore: unused_import
-import 'package:kivicare_flutter/components/status_widget.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/model/service_duration_model.dart';
-import 'package:kivicare_flutter/model/service_model.dart';
-import 'package:kivicare_flutter/model/static_data_model.dart';
-import 'package:kivicare_flutter/screens/receptionist/screens/doctor/doctor_details_screen.dart';
-import 'package:kivicare_flutter/utils/app_common.dart';
-import 'package:kivicare_flutter/utils/colors.dart';
-import 'package:kivicare_flutter/utils/extensions/string_extensions.dart';
-import 'package:kivicare_flutter/utils/images.dart';
+import 'package:solidcare/components/status_widget.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/model/service_duration_model.dart';
+import 'package:solidcare/model/service_model.dart';
+import 'package:solidcare/model/static_data_model.dart';
+import 'package:solidcare/screens/receptionist/screens/doctor/doctor_details_screen.dart';
+import 'package:solidcare/utils/app_common.dart';
+import 'package:solidcare/utils/colors.dart';
+import 'package:solidcare/utils/extensions/string_extensions.dart';
+import 'package:solidcare/utils/images.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class ViewServiceDetailScreen extends StatefulWidget {
@@ -19,7 +19,8 @@ class ViewServiceDetailScreen extends StatefulWidget {
   ViewServiceDetailScreen({required this.serviceData});
 
   @override
-  State<ViewServiceDetailScreen> createState() => _ViewServiceDetailScreenState();
+  State<ViewServiceDetailScreen> createState() =>
+      _ViewServiceDetailScreenState();
 }
 
 class _ViewServiceDetailScreenState extends State<ViewServiceDetailScreen> {
@@ -59,19 +60,32 @@ class _ViewServiceDetailScreenState extends State<ViewServiceDetailScreen> {
             RichText(
               text: TextSpan(children: [
                 TextSpan(text: locale.lblCategory, style: primaryTextStyle()),
-                TextSpan(text: " : " + widget.serviceData.type.validate().replaceAll(RegExp('[^A-Za-z]'), ' ').capitalizeEachWord(), style: boldTextStyle()),
+                TextSpan(
+                    text: " : " +
+                        widget.serviceData.type
+                            .validate()
+                            .replaceAll(RegExp('[^A-Za-z]'), ' ')
+                            .capitalizeEachWord(),
+                    style: boldTextStyle()),
               ]),
             ),
             16.height,
-            Text(widget.serviceData.doctorList.validate().length > 1 ? locale.lblAvailableDoctors : locale.lblAvailableDoctor, style: boldTextStyle()),
+            Text(
+                widget.serviceData.doctorList.validate().length > 1
+                    ? locale.lblAvailableDoctors
+                    : locale.lblAvailableDoctor,
+                style: boldTextStyle()),
             16.height,
             AnimatedWrap(
               runSpacing: 16,
               listAnimationType: listAnimationType,
-              children: widget.serviceData.doctorList.validate().map((doctorData) {
+              children:
+                  widget.serviceData.doctorList.validate().map((doctorData) {
                 return GestureDetector(
                   onTap: () {
-                    DoctorDetailScreen(doctorData: doctorData).launch(context, pageRouteAnimation: PageRouteAnimation.Fade, duration: 800.milliseconds);
+                    DoctorDetailScreen(doctorData: doctorData).launch(context,
+                        pageRouteAnimation: PageRouteAnimation.Fade,
+                        duration: 800.milliseconds);
                   },
                   child: Container(
                     decoration: boxDecorationDefault(color: context.cardColor),
@@ -83,28 +97,50 @@ class _ViewServiceDetailScreenState extends State<ViewServiceDetailScreen> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('Dr. ' + doctorData.displayName.validate(), style: boldTextStyle(size: 14)),
+                                Text('Dr. ' + doctorData.displayName.validate(),
+                                    style: boldTextStyle(size: 14)),
                                 8.height,
                                 Row(
                                   children: [
                                     SettingItemWidget(
                                       splashColor: Colors.transparent,
                                       highlightColor: Colors.transparent,
-                                      title: appStore.currencyPrefix.validate(value: '') + doctorData.charges.validate(value: '') + appStore.currencyPostfix.validate(value: ''),
-                                      titleTextStyle: secondaryTextStyle(size: 14),
-                                      leading: ic_bill.iconImage(size: 20).paddingRight(6),
+                                      title: appStore.currencyPrefix
+                                              .validate(value: '') +
+                                          doctorData.charges
+                                              .validate(value: '') +
+                                          appStore.currencyPostfix
+                                              .validate(value: ''),
+                                      titleTextStyle:
+                                          secondaryTextStyle(size: 14),
+                                      leading: ic_bill
+                                          .iconImage(size: 20)
+                                          .paddingRight(6),
                                       padding: EdgeInsets.zero,
                                       paddingAfterLeading: 4,
                                     ).expand(),
-                                    if (doctorData.duration != null && doctorData.duration.validate().toInt() != 0)
+                                    if (doctorData.duration != null &&
+                                        doctorData.duration
+                                                .validate()
+                                                .toInt() !=
+                                            0)
                                       SettingItemWidget(
                                         splashColor: Colors.transparent,
                                         highlightColor: Colors.transparent,
                                         padding: EdgeInsets.zero,
                                         paddingAfterLeading: 4,
-                                        title: durationList.where((element) => element.value == doctorData.duration.toInt()).first.label.validate(),
-                                        titleTextStyle: secondaryTextStyle(size: 14),
-                                        leading: ic_timer.iconImage(size: 20).paddingRight(6),
+                                        title: durationList
+                                            .where((element) =>
+                                                element.value ==
+                                                doctorData.duration.toInt())
+                                            .first
+                                            .label
+                                            .validate(),
+                                        titleTextStyle:
+                                            secondaryTextStyle(size: 14),
+                                        leading: ic_timer
+                                            .iconImage(size: 20)
+                                            .paddingRight(6),
                                       ).expand(flex: 2),
                                   ],
                                 ),
@@ -117,7 +153,8 @@ class _ViewServiceDetailScreenState extends State<ViewServiceDetailScreen> {
                                     paddingAfterLeading: 4,
                                     leading: ic_telemed.iconImage(size: 20),
                                     title: locale.lblTelemedServiceAvailable,
-                                    titleTextStyle: secondaryTextStyle(size: 14),
+                                    titleTextStyle:
+                                        secondaryTextStyle(size: 14),
                                   )
                               ],
                             ).expand(flex: 3),

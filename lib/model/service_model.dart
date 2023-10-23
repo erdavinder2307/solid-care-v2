@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:kivicare_flutter/model/clinic_list_model.dart';
-import 'package:kivicare_flutter/model/user_model.dart';
+import 'package:solidcare/model/clinic_list_model.dart';
+import 'package:solidcare/model/user_model.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class ServiceListModel {
@@ -12,7 +12,9 @@ class ServiceListModel {
 
   factory ServiceListModel.fromJson(Map<String, dynamic> json) {
     return ServiceListModel(
-      serviceData: json['data'] != null ? (json['data'] as List).map((i) => ServiceData.fromJson(i)).toList() : null,
+      serviceData: json['data'] != null
+          ? (json['data'] as List).map((i) => ServiceData.fromJson(i)).toList()
+          : null,
       total: json['total'],
     );
   }
@@ -104,8 +106,17 @@ class ServiceData {
         type: json['type'],
         label: json['label'],
         displayName: json['display_name'],
-        doctorList: json['doctors'] != null ? (json['doctors'] as List).map((doctorServiceData) => UserModel.fromJson(doctorServiceData)).toList() : null,
-        clinicList: json['clinics'] != null ? (json['clinics'] as List).map((clinicData) => Clinic.fromJson(clinicData)).toList() : null);
+        doctorList: json['doctors'] != null
+            ? (json['doctors'] as List)
+                .map((doctorServiceData) =>
+                    UserModel.fromJson(doctorServiceData))
+                .toList()
+            : null,
+        clinicList: json['clinics'] != null
+            ? (json['clinics'] as List)
+                .map((clinicData) => Clinic.fromJson(clinicData))
+                .toList()
+            : null);
   }
 
   Map<String, dynamic> toJson() {
@@ -129,8 +140,10 @@ class ServiceData {
 
     //data['extra'] = this.extra!.toJson();
 
-    if (data['doctors'] != null) data['doctors'] = this.doctorList!.map((v) => v.toJson()).toList();
-    if (data['clinics'] != null) data['clinic'] = this.clinicList!.map((v) => v.toJson()).toList();
+    if (data['doctors'] != null)
+      data['doctors'] = this.doctorList!.map((v) => v.toJson()).toList();
+    if (data['clinics'] != null)
+      data['clinic'] = this.clinicList!.map((v) => v.toJson()).toList();
     return data;
   }
 }

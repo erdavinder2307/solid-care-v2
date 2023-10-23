@@ -3,23 +3,23 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:kivicare_flutter/components/body_widget.dart';
-import 'package:kivicare_flutter/components/loader_widget.dart';
-import 'package:kivicare_flutter/components/status_widget.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/model/encounter_model.dart';
-import 'package:kivicare_flutter/network/dashboard_repository.dart';
-import 'package:kivicare_flutter/network/encounter_repository.dart';
-import 'package:kivicare_flutter/screens/doctor/screens/generate_bill_screen.dart';
-import 'package:kivicare_flutter/utils/app_common.dart';
-import 'package:kivicare_flutter/utils/colors.dart';
-import 'package:kivicare_flutter/utils/common.dart';
-import 'package:kivicare_flutter/utils/constants.dart';
-import 'package:kivicare_flutter/utils/extensions/enums.dart';
-import 'package:kivicare_flutter/utils/extensions/string_extensions.dart';
-import 'package:kivicare_flutter/utils/images.dart';
+import 'package:solidcare/components/body_widget.dart';
+import 'package:solidcare/components/loader_widget.dart';
+import 'package:solidcare/components/status_widget.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/model/encounter_model.dart';
+import 'package:solidcare/network/dashboard_repository.dart';
+import 'package:solidcare/network/encounter_repository.dart';
+import 'package:solidcare/screens/doctor/screens/generate_bill_screen.dart';
+import 'package:solidcare/utils/app_common.dart';
+import 'package:solidcare/utils/colors.dart';
+import 'package:solidcare/utils/common.dart';
+import 'package:solidcare/utils/constants.dart';
+import 'package:solidcare/utils/extensions/enums.dart';
+import 'package:solidcare/utils/extensions/string_extensions.dart';
+import 'package:solidcare/utils/images.dart';
 import 'package:nb_utils/nb_utils.dart';
-import 'package:kivicare_flutter/screens/encounter/component/encounter_expandable_view.dart';
+import 'package:solidcare/screens/encounter/component/encounter_expandable_view.dart';
 
 class EncounterDashboardScreen extends StatefulWidget {
   final String? encounterId;
@@ -29,7 +29,8 @@ class EncounterDashboardScreen extends StatefulWidget {
   EncounterDashboardScreen({this.encounterId, this.refreshAppointment});
 
   @override
-  State<EncounterDashboardScreen> createState() => _EncounterDashboardScreenState();
+  State<EncounterDashboardScreen> createState() =>
+      _EncounterDashboardScreenState();
 }
 
 class _EncounterDashboardScreenState extends State<EncounterDashboardScreen> {
@@ -40,7 +41,11 @@ class _EncounterDashboardScreenState extends State<EncounterDashboardScreen> {
 
   bool isBillPaid = false;
 
-  bool isProblem = false, isNotes = false, isObservation = false, isPrescription = false, isMedicalReport = false;
+  bool isProblem = false,
+      isNotes = false,
+      isObservation = false,
+      isPrescription = false,
+      isMedicalReport = false;
 
   DateTime current = DateTime.now();
 
@@ -54,7 +59,9 @@ class _EncounterDashboardScreenState extends State<EncounterDashboardScreen> {
     if (showLoader) {
       appStore.setLoading(true);
     }
-    future = getEncounterDetailsDashBoardAPI(encounterId: widget.encounterId.toInt()).then((value) {
+    future =
+        getEncounterDetailsDashBoardAPI(encounterId: widget.encounterId.toInt())
+            .then((value) {
       isBillPaid = value.paymentStatus == 'paid';
 
       setState(() {});
@@ -92,7 +99,8 @@ class _EncounterDashboardScreenState extends State<EncounterDashboardScreen> {
     });
   }
 
-  void _handleCloseEncounterClick({required EncounterModel encounterData, bool isCheckOut = false}) async {
+  void _handleCloseEncounterClick(
+      {required EncounterModel encounterData, bool isCheckOut = false}) async {
     if (appStore.isLoading) return;
 
     if (isBillPaid && isCheckOut) {
@@ -101,7 +109,9 @@ class _EncounterDashboardScreenState extends State<EncounterDashboardScreen> {
         title: locale.lblEncounterWillBeClosed + ' & ' + locale.lblCheckOut,
         dialogType: DialogType.CONFIRMATION,
         onAccept: (p0) {
-          closeEncounter(isCheckOut: isCheckOut, appointmentId: encounterData.appointmentId);
+          closeEncounter(
+              isCheckOut: isCheckOut,
+              appointmentId: encounterData.appointmentId);
         },
       );
     } else {
@@ -111,11 +121,14 @@ class _EncounterDashboardScreenState extends State<EncounterDashboardScreen> {
           title: locale.lblEncounterWillBeClosed,
           dialogType: DialogType.CONFIRMATION,
           onAccept: (p0) {
-            closeEncounter(appointmentId: encounterData.appointmentId, isCheckOut: false);
+            closeEncounter(
+                appointmentId: encounterData.appointmentId, isCheckOut: false);
           },
         );
       } else {
-        await GenerateBillScreen(data: encounterData).launch(context).then((value) {
+        await GenerateBillScreen(data: encounterData)
+            .launch(context)
+            .then((value) {
           if (value != null) {
             if (value == "paid") {
               init();
@@ -141,13 +154,17 @@ class _EncounterDashboardScreenState extends State<EncounterDashboardScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(locale.lblName, style: secondaryTextStyle(size: 12)),
-                Text(encounterData.patientName.validate(), style: boldTextStyle()),
+                Text(encounterData.patientName.validate(),
+                    style: boldTextStyle()),
                 8.height,
                 Text(locale.lblEmail, style: secondaryTextStyle(size: 12)),
-                Text(encounterData.patientEmail.validate(), style: boldTextStyle()),
+                Text(encounterData.patientEmail.validate(),
+                    style: boldTextStyle()),
                 8.height,
-                Text(locale.lblEncounterDate, style: secondaryTextStyle(size: 12)),
-                Text(encounterData.encounterDate.validate(), style: boldTextStyle()),
+                Text(locale.lblEncounterDate,
+                    style: secondaryTextStyle(size: 12)),
+                Text(encounterData.encounterDate.validate(),
+                    style: boldTextStyle()),
               ],
             ),
           ).expand(),
@@ -160,13 +177,17 @@ class _EncounterDashboardScreenState extends State<EncounterDashboardScreen> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Text(locale.lblClinicName, style: secondaryTextStyle(size: 12)),
-                Text(encounterData.clinicName.validate(), style: boldTextStyle()),
+                Text(encounterData.clinicName.validate(),
+                    style: boldTextStyle()),
                 8.height,
                 Text(locale.lblDoctorName, style: secondaryTextStyle(size: 12)),
-                Text(encounterData.doctorName.validate(), style: boldTextStyle()),
+                Text(encounterData.doctorName.validate(),
+                    style: boldTextStyle()),
                 8.height,
-                Text(locale.lblDescription, style: secondaryTextStyle(size: 12)),
-                Text(encounterData.description.validate(value: " -- "), style: boldTextStyle()),
+                Text(locale.lblDescription,
+                    style: secondaryTextStyle(size: 12)),
+                Text(encounterData.description.validate(value: " -- "),
+                    style: boldTextStyle()),
               ],
             ),
           ).expand(),
@@ -187,13 +208,18 @@ class _EncounterDashboardScreenState extends State<EncounterDashboardScreen> {
       onTap: onTap,
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 2, horizontal: 16),
-        decoration: boxDecorationDefault(color: context.cardColor, borderRadius: radius()),
+        decoration: boxDecorationDefault(
+            color: context.cardColor, borderRadius: radius()),
         child: AnimatedCrossFade(
           firstChild: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(title.capitalizeFirstLetter(), style: secondaryTextStyle(size: 16)),
-              (isExpanded ? ic_arrow_up : ic_arrow_down).iconImage(size: 16, color: context.iconColor).paddingAll(14).onTap(onTap),
+              Text(title.capitalizeFirstLetter(),
+                  style: secondaryTextStyle(size: 16)),
+              (isExpanded ? ic_arrow_up : ic_arrow_down)
+                  .iconImage(size: 16, color: context.iconColor)
+                  .paddingAll(14)
+                  .onTap(onTap),
             ],
           ),
           secondChild: Stack(
@@ -214,13 +240,18 @@ class _EncounterDashboardScreenState extends State<EncounterDashboardScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(title.capitalizeFirstLetter(), style: secondaryTextStyle(size: 16)),
-                  (isExpanded ? ic_arrow_up : ic_arrow_down).iconImage(size: 16, color: context.iconColor).paddingAll(14).onTap(onTap),
+                  Text(title.capitalizeFirstLetter(),
+                      style: secondaryTextStyle(size: 16)),
+                  (isExpanded ? ic_arrow_up : ic_arrow_down)
+                      .iconImage(size: 16, color: context.iconColor)
+                      .paddingAll(14)
+                      .onTap(onTap),
                 ],
               ),
             ],
           ),
-          crossFadeState: isExpanded ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+          crossFadeState:
+              isExpanded ? CrossFadeState.showSecond : CrossFadeState.showFirst,
           duration: 600.milliseconds,
           firstCurve: Curves.bounceInOut,
         ),
@@ -268,7 +299,8 @@ class _EncounterDashboardScreenState extends State<EncounterDashboardScreen> {
                           ),
                         ),
                         12.height,
-                        encounterDetail(encounterData: encounterData).paddingSymmetric(vertical: 6),
+                        encounterDetail(encounterData: encounterData)
+                            .paddingSymmetric(vertical: 6),
                         16.height,
                         //region Others
                         buildExpandableWidget(
@@ -336,7 +368,8 @@ class _EncounterDashboardScreenState extends State<EncounterDashboardScreen> {
                         //endregion
                       ],
                     ),
-                    if ((encounterData.status == '1') && (isDoctor() || isReceptionist()))
+                    if ((encounterData.status == '1') &&
+                        (isDoctor() || isReceptionist()))
                       Positioned(
                           bottom: 0,
                           right: 0,
@@ -346,25 +379,38 @@ class _EncounterDashboardScreenState extends State<EncounterDashboardScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 8.height,
-                                Text('\t${locale.lblNote}: ${locale.lblToCloseTheEncounterInvoicePaymentIsMandatory}', style: secondaryTextStyle(size: 10, color: appSecondaryColor)),
+                                Text(
+                                    '\t${locale.lblNote}: ${locale.lblToCloseTheEncounterInvoicePaymentIsMandatory}',
+                                    style: secondaryTextStyle(
+                                        size: 10, color: appSecondaryColor)),
                                 8.height,
                                 Row(
                                   children: [
                                     AppButton(
-                                      text: isBillPaid ? '${locale.lblClose} & ${locale.lblCheckOut}' : locale.lblClose,
+                                      text: isBillPaid
+                                          ? '${locale.lblClose} & ${locale.lblCheckOut}'
+                                          : locale.lblClose,
                                       color: context.cardColor,
-                                      textStyle: primaryTextStyle(color: Colors.red),
-                                      shapeBorder: RoundedRectangleBorder(borderRadius: radius(), side: BorderSide(color: Colors.red)),
+                                      textStyle:
+                                          primaryTextStyle(color: Colors.red),
+                                      shapeBorder: RoundedRectangleBorder(
+                                          borderRadius: radius(),
+                                          side: BorderSide(color: Colors.red)),
                                       onTap: () async {
-                                        _handleCloseEncounterClick(encounterData: encounterData, isCheckOut: true);
+                                        _handleCloseEncounterClick(
+                                            encounterData: encounterData,
+                                            isCheckOut: true);
                                       },
                                     ).expand(),
                                     16.width,
                                     AppButton(
                                       text: locale.lblBillDetails,
                                       color: context.cardColor,
-                                      shapeBorder: RoundedRectangleBorder(borderRadius: radius(), side: BorderSide(color: Colors.red)),
-                                      textStyle: primaryTextStyle(color: Colors.red),
+                                      shapeBorder: RoundedRectangleBorder(
+                                          borderRadius: radius(),
+                                          side: BorderSide(color: Colors.red)),
+                                      textStyle:
+                                          primaryTextStyle(color: Colors.red),
                                       onTap: () async {
                                         await GenerateBillScreen(
                                           data: encounterData,
@@ -383,7 +429,8 @@ class _EncounterDashboardScreenState extends State<EncounterDashboardScreen> {
                                   ],
                                 ),
                               ],
-                            ).paddingOnly(left: 16, right: 16, bottom: 16, top: 0),
+                            ).paddingOnly(
+                                left: 16, right: 16, bottom: 16, top: 0),
                             decoration: boxDecorationDefault(
                               color: context.scaffoldBackgroundColor,
                             ),
@@ -395,7 +442,8 @@ class _EncounterDashboardScreenState extends State<EncounterDashboardScreen> {
             },
           ),
           Observer(
-            builder: (context) => LoaderWidget().visible(appStore.isLoading).center(),
+            builder: (context) =>
+                LoaderWidget().visible(appStore.isLoading).center(),
           )
         ],
       ),

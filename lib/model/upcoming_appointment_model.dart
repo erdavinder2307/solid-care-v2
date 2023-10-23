@@ -1,8 +1,8 @@
 import 'package:intl/intl.dart';
-import 'package:kivicare_flutter/model/rating_model.dart';
-import 'package:kivicare_flutter/utils/common.dart';
-import 'package:kivicare_flutter/utils/extensions/date_extensions.dart';
-import 'package:kivicare_flutter/utils/extensions/string_extensions.dart';
+import 'package:solidcare/model/rating_model.dart';
+import 'package:solidcare/utils/common.dart';
+import 'package:solidcare/utils/extensions/date_extensions.dart';
+import 'package:solidcare/utils/extensions/string_extensions.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 import '../utils/constants.dart';
@@ -39,20 +39,29 @@ class UpcomingAppointmentModel {
 
   // Local Variable
 
-  String get getAppointmentDisplayDate => appointmentStartDate.validate().getFormattedDate(GLOBAL_DATE_FORMAT);
-  String get getDisplayAppointmentTime => appointmentStartTime.validate().getFormattedTime() + " - " + appointmentEndTime.validate().getFormattedTime();
+  String get getAppointmentDisplayDate =>
+      appointmentStartDate.validate().getFormattedDate(GLOBAL_DATE_FORMAT);
+  String get getDisplayAppointmentTime =>
+      appointmentStartTime.validate().getFormattedTime() +
+      " - " +
+      appointmentEndTime.validate().getFormattedTime();
 
-  String get getAppointmentTime => DateFormat(ONLY_HOUR_MINUTE).parse(appointmentStartTime.validate()).getFormattedDate(FORMAT_12_HOUR);
+  String get getAppointmentTime => DateFormat(ONLY_HOUR_MINUTE)
+      .parse(appointmentStartTime.validate())
+      .getFormattedDate(FORMAT_12_HOUR);
 
   String get getAppointmentStartDate => appointmentStartDate.validate();
 
   String get getAppointmentSaveDate => appointmentStartDate.validate();
 
-  String get getVisitTypesInString => visitType.validate().map((e) => e.serviceName.validate()).join(", ");
+  String get getVisitTypesInString =>
+      visitType.validate().map((e) => e.serviceName.validate()).join(", ");
 
-  String get getProfileImage => isPatient() ? doctorProfileImg.validate() : patientProfileImg.validate();
+  String get getProfileImage =>
+      isPatient() ? doctorProfileImg.validate() : patientProfileImg.validate();
 
-  String get appointmentDateFormat => "$getAppointmentStartDate   •   $getDisplayAppointmentTime";
+  String get appointmentDateFormat =>
+      "$getAppointmentStartDate   •   $getDisplayAppointmentTime";
 
   UpcomingAppointmentModel(
       {this.appointmentEndDate,
@@ -96,21 +105,37 @@ class UpcomingAppointmentModel {
       doctorProfileImg: json['doctor_profile_img'],
       patientProfileImg: json['patient_profile_img'],
       createdAt: json['created_at'],
-      description: json['description'].toString().validate().isNotEmpty ? json['description'] : "NA",
-      appointmentReport: json['appointment_report'] != null ? (json['appointment_report'] as List).map((i) => AppointmentReport.fromJson(i)).toList() : [],
-      visitType: json['visit_type'] != null ? (json['visit_type'] as List).map((i) => VisitType.fromJson(i)).toList() : [],
+      description: json['description'].toString().validate().isNotEmpty
+          ? json['description']
+          : "NA",
+      appointmentReport: json['appointment_report'] != null
+          ? (json['appointment_report'] as List)
+              .map((i) => AppointmentReport.fromJson(i))
+              .toList()
+          : [],
+      visitType: json['visit_type'] != null
+          ? (json['visit_type'] as List)
+              .map((i) => VisitType.fromJson(i))
+              .toList()
+          : [],
       doctorId: json['doctor_id'],
       discountCode: json['discount_code'],
       doctorName: json['doctor_name'],
       encounterId: json['encounter_id'],
       id: json['id'],
-      allServiceCharges: json['all_service_charges'].runtimeType == String ? (json['all_service_charges'] as String).toDouble() : json['all_service_charges'],
+      allServiceCharges: json['all_service_charges'].runtimeType == String
+          ? (json['all_service_charges'] as String).toDouble()
+          : json['all_service_charges'],
       patientId: json['patient_id'],
       patientName: json['patient_name'],
       status: json['status'],
       visitLabel: json['visit_label'],
-      zoomData: json['zoom_data'] != null ? new ZoomData.fromJson(json['zoom_data']) : null,
-      doctorRating: json['review'] != null ? new RatingData.fromJson(json['review']) : null,
+      zoomData: json['zoom_data'] != null
+          ? new ZoomData.fromJson(json['zoom_data'])
+          : null,
+      doctorRating: json['review'] != null
+          ? new RatingData.fromJson(json['review'])
+          : null,
     );
   }
 
@@ -139,7 +164,8 @@ class UpcomingAppointmentModel {
     data['start_date'] = this.appointmentGlobalStartDate;
 
     if (this.appointmentReport != null) {
-      data['appointment_report'] = this.appointmentReport!.map((v) => v.toJson()).toList();
+      data['appointment_report'] =
+          this.appointmentReport!.map((v) => v.toJson()).toList();
     }
     data['visit_label'] = this.visitLabel;
     if (this.visitType != null) {
@@ -234,7 +260,15 @@ class ZoomData {
   String? password;
   String? createdAt;
 
-  ZoomData({this.id, this.appointmentId, this.zoomId, this.zoomUuid, this.startUrl, this.joinUrl, this.password, this.createdAt});
+  ZoomData(
+      {this.id,
+      this.appointmentId,
+      this.zoomId,
+      this.zoomUuid,
+      this.startUrl,
+      this.joinUrl,
+      this.password,
+      this.createdAt});
 
   ZoomData.fromJson(Map<String, dynamic> json) {
     id = json['id'];

@@ -8,11 +8,11 @@ import 'package:flutter_custom_tabs/flutter_custom_tabs.dart' as custom_tabs;
 import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
 import 'package:html/parser.dart';
 import 'package:intl/intl.dart';
-import 'package:kivicare_flutter/config.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/utils/colors.dart';
-import 'package:kivicare_flutter/utils/constants.dart';
-import 'package:kivicare_flutter/utils/extensions/date_extensions.dart';
+import 'package:solidcare/config.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/utils/colors.dart';
+import 'package:solidcare/utils/constants.dart';
+import 'package:solidcare/utils/extensions/date_extensions.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:signature/signature.dart';
@@ -22,7 +22,8 @@ String parseHtmlString(String? htmlString) {
   return parse(parse(htmlString).body!.text).documentElement!.text;
 }
 
-Future<void> commonLaunchUrl(String address, {LaunchMode launchMode = LaunchMode.inAppWebView}) async {
+Future<void> commonLaunchUrl(String address,
+    {LaunchMode launchMode = LaunchMode.inAppWebView}) async {
   await launchUrl(Uri.parse(address), mode: launchMode).catchError((e) {
     toast('${locale.lblInvalidURL}');
     throw e;
@@ -32,9 +33,11 @@ Future<void> commonLaunchUrl(String address, {LaunchMode launchMode = LaunchMode
 void launchCall(String? url) {
   if (url.validate().isNotEmpty) {
     if (isIOS)
-      commonLaunchUrl('tel://' + url!, launchMode: LaunchMode.externalApplication);
+      commonLaunchUrl('tel://' + url!,
+          launchMode: LaunchMode.externalApplication);
     else
-      commonLaunchUrl('tel:' + url!, launchMode: LaunchMode.externalApplication);
+      commonLaunchUrl('tel:' + url!,
+          launchMode: LaunchMode.externalApplication);
   }
 }
 
@@ -74,16 +77,23 @@ List<DateTime> getDatesBetweenTwoDates(DateTime startDate, DateTime endDate) {
   return dates;
 }
 
-int getDateDifference(String sDate, {String? eDate, bool isForHolidays = false}) {
+int getDateDifference(String sDate,
+    {String? eDate, bool isForHolidays = false}) {
   DateTime startDate = new DateFormat(SAVE_DATE_FORMAT).parse(sDate);
 
-  DateTime endDate = new DateFormat(SAVE_DATE_FORMAT).parse(eDate ?? DateTime.now().toString());
+  DateTime endDate = new DateFormat(SAVE_DATE_FORMAT)
+      .parse(eDate ?? DateTime.now().toString());
   Duration diff = endDate.difference(startDate);
 
   return diff.inDays;
 }
 
-InputDecoration inputDecoration({required BuildContext context, Widget? prefixIcon, String? labelText, String? hintText, Widget? suffixIcon}) {
+InputDecoration inputDecoration(
+    {required BuildContext context,
+    Widget? prefixIcon,
+    String? labelText,
+    String? hintText,
+    Widget? suffixIcon}) {
   return InputDecoration(
     contentPadding: EdgeInsets.all(10),
     labelText: labelText,
@@ -95,12 +105,24 @@ InputDecoration inputDecoration({required BuildContext context, Widget? prefixIc
     hintText: hintText,
     hintStyle: secondaryTextStyle(),
     fillColor: context.cardColor,
-    disabledBorder: OutlineInputBorder(borderRadius: radius(), borderSide: BorderSide(color: Colors.transparent, width: 0.0)),
-    border: OutlineInputBorder(borderRadius: radius(), borderSide: BorderSide(color: Colors.transparent, width: 0.0)),
-    enabledBorder: OutlineInputBorder(borderRadius: radius(), borderSide: BorderSide(color: Colors.transparent, width: 0.0)),
-    focusedErrorBorder: OutlineInputBorder(borderRadius: radius(), borderSide: BorderSide(color: Colors.red, width: 0.0)),
-    errorBorder: OutlineInputBorder(borderRadius: radius(), borderSide: BorderSide(color: Colors.red, width: 1.0)),
-    focusedBorder: OutlineInputBorder(borderRadius: radius(), borderSide: BorderSide(color: primaryColor, width: 0.0)),
+    disabledBorder: OutlineInputBorder(
+        borderRadius: radius(),
+        borderSide: BorderSide(color: Colors.transparent, width: 0.0)),
+    border: OutlineInputBorder(
+        borderRadius: radius(),
+        borderSide: BorderSide(color: Colors.transparent, width: 0.0)),
+    enabledBorder: OutlineInputBorder(
+        borderRadius: radius(),
+        borderSide: BorderSide(color: Colors.transparent, width: 0.0)),
+    focusedErrorBorder: OutlineInputBorder(
+        borderRadius: radius(),
+        borderSide: BorderSide(color: Colors.red, width: 0.0)),
+    errorBorder: OutlineInputBorder(
+        borderRadius: radius(),
+        borderSide: BorderSide(color: Colors.red, width: 1.0)),
+    focusedBorder: OutlineInputBorder(
+        borderRadius: radius(),
+        borderSide: BorderSide(color: primaryColor, width: 0.0)),
   );
 }
 
@@ -267,17 +289,26 @@ Future setupRemoteConfig() async {
 
 class HttpOverridesSkipCertificate extends HttpOverrides {
   @override
-  HttpClient createHttpClient(SecurityContext? context) => super.createHttpClient(context)..badCertificateCallback = (X509Certificate cert, String host, int port) => true;
+  HttpClient createHttpClient(SecurityContext? context) =>
+      super.createHttpClient(context)
+        ..badCertificateCallback =
+            (X509Certificate cert, String host, int port) => true;
 }
 
-Future<File?> getSignatureInFile(BuildContext context, {required SignatureController controller, int? height, int? width, required String fileName}) async {
+Future<File?> getSignatureInFile(BuildContext context,
+    {required SignatureController controller,
+    int? height,
+    int? width,
+    required String fileName}) async {
   if (controller.isEmpty) return null;
-  Uint8List? unit = await controller.toPngBytes(height: height ?? 150, width: width ?? context.width().toInt());
+  Uint8List? unit = await controller.toPngBytes(
+      height: height ?? 150, width: width ?? context.width().toInt());
 
   Directory? directory = await getExternalStorageDirectory();
 
   await Directory('${directory!.path}/signature').create(recursive: true);
-  File('${directory.path}/signature/$fileName.png').writeAsBytesSync(unit!.buffer.asInt8List());
+  File('${directory.path}/signature/$fileName.png')
+      .writeAsBytesSync(unit!.buffer.asInt8List());
   return File(Directory('${directory.path}/signature/$fileName.png').path);
 }
 
@@ -296,4 +327,5 @@ Uint8List? getImageFromBase64(String value) {
 }
 //endregion
 
-String get getAppointmentDate => appointmentAppStore.selectedAppointmentDate.getFormattedDate(SAVE_DATE_FORMAT);
+String get getAppointmentDate => appointmentAppStore.selectedAppointmentDate
+    .getFormattedDate(SAVE_DATE_FORMAT);

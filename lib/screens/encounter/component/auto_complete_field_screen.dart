@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:kivicare_flutter/components/no_data_found_widget.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/network/prescription_repository.dart';
-import 'package:kivicare_flutter/utils/common.dart';
+import 'package:solidcare/components/no_data_found_widget.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/network/prescription_repository.dart';
+import 'package:solidcare/utils/common.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class AutoCompleteFieldScreen extends StatefulWidget {
@@ -11,10 +11,17 @@ class AutoCompleteFieldScreen extends StatefulWidget {
   final String? name;
   final Function(String name) onTap;
 
-  const AutoCompleteFieldScreen({Key? key, this.name, required this.encounterId, required this.isFrequency, required this.onTap}) : super(key: key);
+  const AutoCompleteFieldScreen(
+      {Key? key,
+      this.name,
+      required this.encounterId,
+      required this.isFrequency,
+      required this.onTap})
+      : super(key: key);
 
   @override
-  State<AutoCompleteFieldScreen> createState() => _AutoCompleteFieldScreenState();
+  State<AutoCompleteFieldScreen> createState() =>
+      _AutoCompleteFieldScreenState();
 }
 
 class _AutoCompleteFieldScreenState extends State<AutoCompleteFieldScreen> {
@@ -37,11 +44,14 @@ class _AutoCompleteFieldScreenState extends State<AutoCompleteFieldScreen> {
   void init() async {
     isUpdate = widget.name != null;
     appStore.setLoading(true);
-    future = getPrescriptionNameAndFrequencyAPI(id: '', isFrequency: widget.isFrequency).then((value) {
+    future = getPrescriptionNameAndFrequencyAPI(
+            id: '', isFrequency: widget.isFrequency)
+        .then((value) {
       appStore.setLoading(false);
       if (isUpdate) {
         if (widget.name.validate().isNotEmpty) {
-          prescriptionCont.text = value.where((element) => element == widget.name).first;
+          prescriptionCont.text =
+              value.where((element) => element == widget.name).first;
         }
       }
 
@@ -75,7 +85,11 @@ class _AutoCompleteFieldScreenState extends State<AutoCompleteFieldScreen> {
                 prescriptionCont.text = value;
                 widget.onTap.call(value);
               },
-              decoration: inputDecoration(context: context, labelText: widget.isFrequency ? locale.lblFrequency : locale.lblName),
+              decoration: inputDecoration(
+                  context: context,
+                  labelText: widget.isFrequency
+                      ? locale.lblFrequency
+                      : locale.lblName),
             );
           }
           return RawAutocomplete<String>(
@@ -90,7 +104,9 @@ class _AutoCompleteFieldScreenState extends State<AutoCompleteFieldScreen> {
                   child: AnimatedScrollView(
                     physics: AlwaysScrollableScrollPhysics(),
                     mainAxisSize: MainAxisSize.min,
-                    listAnimationType: isFirstTime ? listAnimationType : ListAnimationType.None,
+                    listAnimationType: isFirstTime
+                        ? listAnimationType
+                        : ListAnimationType.None,
                     children: options.map(
                       (opt) {
                         return InkWell(
@@ -99,10 +115,13 @@ class _AutoCompleteFieldScreenState extends State<AutoCompleteFieldScreen> {
                           },
                           child: Container(
                             width: context.width(),
-                            decoration: boxDecorationDefault(color: context.primaryColor),
+                            decoration: boxDecorationDefault(
+                                color: context.primaryColor),
                             padding: EdgeInsets.all(12),
-                            margin: EdgeInsets.only(right: 26, top: 4, bottom: 4),
-                            child: Text(opt, style: boldTextStyle(color: Colors.white)),
+                            margin:
+                                EdgeInsets.only(right: 26, top: 4, bottom: 4),
+                            child: Text(opt,
+                                style: boldTextStyle(color: Colors.white)),
                           ),
                         );
                       },
@@ -123,13 +142,16 @@ class _AutoCompleteFieldScreenState extends State<AutoCompleteFieldScreen> {
                   if (!matches.contains(element)) matches.add(element);
                 });
 
-              int index = matches.indexWhere((element) => element.toLowerCase().contains(textEditingValue.text.toLowerCase()));
+              int index = matches.indexWhere((element) => element
+                  .toLowerCase()
+                  .contains(textEditingValue.text.toLowerCase()));
 
               matches[index] = matches[index];
 
               return matches;
             },
-            fieldViewBuilder: (context, textEditingController, focusNode, onFieldSubmitted) {
+            fieldViewBuilder:
+                (context, textEditingController, focusNode, onFieldSubmitted) {
               return AppTextField(
                 textFieldType: TextFieldType.OTHER,
                 focus: focusNode,
@@ -142,7 +164,11 @@ class _AutoCompleteFieldScreenState extends State<AutoCompleteFieldScreen> {
                   prescriptionCont.text = value;
                   widget.onTap.call(textEditingController.text);
                 },
-                decoration: inputDecoration(context: context, labelText: widget.isFrequency ? locale.lblFrequency : locale.lblName),
+                decoration: inputDecoration(
+                    context: context,
+                    labelText: widget.isFrequency
+                        ? locale.lblFrequency
+                        : locale.lblName),
               );
             },
           );
@@ -158,7 +184,10 @@ class _AutoCompleteFieldScreenState extends State<AutoCompleteFieldScreen> {
             onFieldSubmitted: (p0) {
               widget.onTap.call(prescriptionCont.text);
             },
-            decoration: inputDecoration(context: context, labelText: widget.isFrequency ? locale.lblFrequency : locale.lblName),
+            decoration: inputDecoration(
+                context: context,
+                labelText:
+                    widget.isFrequency ? locale.lblFrequency : locale.lblName),
           ),
         );
       },

@@ -2,21 +2,21 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:kivicare_flutter/components/body_widget.dart';
-import 'package:kivicare_flutter/components/empty_error_state_component.dart';
-import 'package:kivicare_flutter/components/internet_connectivity_widget.dart';
-import 'package:kivicare_flutter/components/loader_widget.dart';
-import 'package:kivicare_flutter/components/no_data_found_widget.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/model/service_model.dart';
-import 'package:kivicare_flutter/network/service_repository.dart';
-import 'package:kivicare_flutter/screens/doctor/screens/service/components/service_widget.dart';
-import 'package:kivicare_flutter/screens/shimmer/components/services_shimmer_component.dart';
-import 'package:kivicare_flutter/utils/app_common.dart';
-import 'package:kivicare_flutter/utils/colors.dart';
-import 'package:kivicare_flutter/utils/common.dart';
-import 'package:kivicare_flutter/utils/extensions/string_extensions.dart';
-import 'package:kivicare_flutter/utils/images.dart';
+import 'package:solidcare/components/body_widget.dart';
+import 'package:solidcare/components/empty_error_state_component.dart';
+import 'package:solidcare/components/internet_connectivity_widget.dart';
+import 'package:solidcare/components/loader_widget.dart';
+import 'package:solidcare/components/no_data_found_widget.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/model/service_model.dart';
+import 'package:solidcare/network/service_repository.dart';
+import 'package:solidcare/screens/doctor/screens/service/components/service_widget.dart';
+import 'package:solidcare/screens/shimmer/components/services_shimmer_component.dart';
+import 'package:solidcare/utils/app_common.dart';
+import 'package:solidcare/utils/colors.dart';
+import 'package:solidcare/utils/common.dart';
+import 'package:solidcare/utils/extensions/string_extensions.dart';
+import 'package:solidcare/utils/images.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 import 'add_service_screen.dart';
@@ -51,7 +51,9 @@ class _ServiceListScreenState extends State<ServiceListScreen> {
 
     future = getServiceListAPI(
       searchString: searchCont.text,
-      id: isReceptionist() ? userStore.userClinicId.validate().toInt() : userStore.userId.validate(),
+      id: isReceptionist()
+          ? userStore.userClinicId.validate().toInt()
+          : userStore.userId.validate(),
       perPages: 50,
       page: page,
       lastPageCallback: (b) => isLastPage = b,
@@ -150,7 +152,9 @@ class _ServiceListScreenState extends State<ServiceListScreen> {
                   },
                 ),
                 16.height,
-                Text('${locale.lblNote} : ${locale.lblTapMsg}', style: secondaryTextStyle(size: 10, color: appSecondaryColor)),
+                Text('${locale.lblNote} : ${locale.lblTapMsg}',
+                    style:
+                        secondaryTextStyle(size: 10, color: appSecondaryColor)),
               ],
             ).paddingSymmetric(horizontal: 16, vertical: 16),
             SnapHelperWidget<List<ServiceData>>(
@@ -167,15 +171,20 @@ class _ServiceListScreenState extends State<ServiceListScreen> {
                 crossAxisAlignment: WrapCrossAlignment.center,
                 children: List.generate(
                   4,
-                  (index) => ServicesShimmerComponent(isForDoctorServicesList: isDoctor()),
+                  (index) => ServicesShimmerComponent(
+                      isForDoctorServicesList: isDoctor()),
                 ),
               ).paddingSymmetric(horizontal: 16),
               onSuccess: (snap) {
                 if (snap.isEmpty && !appStore.isLoading) {
                   return SingleChildScrollView(
                     child: NoDataFoundWidget(
-                      iconSize: searchCont.text.isNotEmpty && appStore.isLoading ? 60 : 160,
-                      text: searchCont.text.isNotEmpty ? locale.lblCantFindServiceYouSearchedFor : locale.lblNoServicesFound,
+                      iconSize: searchCont.text.isNotEmpty && appStore.isLoading
+                          ? 60
+                          : 160,
+                      text: searchCont.text.isNotEmpty
+                          ? locale.lblCantFindServiceYouSearchedFor
+                          : locale.lblNoServicesFound,
                     ),
                   ).center();
                 }
@@ -216,10 +225,14 @@ class _ServiceListScreenState extends State<ServiceListScreen> {
                         return GestureDetector(
                           onTap: () async {
                             await AddServiceScreen(
-                                serviceData: data,
-                                callForRefresh: () {
-                                  init();
-                                }).launch(context, pageRouteAnimation: PageRouteAnimation.Slide).then((value) {
+                                    serviceData: data,
+                                    callForRefresh: () {
+                                      init();
+                                    })
+                                .launch(context,
+                                    pageRouteAnimation:
+                                        PageRouteAnimation.Slide)
+                                .then((value) {
                               if (value ?? false) {
                                 init();
                               }
@@ -233,7 +246,9 @@ class _ServiceListScreenState extends State<ServiceListScreen> {
                 );
               },
             ).paddingTop(116),
-            Observer(builder: (context) => LoaderWidget().visible(appStore.isLoading).center())
+            Observer(
+                builder: (context) =>
+                    LoaderWidget().visible(appStore.isLoading).center())
           ],
         ),
       ),

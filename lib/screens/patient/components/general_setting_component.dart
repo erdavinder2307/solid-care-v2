@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:kivicare_flutter/components/app_setting_widget.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/screens/encounter/screen/encounter_list_screen.dart';
-import 'package:kivicare_flutter/screens/patient/screens/my_bill_records_screen.dart';
-import 'package:kivicare_flutter/screens/patient/screens/my_report_screen.dart';
-import 'package:kivicare_flutter/screens/patient/screens/patient_clinic_selection_screen.dart';
-import 'package:kivicare_flutter/utils/images.dart';
+import 'package:solidcare/components/app_setting_widget.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/screens/encounter/screen/encounter_list_screen.dart';
+import 'package:solidcare/screens/patient/screens/my_bill_records_screen.dart';
+import 'package:solidcare/screens/patient/screens/my_report_screen.dart';
+import 'package:solidcare/screens/patient/screens/patient_clinic_selection_screen.dart';
+import 'package:solidcare/utils/images.dart';
 
 class GeneralSettingComponent extends StatelessWidget {
   final VoidCallback? callBack;

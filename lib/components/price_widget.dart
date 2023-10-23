@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kivicare_flutter/main.dart';
+import 'package:solidcare/main.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class PriceWidget extends StatelessWidget {
@@ -10,14 +10,23 @@ class PriceWidget extends StatelessWidget {
   final String? postFix;
   final TextAlign? textAlign;
 
-  PriceWidget({required this.price, this.textStyle, this.textAlign, this.textSize, this.postFix, this.textColor});
+  PriceWidget(
+      {required this.price,
+      this.textStyle,
+      this.textAlign,
+      this.textSize,
+      this.postFix,
+      this.textColor});
 
   @override
   Widget build(BuildContext context) {
     return Text(
       '${appStore.currencyPrefix.validate(value: appStore.currency.validate())}$price${appStore.currencyPostfix.validate(value: '')}',
       textAlign: textAlign,
-      style: textStyle ?? boldTextStyle(size: textSize ?? textBoldSizeGlobal.toInt(), color: textColor ?? textPrimaryColorGlobal),
+      style: textStyle ??
+          boldTextStyle(
+              size: textSize ?? textBoldSizeGlobal.toInt(),
+              color: textColor ?? textPrimaryColorGlobal),
     );
   }
 }

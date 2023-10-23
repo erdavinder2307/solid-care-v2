@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:kivicare_flutter/components/app_scaffold.dart';
-import 'package:kivicare_flutter/utils/app_common.dart';
-import 'package:kivicare_flutter/utils/colors.dart';
-import 'package:kivicare_flutter/utils/constants.dart';
+import 'package:solidcare/components/app_scaffold.dart';
+import 'package:solidcare/utils/app_common.dart';
+import 'package:solidcare/utils/colors.dart';
+import 'package:solidcare/utils/constants.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 import '../main.dart';
@@ -22,7 +22,8 @@ class LanguageScreenState extends State<LanguageScreen> {
   }
 
   Future<void> init() async {
-    setStatusBarColor(appStore.isDarkModeOn ? scaffoldDarkColor : primaryColor, statusBarIconBrightness: Brightness.light);
+    setStatusBarColor(appStore.isDarkModeOn ? scaffoldDarkColor : primaryColor,
+        statusBarIconBrightness: Brightness.light);
 
     currentIndex = getIntAsync(SELECTED_LANGUAGE, defaultValue: 0);
     setState(() {});

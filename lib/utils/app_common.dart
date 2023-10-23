@@ -4,13 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 
-import 'package:kivicare_flutter/config.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/model/upcoming_appointment_model.dart';
-import 'package:kivicare_flutter/utils/colors.dart';
-import 'package:kivicare_flutter/utils/common.dart';
-import 'package:kivicare_flutter/utils/constants.dart';
-import 'package:kivicare_flutter/utils/extensions/string_extensions.dart';
+import 'package:solidcare/config.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/model/upcoming_appointment_model.dart';
+import 'package:solidcare/utils/colors.dart';
+import 'package:solidcare/utils/common.dart';
+import 'package:solidcare/utils/constants.dart';
+import 'package:solidcare/utils/extensions/string_extensions.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 Future<void> defaultValue() async {
@@ -55,11 +55,18 @@ String getRoleWiseAppointmentFirstText(UpcomingAppointmentModel upcomingData) {
     return upcomingData.doctorName.validate().prefixText(value: 'Dr. ');
 }
 
-SystemUiOverlayStyle defaultSystemUiOverlayStyle(BuildContext context, {Color? color, Brightness? statusBarIconBrightness}) {
-  return SystemUiOverlayStyle(statusBarColor: color ?? context.primaryColor.withOpacity(0.02), statusBarIconBrightness: statusBarIconBrightness ?? Brightness.light);
+SystemUiOverlayStyle defaultSystemUiOverlayStyle(BuildContext context,
+    {Color? color, Brightness? statusBarIconBrightness}) {
+  return SystemUiOverlayStyle(
+      statusBarColor: color ?? context.primaryColor.withOpacity(0.02),
+      statusBarIconBrightness: statusBarIconBrightness ?? Brightness.light);
 }
 
-String getEndPoint({required String endPoint, int? perPages, int? page, List<String>? params}) {
+String getEndPoint(
+    {required String endPoint,
+    int? perPages,
+    int? page,
+    List<String>? params}) {
   String perPage = "?limit=${perPages ?? PER_PAGE}";
   String pages = "&page=$page";
 
@@ -75,7 +82,13 @@ String getEndPoint({required String endPoint, int? perPages, int? page, List<Str
 }
 
 void getDisposeStatusBarColor({Color? colors}) {
-  setStatusBarColor(colors ?? (appStore.isDarkModeOn.validate() ? scaffoldColorDark : scaffoldColorLight), statusBarIconBrightness: appStore.isDarkModeOn ? Brightness.light : Brightness.dark);
+  setStatusBarColor(
+      colors ??
+          (appStore.isDarkModeOn.validate()
+              ? scaffoldColorDark
+              : scaffoldColorLight),
+      statusBarIconBrightness:
+          appStore.isDarkModeOn ? Brightness.light : Brightness.dark);
 }
 
 Future<List<File>> getMultipleImageSource({bool isCamera = true}) async {
@@ -84,7 +97,8 @@ Future<List<File>> getMultipleImageSource({bool isCamera = true}) async {
 }
 
 Future<File> getCameraImage({bool isCamera = true}) async {
-  final pickedImage = await ImagePicker().pickImage(source: isCamera ? ImageSource.camera : ImageSource.gallery);
+  final pickedImage = await ImagePicker()
+      .pickImage(source: isCamera ? ImageSource.camera : ImageSource.gallery);
   return File(pickedImage!.path.validate());
 }
 
@@ -99,7 +113,8 @@ Map<T, List<S>> groupBy<S, T>(Iterable<S> values, T Function(S) key) {
 DateTime getDateTime({required String date, String? time}) {
   DateTime? dates = DateTime.tryParse(date.validate());
   DateTime? times = DateTime.tryParse(time.validate());
-  return DateTime(dates!.year, dates.month, dates.day, times!.hour, times.minute, times.second);
+  return DateTime(dates!.year, dates.month, dates.day, times!.hour,
+      times.minute, times.second);
 }
 
 void ifNotTester(BuildContext context, VoidCallback callback) {
@@ -115,11 +130,16 @@ void ifNotTester(BuildContext context, VoidCallback callback) {
   }
 }
 
-void ifTester(BuildContext context, VoidCallback callback, {String? userEmail}) {
-  if (isDoctor() && userStore.userEmail != doctorEmail && userEmail == patientEmail) {
+void ifTester(BuildContext context, VoidCallback callback,
+    {String? userEmail}) {
+  if (isDoctor() &&
+      userStore.userEmail != doctorEmail &&
+      userEmail == patientEmail) {
     hideKeyboard(context);
     toast(locale.lblUnAuthorized);
-  } else if (isReceptionist() && userStore.userEmail == receptionistEmail && (userEmail == patientEmail || userEmail == doctorEmail)) {
+  } else if (isReceptionist() &&
+      userStore.userEmail == receptionistEmail &&
+      (userEmail == patientEmail || userEmail == doctorEmail)) {
     hideKeyboard(context);
     toast(locale.lblUnAuthorized);
   } else {
@@ -127,7 +147,8 @@ void ifTester(BuildContext context, VoidCallback callback, {String? userEmail}) 
   }
 }
 
-dynamic shimmerBoxInputDecoration({double? borderRadiusValue, Color? color, BoxShape? shape}) {
+dynamic shimmerBoxInputDecoration(
+    {double? borderRadiusValue, Color? color, BoxShape? shape}) {
   return boxDecorationDefault(
     boxShadow: [],
     shape: shape,
@@ -165,20 +186,31 @@ void datePickerComponent(
     builder: (context, child) {
       return Theme(
         data: appStore.isDarkModeOn
-            ? ThemeData.dark(useMaterial3: true).copyWith(colorScheme: ColorScheme.fromSeed(seedColor: primaryColor, brightness: Brightness.dark))
-            : ThemeData.light(useMaterial3: true).copyWith(colorScheme: ColorScheme.fromSeed(seedColor: primaryColor, brightness: Brightness.light)),
+            ? ThemeData.dark(useMaterial3: true).copyWith(
+                colorScheme: ColorScheme.fromSeed(
+                    seedColor: primaryColor, brightness: Brightness.dark))
+            : ThemeData.light(useMaterial3: true).copyWith(
+                colorScheme: ColorScheme.fromSeed(
+                    seedColor: primaryColor, brightness: Brightness.light)),
         child: child.cornerRadiusWithClipRRect(24),
       );
     },
   ).then((value) {
-    if (isAgeVerificationRequired && value != null && DateTime.now().year - value.year < 18) {
+    if (isAgeVerificationRequired &&
+        value != null &&
+        DateTime.now().year - value.year < 18) {
       Fluttertoast.cancel();
       toast(
-        locale.lblMinimumAgeRequired + locale.lblCurrentAgeIs + ' ${DateTime.now().year - value.year}',
+        locale.lblMinimumAgeRequired +
+            locale.lblCurrentAgeIs +
+            ' ${DateTime.now().year - value.year}',
         bgColor: errorBackGroundColor,
         textColor: errorTextColor,
       );
-      datePickerComponent(context, initialDate: value, firstDate: DateTime(1900), isAgeVerificationRequired: true);
+      datePickerComponent(context,
+          initialDate: value,
+          firstDate: DateTime(1900),
+          isAgeVerificationRequired: true);
     } else {
       onDateSelected?.call(value);
     }

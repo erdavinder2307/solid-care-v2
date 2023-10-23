@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/model/report_model.dart';
-import 'package:kivicare_flutter/utils/extensions/string_extensions.dart';
-import 'package:kivicare_flutter/utils/images.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/model/report_model.dart';
+import 'package:solidcare/utils/extensions/string_extensions.dart';
+import 'package:solidcare/utils/images.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import 'package:kivicare_flutter/utils/common.dart';
+import 'package:solidcare/utils/common.dart';
 
 class PatientReportComponent extends StatelessWidget {
   final List<ReportData> reportList;
@@ -15,7 +15,10 @@ class PatientReportComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (reportList.isEmpty) return NoDataWidget(title: locale.lblNoReportsFound, titleTextStyle: primaryTextStyle(color: Colors.red));
+    if (reportList.isEmpty)
+      return NoDataWidget(
+          title: locale.lblNoReportsFound,
+          titleTextStyle: primaryTextStyle(color: Colors.red));
     return AnimatedWrap(
         runSpacing: 16,
         spacing: 16,
@@ -25,7 +28,8 @@ class PatientReportComponent extends StatelessWidget {
             .map(
               (reportData) => GestureDetector(
                 onTap: () {
-                  commonLaunchUrl(reportData.uploadReport.validate(), launchMode: LaunchMode.externalApplication);
+                  commonLaunchUrl(reportData.uploadReport.validate(),
+                      launchMode: LaunchMode.externalApplication);
                 },
                 child: Container(
                   padding: EdgeInsets.all(8),
@@ -47,7 +51,8 @@ class PatientReportComponent extends StatelessWidget {
                           color: Colors.grey.withOpacity(0.4),
                         ),
                       6.height,
-                      Text(reportData.name.validate(), style: primaryTextStyle(size: 12)),
+                      Text(reportData.name.validate(),
+                          style: primaryTextStyle(size: 12)),
                     ],
                   ),
                 ),

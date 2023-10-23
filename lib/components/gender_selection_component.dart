@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/model/gender_model.dart';
-import 'package:kivicare_flutter/utils/colors.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/model/gender_model.dart';
+import 'package:solidcare/utils/colors.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class GenderSelectionComponent extends StatefulWidget {
   final String? type;
   final Function(String value) onTap;
 
-  GenderSelectionComponent({Key? key, this.type, required this.onTap}) : super(key: key);
+  GenderSelectionComponent({Key? key, this.type, required this.onTap})
+      : super(key: key);
 
   @override
-  State<GenderSelectionComponent> createState() => _GenderSelectionComponentState();
+  State<GenderSelectionComponent> createState() =>
+      _GenderSelectionComponentState();
 }
 
 class _GenderSelectionComponentState extends State<GenderSelectionComponent> {
@@ -20,9 +22,16 @@ class _GenderSelectionComponentState extends State<GenderSelectionComponent> {
   bool isUpdate = false;
 
   List<GenderModel> genderList = [
-    GenderModel(name: locale.lblMale, icon: FontAwesomeIcons.person, value: "male"),
-    GenderModel(name: locale.lblFemale, icon: FontAwesomeIcons.personDress, value: "female"),
-    GenderModel(name: locale.lblOther, icon: FontAwesomeIcons.personDress, value: "other"),
+    GenderModel(
+        name: locale.lblMale, icon: FontAwesomeIcons.person, value: "male"),
+    GenderModel(
+        name: locale.lblFemale,
+        icon: FontAwesomeIcons.personDress,
+        value: "female"),
+    GenderModel(
+        name: locale.lblOther,
+        icon: FontAwesomeIcons.personDress,
+        value: "other"),
   ];
 
   @override
@@ -35,7 +44,8 @@ class _GenderSelectionComponentState extends State<GenderSelectionComponent> {
     isUpdate = widget.type != null;
 
     if (isUpdate) {
-      selectedGender = genderList.indexWhere((element) => element.value == widget.type.validate());
+      selectedGender = genderList
+          .indexWhere((element) => element.value == widget.type.validate());
       setState(() {});
     }
   }
@@ -64,25 +74,39 @@ class _GenderSelectionComponentState extends State<GenderSelectionComponent> {
 
                 return Container(
                   width: context.width() / 3 - 32,
-                  decoration: boxDecorationDefault(borderRadius: radius(defaultRadius), color: context.cardColor),
+                  decoration: boxDecorationDefault(
+                      borderRadius: radius(defaultRadius),
+                      color: context.cardColor),
                   child: Row(
                     children: [
                       Container(
                         padding: EdgeInsets.all(2),
                         decoration: boxDecorationDefault(
                           shape: BoxShape.circle,
-                          border: Border.all(color: isSelected ? primaryColor : secondaryTxtColor.withOpacity(0.5)),
+                          border: Border.all(
+                              color: isSelected
+                                  ? primaryColor
+                                  : secondaryTxtColor.withOpacity(0.5)),
                           color: Colors.transparent,
                         ),
                         child: Container(
                           height: 12,
                           width: 12,
-                          decoration: boxDecorationDefault(shape: BoxShape.circle, color: isSelected ? primaryColor : context.cardColor),
+                          decoration: boxDecorationDefault(
+                              shape: BoxShape.circle,
+                              color: isSelected
+                                  ? primaryColor
+                                  : context.cardColor),
                         ),
                       ),
                       10.width,
                       Text("${genderList[index].name.validate()}",
-                              style: isSelected ? boldTextStyle(size: 14) : primaryTextStyle(size: 14), textAlign: TextAlign.center, maxLines: 1, overflow: TextOverflow.ellipsis)
+                              style: isSelected
+                                  ? boldTextStyle(size: 14)
+                                  : primaryTextStyle(size: 14),
+                              textAlign: TextAlign.center,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis)
                           .flexible(),
                     ],
                   ).paddingBottom(4).center(),
@@ -94,7 +118,9 @@ class _GenderSelectionComponentState extends State<GenderSelectionComponent> {
                     selectedGender = index;
                   }
                   setState(() {});
-                }, borderRadius: BorderRadius.circular(defaultRadius)).paddingRight(16);
+                },
+                    borderRadius:
+                        BorderRadius.circular(defaultRadius)).paddingRight(16);
               },
             ),
           ),

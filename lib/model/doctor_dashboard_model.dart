@@ -1,4 +1,4 @@
-import 'package:kivicare_flutter/model/upcoming_appointment_model.dart';
+import 'package:solidcare/model/upcoming_appointment_model.dart';
 
 class DoctorDashboardModel {
   int? totalAppointment;
@@ -22,9 +22,17 @@ class DoctorDashboardModel {
       totalAppointment: json['total_appointment'],
       totalPatient: json['total_patient'],
       totalService: json['total_service'],
-      upcomingAppointment: json['upcoming_appointment'] != null ? (json['upcoming_appointment'] as List).map((i) => UpcomingAppointmentModel.fromJson(i)).toList() : null,
+      upcomingAppointment: json['upcoming_appointment'] != null
+          ? (json['upcoming_appointment'] as List)
+              .map((i) => UpcomingAppointmentModel.fromJson(i))
+              .toList()
+          : null,
       upcomingAppointmentTotal: json['upcoming_appointment_total'],
-      weeklyAppointment: json['weekly_appointment'] != null ? (json['weekly_appointment'] as List).map((i) => WeeklyAppointment.fromJson(i)).toList() : null,
+      weeklyAppointment: json['weekly_appointment'] != null
+          ? (json['weekly_appointment'] as List)
+              .map((i) => WeeklyAppointment.fromJson(i))
+              .toList()
+          : null,
     );
   }
 
@@ -35,10 +43,12 @@ class DoctorDashboardModel {
     data['total_service'] = this.totalService;
     data['upcoming_appointment_total'] = this.upcomingAppointmentTotal;
     if (this.upcomingAppointment != null) {
-      data['upcoming_appointment'] = this.upcomingAppointment!.map((v) => v.toJson()).toList();
+      data['upcoming_appointment'] =
+          this.upcomingAppointment!.map((v) => v.toJson()).toList();
     }
     if (this.weeklyAppointment != null) {
-      data['weekly_appointment'] = this.weeklyAppointment!.map((v) => v.toJson()).toList();
+      data['weekly_appointment'] =
+          this.weeklyAppointment!.map((v) => v.toJson()).toList();
     }
     return data;
   }

@@ -1,6 +1,6 @@
-import 'package:kivicare_flutter/model/service_model.dart';
-import 'package:kivicare_flutter/model/upcoming_appointment_model.dart';
-import 'package:kivicare_flutter/model/user_model.dart';
+import 'package:solidcare/model/service_model.dart';
+import 'package:solidcare/model/upcoming_appointment_model.dart';
+import 'package:solidcare/model/user_model.dart';
 
 import '../screens/patient/models/news_model.dart';
 
@@ -20,21 +20,48 @@ class DashboardModel {
   List<NewsData>? news;
   List<ServiceData>? serviceList;
 
-  DashboardModel({this.totalAppointment, this.totalService, this.totalPatient, this.upcomingAppointment, this.upcomingAppointmentTotal, this.weeklyAppointment, this.doctor, this.news, this.serviceList, this.currencyPostfix, this.currencyPrefix});
+  DashboardModel(
+      {this.totalAppointment,
+      this.totalService,
+      this.totalPatient,
+      this.upcomingAppointment,
+      this.upcomingAppointmentTotal,
+      this.weeklyAppointment,
+      this.doctor,
+      this.news,
+      this.serviceList,
+      this.currencyPostfix,
+      this.currencyPrefix});
 
   factory DashboardModel.fromJson(Map<String, dynamic> json) {
     return DashboardModel(
-      doctor: json['doctor'] != null ? (json['doctor'] as List).map((i) => UserModel.fromJson(i)).toList() : null,
-      news: json['news'] != null ? (json['news'] as List).map((i) => NewsData.fromJson(i)).toList() : null,
-      serviceList: json['service'] != null ? (json['service'] as List).map((i) => ServiceData.fromJson(i)).toList() : null,
+      doctor: json['doctor'] != null
+          ? (json['doctor'] as List).map((i) => UserModel.fromJson(i)).toList()
+          : null,
+      news: json['news'] != null
+          ? (json['news'] as List).map((i) => NewsData.fromJson(i)).toList()
+          : null,
+      serviceList: json['service'] != null
+          ? (json['service'] as List)
+              .map((i) => ServiceData.fromJson(i))
+              .toList()
+          : null,
       totalAppointment: json['total_appointment'],
-      upcomingAppointment: json['upcoming_appointment'] != null ? (json['upcoming_appointment'] as List).map((i) => UpcomingAppointmentModel.fromJson(i)).toList() : null,
+      upcomingAppointment: json['upcoming_appointment'] != null
+          ? (json['upcoming_appointment'] as List)
+              .map((i) => UpcomingAppointmentModel.fromJson(i))
+              .toList()
+          : null,
       upcomingAppointmentTotal: json['upcoming_appointment_total'],
       totalPatient: json['total_patient'],
       totalService: json['total_service'],
       currencyPrefix: json['currency_prefix'],
       currencyPostfix: json['currency_postfix'],
-      weeklyAppointment: json['weekly_appointment'] != null ? (json['weekly_appointment'] as List).map((i) => WeeklyAppointment.fromJson(i)).toList() : null,
+      weeklyAppointment: json['weekly_appointment'] != null
+          ? (json['weekly_appointment'] as List)
+              .map((i) => WeeklyAppointment.fromJson(i))
+              .toList()
+          : null,
     );
   }
 
@@ -48,10 +75,12 @@ class DashboardModel {
     data['currency_prefix'] = this.currencyPrefix;
     data['currency_postfix'] = this.currencyPostfix;
     if (this.upcomingAppointment != null) {
-      data['upcoming_appointment'] = this.upcomingAppointment!.map((v) => v.toJson()).toList();
+      data['upcoming_appointment'] =
+          this.upcomingAppointment!.map((v) => v.toJson()).toList();
     }
     if (this.weeklyAppointment != null) {
-      data['weekly_appointment'] = this.weeklyAppointment!.map((v) => v.toJson()).toList();
+      data['weekly_appointment'] =
+          this.weeklyAppointment!.map((v) => v.toJson()).toList();
     }
 
     if (this.doctor != null) {

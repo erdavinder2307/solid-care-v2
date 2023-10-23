@@ -1,24 +1,52 @@
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/model/demo_login_model.dart';
-import 'package:kivicare_flutter/model/upcoming_appointment_model.dart';
-import 'package:kivicare_flutter/utils/images.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/model/demo_login_model.dart';
+import 'package:solidcare/model/upcoming_appointment_model.dart';
+import 'package:solidcare/utils/images.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 List<LanguageDataModel> languageList() {
   return [
-    LanguageDataModel(id: 0, name: locale.lblEnglish, languageCode: 'en', fullLanguageCode: 'en-US', flag: flagsIcUs),
-    LanguageDataModel(id: 1, name: locale.lblArabic, languageCode: 'ar', fullLanguageCode: 'ar-AR', flag: flagsIcAr),
-    LanguageDataModel(id: 2, name: locale.lblHindi, languageCode: 'hi', fullLanguageCode: 'hi-IN', flag: flagsIcIndia),
-    LanguageDataModel(id: 3, name: locale.lblGerman, languageCode: 'de', fullLanguageCode: 'de-DE', flag: flagsIcGermany),
-    LanguageDataModel(id: 4, name: locale.lblFrench, languageCode: 'fr', fullLanguageCode: 'fr-FR', flag: flagsIcFrench),
+    LanguageDataModel(
+        id: 0,
+        name: locale.lblEnglish,
+        languageCode: 'en',
+        fullLanguageCode: 'en-US',
+        flag: flagsIcUs),
+    LanguageDataModel(
+        id: 1,
+        name: locale.lblArabic,
+        languageCode: 'ar',
+        fullLanguageCode: 'ar-AR',
+        flag: flagsIcAr),
+    LanguageDataModel(
+        id: 2,
+        name: locale.lblHindi,
+        languageCode: 'hi',
+        fullLanguageCode: 'hi-IN',
+        flag: flagsIcIndia),
+    LanguageDataModel(
+        id: 3,
+        name: locale.lblGerman,
+        languageCode: 'de',
+        fullLanguageCode: 'de-DE',
+        flag: flagsIcGermany),
+    LanguageDataModel(
+        id: 4,
+        name: locale.lblFrench,
+        languageCode: 'fr',
+        fullLanguageCode: 'fr-FR',
+        flag: flagsIcFrench),
   ];
 }
 
 List<DemoLoginModel> demoLoginList() {
   List<DemoLoginModel> demoLoginListData = [];
-  demoLoginListData.add(DemoLoginModel(loginTypeImage: "images/icons/user.png"));
-  demoLoginListData.add(DemoLoginModel(loginTypeImage: "images/icons/receptionistIcon.png"));
-  demoLoginListData.add(DemoLoginModel(loginTypeImage: "images/icons/doctorIcon.png"));
+  demoLoginListData
+      .add(DemoLoginModel(loginTypeImage: "images/icons/user.png"));
+  demoLoginListData
+      .add(DemoLoginModel(loginTypeImage: "images/icons/receptionistIcon.png"));
+  demoLoginListData
+      .add(DemoLoginModel(loginTypeImage: "images/icons/doctorIcon.png"));
 
   return demoLoginListData;
 }

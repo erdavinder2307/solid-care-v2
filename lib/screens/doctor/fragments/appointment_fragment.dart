@@ -5,22 +5,22 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:intl/intl.dart';
-import 'package:kivicare_flutter/components/body_widget.dart';
-import 'package:kivicare_flutter/components/empty_error_state_component.dart';
-import 'package:kivicare_flutter/components/no_data_found_widget.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/model/upcoming_appointment_model.dart';
-import 'package:kivicare_flutter/network/appointment_repository.dart';
-import 'package:kivicare_flutter/screens/appointment/appointment_functions.dart';
-import 'package:kivicare_flutter/screens/doctor/components/appointment_fragment_appointment_component.dart';
-import 'package:kivicare_flutter/screens/shimmer/components/appointment_shimmer_component.dart';
-import 'package:kivicare_flutter/utils/cached_value.dart';
-import 'package:kivicare_flutter/utils/colors.dart';
-import 'package:kivicare_flutter/utils/constants.dart';
-import 'package:kivicare_flutter/utils/extensions/date_extensions.dart';
-import 'package:kivicare_flutter/utils/images.dart';
-import 'package:kivicare_flutter/utils/widgets/calender/date_utils.dart';
-import 'package:kivicare_flutter/utils/widgets/calender/flutter_clean_calendar.dart';
+import 'package:solidcare/components/body_widget.dart';
+import 'package:solidcare/components/empty_error_state_component.dart';
+import 'package:solidcare/components/no_data_found_widget.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/model/upcoming_appointment_model.dart';
+import 'package:solidcare/network/appointment_repository.dart';
+import 'package:solidcare/screens/appointment/appointment_functions.dart';
+import 'package:solidcare/screens/doctor/components/appointment_fragment_appointment_component.dart';
+import 'package:solidcare/screens/shimmer/components/appointment_shimmer_component.dart';
+import 'package:solidcare/utils/cached_value.dart';
+import 'package:solidcare/utils/colors.dart';
+import 'package:solidcare/utils/constants.dart';
+import 'package:solidcare/utils/extensions/date_extensions.dart';
+import 'package:solidcare/utils/images.dart';
+import 'package:solidcare/utils/widgets/calender/date_utils.dart';
+import 'package:solidcare/utils/widgets/calender/flutter_clean_calendar.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 StreamController appointmentStreamController = StreamController.broadcast();
@@ -42,8 +42,11 @@ class _AppointmentFragmentState extends State<AppointmentFragment> {
   bool isLastPage = false;
   bool isRangeSelected = false;
 
-  String startDate = DateTime(DateTime.now().year, DateTime.now().month, 1).getFormattedDate(SAVE_DATE_FORMAT);
-  String endDate = DateTime(DateTime.now().year, DateTime.now().month, Utils.lastDayOfMonth(DateTime.now()).day).getFormattedDate(SAVE_DATE_FORMAT);
+  String startDate = DateTime(DateTime.now().year, DateTime.now().month, 1)
+      .getFormattedDate(SAVE_DATE_FORMAT);
+  String endDate = DateTime(DateTime.now().year, DateTime.now().month,
+          Utils.lastDayOfMonth(DateTime.now()).day)
+      .getFormattedDate(SAVE_DATE_FORMAT);
 
   DateTime selectedDate = DateTime.now();
 
@@ -53,7 +56,8 @@ class _AppointmentFragmentState extends State<AppointmentFragment> {
   void initState() {
     super.initState();
 
-    updateAppointmentApi = appointmentStreamController.stream.listen((streamData) {
+    updateAppointmentApi =
+        appointmentStreamController.stream.listen((streamData) {
       page = 1;
       init(
         todayDate: selectedDate.getFormattedDate(SAVE_DATE_FORMAT),
@@ -67,7 +71,11 @@ class _AppointmentFragmentState extends State<AppointmentFragment> {
     init(startDate: startDate, endDate: endDate, isFirst: true);
   }
 
-  Future<void> init({String? todayDate, String? startDate, String? endDate, bool isFirst = false}) async {
+  Future<void> init(
+      {String? todayDate,
+      String? startDate,
+      String? endDate,
+      bool isFirst = false}) async {
     appStore.setLoading(true);
     future = getAppointment(
       pages: page,
@@ -92,7 +100,8 @@ class _AppointmentFragmentState extends State<AppointmentFragment> {
     if (isRangeSelected && (snap.isNotEmpty)) {
       _events.clear();
       snap.validate().forEachIndexed((element, index) {
-        DateTime date = DateFormat(SAVE_DATE_FORMAT).parse(element.appointmentGlobalStartDate.validate());
+        DateTime date = DateFormat(SAVE_DATE_FORMAT)
+            .parse(element.appointmentGlobalStartDate.validate());
         _events.addAll({
           DateTime(date.year, date.month, date.day): [{}]
         });
@@ -184,21 +193,38 @@ class _AppointmentFragmentState extends State<AppointmentFragment> {
             children: [
               Row(
                 children: [
-                  Text(locale.lblTodaySAppointments, style: boldTextStyle(size: fragmentTextSize)),
+                  Text(locale.lblTodaySAppointments,
+                      style: boldTextStyle(size: fragmentTextSize)),
                   8.width,
-                  Marquee(child: Text("(${selectedDate.getDateInString(format: CONFIRM_APPOINTMENT_FORMAT)})", style: boldTextStyle(size: 14, color: context.primaryColor))).expand(),
+                  Marquee(
+                          child: Text(
+                              "(${selectedDate.getDateInString(format: CONFIRM_APPOINTMENT_FORMAT)})",
+                              style: boldTextStyle(
+                                  size: 14, color: context.primaryColor)))
+                      .expand(),
                 ],
               ),
               4.height,
-              Text(locale.lblSwipeMassage, style: secondaryTextStyle(size: 10, color: appSecondaryColor)),
+              Text(locale.lblSwipeMassage,
+                  style:
+                      secondaryTextStyle(size: 10, color: appSecondaryColor)),
             ],
           ).paddingOnly(top: 16, right: 16, left: 16),
           Container(
             margin: EdgeInsets.all(16),
-            decoration: boxDecorationWithRoundedCorners(backgroundColor: context.cardColor),
+            decoration: boxDecorationWithRoundedCorners(
+                backgroundColor: context.cardColor),
             child: CleanCalendar(
               startOnMonday: true,
-              weekDays: [locale.lblMon, locale.lblTue, locale.lblWed, locale.lblThu, locale.lblFri, locale.lblSat, locale.lblSun],
+              weekDays: [
+                locale.lblMon,
+                locale.lblTue,
+                locale.lblWed,
+                locale.lblThu,
+                locale.lblFri,
+                locale.lblSat,
+                locale.lblSun
+              ],
               events: _events,
               onDateSelected: (e) {
                 showData(e);
@@ -214,7 +240,10 @@ class _AppointmentFragmentState extends State<AppointmentFragment> {
               selectedColor: primaryColor,
               todayColor: primaryColor,
               bottomBarArrowColor: context.iconColor,
-              dayOfWeekStyle: TextStyle(color: appStore.isDarkModeOn ? Colors.white : Colors.black, fontWeight: FontWeight.w800, fontSize: 11),
+              dayOfWeekStyle: TextStyle(
+                  color: appStore.isDarkModeOn ? Colors.white : Colors.black,
+                  fontWeight: FontWeight.w800,
+                  fontSize: 11),
             ),
           ),
           SnapHelperWidget<List<UpcomingAppointmentModel>>(
@@ -253,7 +282,10 @@ class _AppointmentFragmentState extends State<AppointmentFragment> {
                   builder: (context) {
                     if (snap.isEmpty && !appStore.isLoading)
                       return NoDataFoundWidget(
-                              text: selectedDate.getFormattedDate(SAVE_DATE_FORMAT) == DateTime.now().getFormattedDate(SAVE_DATE_FORMAT)
+                              text: selectedDate
+                                          .getFormattedDate(SAVE_DATE_FORMAT) ==
+                                      DateTime.now()
+                                          .getFormattedDate(SAVE_DATE_FORMAT)
                                   ? locale.lblNoAppointmentForToday
                                   : locale.lblNoAppointmentForThisDay)
                           .center();
@@ -266,7 +298,9 @@ class _AppointmentFragmentState extends State<AppointmentFragment> {
                         AppointmentShimmerComponent(),
                         AppointmentShimmerComponent(),
                       ],
-                    ).paddingSymmetric(horizontal: 16).visible(appStore.isLoading && snap.isEmpty);
+                    )
+                        .paddingSymmetric(horizontal: 16)
+                        .visible(appStore.isLoading && snap.isEmpty);
                   },
                 ),
               );

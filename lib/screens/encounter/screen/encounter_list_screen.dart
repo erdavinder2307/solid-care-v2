@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:kivicare_flutter/components/empty_error_state_component.dart';
-import 'package:kivicare_flutter/components/internet_connectivity_widget.dart';
-import 'package:kivicare_flutter/components/loader_widget.dart';
-import 'package:kivicare_flutter/components/no_data_found_widget.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/model/encounter_model.dart';
-import 'package:kivicare_flutter/network/appointment_repository.dart';
-import 'package:kivicare_flutter/network/encounter_repository.dart';
-import 'package:kivicare_flutter/screens/doctor/fragments/appointment_fragment.dart';
-import 'package:kivicare_flutter/screens/encounter/component/encounter_component.dart';
-import 'package:kivicare_flutter/screens/encounter/screen/add_encounter_screen.dart';
-import 'package:kivicare_flutter/screens/shimmer/screen/encounter_shimmer_screen.dart';
-import 'package:kivicare_flutter/utils/app_common.dart';
-import 'package:kivicare_flutter/utils/colors.dart';
-import 'package:kivicare_flutter/utils/common.dart';
-import 'package:kivicare_flutter/utils/constants.dart';
-import 'package:kivicare_flutter/utils/extensions/int_extensions.dart';
+import 'package:solidcare/components/empty_error_state_component.dart';
+import 'package:solidcare/components/internet_connectivity_widget.dart';
+import 'package:solidcare/components/loader_widget.dart';
+import 'package:solidcare/components/no_data_found_widget.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/model/encounter_model.dart';
+import 'package:solidcare/network/appointment_repository.dart';
+import 'package:solidcare/network/encounter_repository.dart';
+import 'package:solidcare/screens/doctor/fragments/appointment_fragment.dart';
+import 'package:solidcare/screens/encounter/component/encounter_component.dart';
+import 'package:solidcare/screens/encounter/screen/add_encounter_screen.dart';
+import 'package:solidcare/screens/shimmer/screen/encounter_shimmer_screen.dart';
+import 'package:solidcare/utils/app_common.dart';
+import 'package:solidcare/utils/colors.dart';
+import 'package:solidcare/utils/common.dart';
+import 'package:solidcare/utils/constants.dart';
+import 'package:solidcare/utils/extensions/int_extensions.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class EncounterListScreen extends StatefulWidget {
@@ -130,12 +130,15 @@ class _EncounterListScreenState extends State<EncounterListScreen> {
               },
               onSuccess: (snap) {
                 if (snap.isEmpty) {
-                  return NoDataFoundWidget(text: locale.lblNoEncounterFound.capitalizeEachWord(), iconSize: 160);
+                  return NoDataFoundWidget(
+                      text: locale.lblNoEncounterFound.capitalizeEachWord(),
+                      iconSize: 160);
                 }
                 return AnimatedScrollView(
                   physics: AlwaysScrollableScrollPhysics(),
                   disposeScrollController: true,
-                  padding: EdgeInsets.only(bottom: 80, top: 16, right: 16, left: 16),
+                  padding:
+                      EdgeInsets.only(bottom: 80, top: 16, right: 16, left: 16),
                   onSwipeRefresh: () async {
                     page = 1;
                     init();
@@ -153,14 +156,21 @@ class _EncounterListScreenState extends State<EncounterListScreen> {
                   listAnimationType: listAnimationType,
                   slideConfiguration: SlideConfiguration(verticalOffset: 400),
                   children: [
-                    Text('${locale.lblNote} :  ${locale.lblSwipeMassage}', style: secondaryTextStyle(size: 10, color: appSecondaryColor)),
+                    Text('${locale.lblNote} :  ${locale.lblSwipeMassage}',
+                        style: secondaryTextStyle(
+                            size: 10, color: appSecondaryColor)),
                     8.height,
                     ...snap
                         .map(
                           (encounterData) => GestureDetector(
                             onTap: () {
                               if (isReceptionist() || isDoctor()) {
-                                AddEncounterScreen(patientId: encounterData.patientId.toInt(), patientEncounterData: encounterData).launch(context).then((value) {
+                                AddEncounterScreen(
+                                        patientId:
+                                            encounterData.patientId.toInt(),
+                                        patientEncounterData: encounterData)
+                                    .launch(context)
+                                    .then((value) {
                                   init();
                                 });
                               }
@@ -169,7 +179,9 @@ class _EncounterListScreenState extends State<EncounterListScreen> {
                               data: encounterData,
                               deleteEncounter: deleteEncounter,
                               callForRefresh: () {
-                                updateStatus(id: encounterData.appointmentId.toInt(), status: CheckOutStatusInt);
+                                updateStatus(
+                                    id: encounterData.appointmentId.toInt(),
+                                    status: CheckOutStatusInt);
                                 init(showLoader: true);
                               },
                             ),

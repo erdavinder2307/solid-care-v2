@@ -1,8 +1,8 @@
 // ignore_for_file: must_be_immutable
 
 import 'package:flutter/material.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/utils/images.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/utils/images.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class EmptyStateWidget extends StatelessWidget {
@@ -11,7 +11,8 @@ class EmptyStateWidget extends StatelessWidget {
   Widget? imageWidget;
   String? emptyWidgetTitle;
 
-  EmptyStateWidget({this.height, this.width, this.imageWidget, this.emptyWidgetTitle});
+  EmptyStateWidget(
+      {this.height, this.width, this.imageWidget, this.emptyWidgetTitle});
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +41,8 @@ class ErrorStateWidget extends StatelessWidget {
     else
       return NoDataWidget(
         title: error,
-        imageWidget: Image.asset(ic_somethingWentWrong, height: 180, width: 180).center(),
+        imageWidget: Image.asset(ic_somethingWentWrong, height: 180, width: 180)
+            .center(),
       );
   }
 }

@@ -1,4 +1,4 @@
-import 'package:kivicare_flutter/model/upcoming_appointment_model.dart';
+import 'package:solidcare/model/upcoming_appointment_model.dart';
 
 class AppointmentListModel {
   List<UpcomingAppointmentModel>? upcomingAppointment;
@@ -8,7 +8,11 @@ class AppointmentListModel {
 
   factory AppointmentListModel.fromJson(Map<String, dynamic> json) {
     return AppointmentListModel(
-      upcomingAppointment: json['data'] != null ? (json['data'] as List).map((i) => UpcomingAppointmentModel.fromJson(i)).toList() : null,
+      upcomingAppointment: json['data'] != null
+          ? (json['data'] as List)
+              .map((i) => UpcomingAppointmentModel.fromJson(i))
+              .toList()
+          : null,
       total: json['total'],
     );
   }

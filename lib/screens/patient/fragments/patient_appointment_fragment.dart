@@ -2,29 +2,31 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:kivicare_flutter/components/empty_error_state_component.dart';
-import 'package:kivicare_flutter/components/internet_connectivity_widget.dart';
-import 'package:kivicare_flutter/components/loader_widget.dart';
-import 'package:kivicare_flutter/components/no_data_found_widget.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/network/appointment_repository.dart';
-import 'package:kivicare_flutter/screens/appointment/appointment_functions.dart';
-import 'package:kivicare_flutter/screens/appointment/components/appointment_widget.dart';
-import 'package:kivicare_flutter/screens/doctor/fragments/appointment_fragment.dart';
-import 'package:kivicare_flutter/components/appointment_fragment_status_compoent.dart';
-import 'package:kivicare_flutter/screens/shimmer/screen/appointment_fragment_shimmer.dart';
-import 'package:kivicare_flutter/utils/cached_value.dart';
-import 'package:kivicare_flutter/utils/images.dart';
+import 'package:solidcare/components/empty_error_state_component.dart';
+import 'package:solidcare/components/internet_connectivity_widget.dart';
+import 'package:solidcare/components/loader_widget.dart';
+import 'package:solidcare/components/no_data_found_widget.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/network/appointment_repository.dart';
+import 'package:solidcare/screens/appointment/appointment_functions.dart';
+import 'package:solidcare/screens/appointment/components/appointment_widget.dart';
+import 'package:solidcare/screens/doctor/fragments/appointment_fragment.dart';
+import 'package:solidcare/components/appointment_fragment_status_compoent.dart';
+import 'package:solidcare/screens/shimmer/screen/appointment_fragment_shimmer.dart';
+import 'package:solidcare/utils/cached_value.dart';
+import 'package:solidcare/utils/images.dart';
 import 'package:nb_utils/nb_utils.dart';
 
-import 'package:kivicare_flutter/model/upcoming_appointment_model.dart';
+import 'package:solidcare/model/upcoming_appointment_model.dart';
 
 class PatientAppointmentFragment extends StatefulWidget {
   @override
-  _PatientAppointmentFragmentState createState() => _PatientAppointmentFragmentState();
+  _PatientAppointmentFragmentState createState() =>
+      _PatientAppointmentFragmentState();
 }
 
-class _PatientAppointmentFragmentState extends State<PatientAppointmentFragment> {
+class _PatientAppointmentFragmentState
+    extends State<PatientAppointmentFragment> {
   Future<List<UpcomingAppointmentModel>>? future;
 
   int selectIndex = 0;
@@ -43,7 +45,8 @@ class _PatientAppointmentFragmentState extends State<PatientAppointmentFragment>
     if (appStore.isLoading) {
       appStore.setLoading(false);
     }
-    updateAppointmentApi = appointmentStreamController.stream.listen((streamData) {
+    updateAppointmentApi =
+        appointmentStreamController.stream.listen((streamData) {
       setState(() {
         page = 1;
       });
@@ -151,7 +154,8 @@ class _PatientAppointmentFragmentState extends State<PatientAppointmentFragment>
               initialData: cachedPatientAppointment,
               errorBuilder: (error) {
                 return NoDataWidget(
-                  imageWidget: Image.asset(ic_somethingWentWrong, height: 180, width: 180),
+                  imageWidget: Image.asset(ic_somethingWentWrong,
+                      height: 180, width: 180),
                   title: error.toString(),
                 );
               },
@@ -159,31 +163,39 @@ class _PatientAppointmentFragmentState extends State<PatientAppointmentFragment>
               loadingWidget: AppointmentFragmentShimmer(),
               onSuccess: (snap) {
                 return AnimatedListView(
-                    physics: AlwaysScrollableScrollPhysics(),
-                    itemCount: snap.length,
-                    disposeScrollController: true,
-                    onSwipeRefresh: () {
-                      return _onSwipeRefresh();
-                    },
-                    padding: EdgeInsets.fromLTRB(16, 0, 16, 80),
-                    onNextPage: () {
-                      _onNextPage();
-                    },
-                    shrinkWrap: true,
-                    listAnimationType: listAnimationType,
-                    slideConfiguration: SlideConfiguration(verticalOffset: 400),
-                    itemBuilder: (_, index) {
-                      return AppointmentWidget(
-                        upcomingData: snap[index],
-                        refreshCall: () {
-                          init();
+                        physics: AlwaysScrollableScrollPhysics(),
+                        itemCount: snap.length,
+                        disposeScrollController: true,
+                        onSwipeRefresh: () {
+                          return _onSwipeRefresh();
                         },
-                      ).paddingSymmetric(vertical: 8);
-                    }).visible(snap.isNotEmpty, defaultWidget: snap.isEmpty && !appStore.isLoading ? NoDataFoundWidget(text: locale.lblNoAppointmentsFound).center() : Offstage());
+                        padding: EdgeInsets.fromLTRB(16, 0, 16, 80),
+                        onNextPage: () {
+                          _onNextPage();
+                        },
+                        shrinkWrap: true,
+                        listAnimationType: listAnimationType,
+                        slideConfiguration: SlideConfiguration(verticalOffset: 400),
+                        itemBuilder: (_, index) {
+                          return AppointmentWidget(
+                            upcomingData: snap[index],
+                            refreshCall: () {
+                              init();
+                            },
+                          ).paddingSymmetric(vertical: 8);
+                        })
+                    .visible(snap.isNotEmpty,
+                        defaultWidget: snap.isEmpty && !appStore.isLoading
+                            ? NoDataFoundWidget(
+                                    text: locale.lblNoAppointmentsFound)
+                                .center()
+                            : Offstage());
               },
             ).paddingTop(100),
           ),
-          Observer(builder: (context) => LoaderWidget().visible(appStore.isLoading).center())
+          Observer(
+              builder: (context) =>
+                  LoaderWidget().visible(appStore.isLoading).center())
         ],
       ),
       floatingActionButton: FloatingActionButton(

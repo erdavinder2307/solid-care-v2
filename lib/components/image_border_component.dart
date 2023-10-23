@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:kivicare_flutter/components/cached_image_widget.dart';
-import 'package:kivicare_flutter/components/zoom_image_screen.dart';
-import 'package:kivicare_flutter/utils/colors.dart';
+import 'package:solidcare/components/cached_image_widget.dart';
+import 'package:solidcare/components/zoom_image_screen.dart';
+import 'package:solidcare/utils/colors.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class ImageBorder extends StatelessWidget {
@@ -14,7 +14,8 @@ class ImageBorder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GradientBorder(
-      gradient: LinearGradient(colors: [primaryColor, appSecondaryColor], tileMode: TileMode.mirror),
+      gradient: LinearGradient(
+          colors: [primaryColor, appSecondaryColor], tileMode: TileMode.mirror),
       strokeWidth: 2,
       borderRadius: 80,
       child: CachedImageWidget(
@@ -25,7 +26,8 @@ class ImageBorder extends StatelessWidget {
         fit: BoxFit.cover,
       ).onTap(
         () {
-          if (src.isNotEmpty) ZoomImageScreen(galleryImages: [src], index: 0).launch(context);
+          if (src.isNotEmpty)
+            ZoomImageScreen(galleryImages: [src], index: 0).launch(context);
         },
         splashColor: Colors.transparent,
         highlightColor: Colors.transparent,

@@ -1,13 +1,13 @@
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/model/patient_bill_model.dart';
-import 'package:kivicare_flutter/model/service_model.dart';
-import 'package:kivicare_flutter/network/service_repository.dart';
-import 'package:kivicare_flutter/utils/app_common.dart';
-import 'package:kivicare_flutter/utils/colors.dart';
-import 'package:kivicare_flutter/utils/common.dart';
-import 'package:kivicare_flutter/utils/constants.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/model/patient_bill_model.dart';
+import 'package:solidcare/model/service_model.dart';
+import 'package:solidcare/network/service_repository.dart';
+import 'package:solidcare/utils/app_common.dart';
+import 'package:solidcare/utils/colors.dart';
+import 'package:solidcare/utils/common.dart';
+import 'package:solidcare/utils/constants.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class AddBillItemScreen extends StatefulWidget {
@@ -40,7 +40,8 @@ class _AddBillItemScreenState extends State<AddBillItemScreen> {
   }
 
   Future<void> init() async {
-    setStatusBarColor(appPrimaryColor, statusBarIconBrightness: Brightness.light);
+    setStatusBarColor(appPrimaryColor,
+        statusBarIconBrightness: Brightness.light);
   }
 
   @override
@@ -58,15 +59,24 @@ class _AddBillItemScreenState extends State<AddBillItemScreen> {
       padding: EdgeInsets.all(16),
       child: Form(
         key: formKey,
-        autovalidateMode: isFirstTime ? AutovalidateMode.disabled : AutovalidateMode.onUserInteraction,
+        autovalidateMode: isFirstTime
+            ? AutovalidateMode.disabled
+            : AutovalidateMode.onUserInteraction,
         child: Column(
           children: [
             FutureBuilder<ServiceListModel>(
-              future: isDoctor() ? _memorizer.runOnce(() => getServiceResponseAPI(doctorId: getIntAsync(USER_ID))) : _memorizer.runOnce(() => getServiceResponseAPI(doctorId: widget.doctorId)),
+              future: isDoctor()
+                  ? _memorizer.runOnce(() =>
+                      getServiceResponseAPI(doctorId: getIntAsync(USER_ID)))
+                  : _memorizer.runOnce(
+                      () => getServiceResponseAPI(doctorId: widget.doctorId)),
               builder: (_, snap) {
                 if (snap.hasData) {
-                  if (snap.data != null && snap.data!.serviceData!.validate().isNotEmpty) {
-                    snap.data!.serviceData!.validate().removeWhere((element) => element.name.isEmptyOrNull);
+                  if (snap.data != null &&
+                      snap.data!.serviceData!.validate().isNotEmpty) {
+                    snap.data!.serviceData!
+                        .validate()
+                        .removeWhere((element) => element.name.isEmptyOrNull);
                   }
                   return Column(
                     children: [
@@ -81,21 +91,29 @@ class _AddBillItemScreenState extends State<AddBillItemScreen> {
                           if (v == null) return locale.lblServiceIsRequired;
                           return null;
                         },
-                        items: snap.data!.serviceData!.map((e) => DropdownMenuItem(child: Text(e.name.validate(), style: primaryTextStyle()), value: e)).toList(),
+                        items: snap.data!.serviceData!
+                            .map((e) => DropdownMenuItem(
+                                child: Text(e.name.validate(),
+                                    style: primaryTextStyle()),
+                                value: e))
+                            .toList(),
                         onChanged: (ServiceData? e) {
                           serviceData = e;
                           priceCont.text = e!.charges.validate();
                           quantityCont.text = locale.lblOne;
-                          totalCont.text = "${e.charges.toInt() * quantityCont.text.toInt()}";
+                          totalCont.text =
+                              "${e.charges.toInt() * quantityCont.text.toInt()}";
                         },
                       ),
                       16.height,
                       AppTextField(
                         controller: priceCont,
                         textFieldType: TextFieldType.PHONE,
-                        decoration: inputDecoration(context: context, labelText: locale.lblPrice),
+                        decoration: inputDecoration(
+                            context: context, labelText: locale.lblPrice),
                         onChanged: (s) {
-                          totalCont.text = "${s.toInt() * quantityCont.text.toInt()}";
+                          totalCont.text =
+                              "${s.toInt() * quantityCont.text.toInt()}";
                         },
                       ),
                       16.height,
@@ -103,16 +121,19 @@ class _AddBillItemScreenState extends State<AddBillItemScreen> {
                         controller: quantityCont,
                         textFieldType: TextFieldType.PHONE,
                         keyboardType: TextInputType.number,
-                        decoration: inputDecoration(context: context, labelText: locale.lblQuantity),
+                        decoration: inputDecoration(
+                            context: context, labelText: locale.lblQuantity),
                         onChanged: (s) {
-                          totalCont.text = "${priceCont.text.toInt() * s.toInt()}";
+                          totalCont.text =
+                              "${priceCont.text.toInt() * s.toInt()}";
                         },
                       ),
                       16.height,
                       AppTextField(
                         controller: totalCont,
                         textFieldType: TextFieldType.PHONE,
-                        decoration: inputDecoration(context: context, labelText: locale.lblTotal),
+                        decoration: inputDecoration(
+                            context: context, labelText: locale.lblTotal),
                         readOnly: true,
                       ),
                     ],
@@ -130,7 +151,9 @@ class _AddBillItemScreenState extends State<AddBillItemScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBarWidget(locale.lblAddBillItem, textColor: Colors.white, systemUiOverlayStyle: defaultSystemUiOverlayStyle(context)),
+      appBar: appBarWidget(locale.lblAddBillItem,
+          textColor: Colors.white,
+          systemUiOverlayStyle: defaultSystemUiOverlayStyle(context)),
       body: body(),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.done),
@@ -138,11 +161,17 @@ class _AddBillItemScreenState extends State<AddBillItemScreen> {
           if (formKey.currentState!.validate()) {
             formKey.currentState!.save();
 
-            bool isAlreadyExist = widget.billItem.validate().any((element) => element.itemId.validate() == serviceData!.id.validate());
+            bool isAlreadyExist = widget.billItem.validate().any((element) =>
+                element.itemId.validate() == serviceData!.id.validate());
 
             if (isAlreadyExist) {
-              int alreadyExistId = widget.billItem.validate().indexWhere((element) => element.itemId.validate() == serviceData!.id.validate());
-              widget.billItem.validate()[alreadyExistId].qty = (widget.billItem.validate()[alreadyExistId].qty.toInt() + quantityCont.text.validate().toInt()).toString();
+              int alreadyExistId = widget.billItem.validate().indexWhere(
+                  (element) =>
+                      element.itemId.validate() == serviceData!.id.validate());
+              widget.billItem.validate()[alreadyExistId].qty =
+                  (widget.billItem.validate()[alreadyExistId].qty.toInt() +
+                          quantityCont.text.validate().toInt())
+                      .toString();
             } else {
               widget.billItem!.add(
                 BillItem(

@@ -1,11 +1,11 @@
 import 'dart:io';
 
-import 'package:kivicare_flutter/model/prescription_module.dart';
-import 'package:kivicare_flutter/model/qualification_model.dart';
-import 'package:kivicare_flutter/model/rating_model.dart';
-import 'package:kivicare_flutter/model/restrict_appointment_model.dart';
-import 'package:kivicare_flutter/model/service_model.dart';
-import 'package:kivicare_flutter/model/speciality_model.dart';
+import 'package:solidcare/model/prescription_module.dart';
+import 'package:solidcare/model/qualification_model.dart';
+import 'package:solidcare/model/rating_model.dart';
+import 'package:solidcare/model/restrict_appointment_model.dart';
+import 'package:solidcare/model/service_model.dart';
+import 'package:solidcare/model/speciality_model.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 import 'clinic_list_model.dart';
@@ -162,7 +162,8 @@ class UserModel {
     this.serviceData,
   });
 
-  String get getDoctorSpeciality => specialties.validate().map((e) => e.label.validate()).join(', ');
+  String get getDoctorSpeciality =>
+      specialties.validate().map((e) => e.label.validate()).join(', ');
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
@@ -173,35 +174,64 @@ class UserModel {
       totalEncounter: json['total_encounter'],
       userRegistered: json['user_registered'],
       city: json['city'],
-      clinic: json['clinic'] != null ? (json['clinic'] as List).map((i) => Clinic.fromJson(i)).toList() : null,
+      clinic: json['clinic'] != null
+          ? (json['clinic'] as List).map((i) => Clinic.fromJson(i)).toList()
+          : null,
       country: json['country'],
       dob: json['dob'],
-      encounterModules: json['enocunter_modules'] != null ? (json['enocunter_modules'] as List).map((i) => EncounterModule.fromJson(i)).toList() : null,
-      firstName: json['first_name'] != null ? json['first_name'] : json['display_name'].toString().split(' ').first,
+      encounterModules: json['enocunter_modules'] != null
+          ? (json['enocunter_modules'] as List)
+              .map((i) => EncounterModule.fromJson(i))
+              .toList()
+          : null,
+      firstName: json['first_name'] != null
+          ? json['first_name']
+          : json['display_name'].toString().split(' ').first,
       gender: json['gender'],
       utc: json['UTC'],
-      isKivicareProOnName: json['isKiviCareProOnName'],
+      isKivicareProOnName: json['isSolidCareProOnName'],
       isPatientEnable: json['is_patient_enable'],
-      lastName: json['last_name'] != null ? json['last_name'] : json['display_name'].toString().split(' ').last,
+      lastName: json['last_name'] != null
+          ? json['last_name']
+          : json['display_name'].toString().split(' ').last,
       mobileNumber: json['mobile_number'],
-      moduleConfig: json['module_config'] != null ? (json['module_config'] as List).map((i) => ModuleConfig.fromJson(i)).toList() : null,
+      moduleConfig: json['module_config'] != null
+          ? (json['module_config'] as List)
+              .map((i) => ModuleConfig.fromJson(i))
+              .toList()
+          : null,
       noOfExperience: json['no_of_experience'],
       postalCode: json['postal_code'],
-      prescriptionModule: json['prescription_module'] != null ? (json['prescription_module'] as List).map((i) => PrescriptionModule.fromJson(i)).toList() : null,
+      prescriptionModule: json['prescription_module'] != null
+          ? (json['prescription_module'] as List)
+              .map((i) => PrescriptionModule.fromJson(i))
+              .toList()
+          : null,
       price: json['price'],
       priceType: json['price_type'],
       profileImage: json['profile_image'],
-      qualifications: json['qualifications'] != null ? (json['qualifications'] as List).map((i) => Qualification.fromJson(i)).toList() : null,
+      qualifications: json['qualifications'] != null
+          ? (json['qualifications'] as List)
+              .map((i) => Qualification.fromJson(i))
+              .toList()
+          : null,
       role: json['role'],
       specialties: json['specialties'] != null
           ? (json['specialities'].runtimeType == String
-              ? (json['specialties'] as String).split(',').map((e) => SpecialtyModel(label: e)).toList()
-              : (json['specialties'] as List).map((e) => SpecialtyModel.fromJson(e)).toList())
+              ? (json['specialties'] as String)
+                  .split(',')
+                  .map((e) => SpecialtyModel(label: e))
+                  .toList()
+              : (json['specialties'] as List)
+                  .map((e) => SpecialtyModel.fromJson(e))
+                  .toList())
           : json['specialties'],
       token: json['token'],
       userDisplayName: json['display_name'],
       userEmail: json['user_email'],
-      userId: json['user_id'].runtimeType == String ? (json['user_id'] as String).toInt() : json['user_id'],
+      userId: json['user_id'].runtimeType == String
+          ? (json['user_id'] as String).toInt()
+          : json['user_id'],
       doctorId: json['doctor_id'],
       doctorName: json['doctor_name'],
       userNiceName: json['user_nicename'],
@@ -214,14 +244,20 @@ class UserModel {
       globalDateFormat: json['global_date_format'],
       isUploadFileAppointment: json['is_uploadfile_appointment'],
       message: json['message'],
-      restrictAppointment: json['restrict_appointment'] != null ? RestrictAppointmentModel.fromJson(json['restrict_appointment']) : null,
+      restrictAppointment: json['restrict_appointment'] != null
+          ? RestrictAppointmentModel.fromJson(json['restrict_appointment'])
+          : null,
       available: json['available'],
       avgRating: json['avgRating'],
-      clinicId: json['clinic_id'] != null ? new List<String>.from(json['clinic_id']) : null,
+      clinicId: json['clinic_id'] != null
+          ? new List<String>.from(json['clinic_id'])
+          : null,
       clinicName: json['clinic_name'],
       displayName: json['display_name'],
       iD: json['ID'],
-      ratingList: json['review'] != null ? (json['review'] as List).map((i) => RatingData.fromJson(i)).toList() : null,
+      ratingList: json['review'] != null
+          ? (json['review'] as List).map((i) => RatingData.fromJson(i)).toList()
+          : null,
       userStatus: json['user_status'],
       charges: json['charges'],
       duration: json['duration'],
@@ -246,7 +282,7 @@ class UserModel {
     data['doctor_name'] = this.doctorName;
     data['UTC'] = this.utc;
 
-    data['isKiviCareProOnName'] = this.isKivicareProOnName;
+    data['isSolidCareProOnName'] = this.isKivicareProOnName;
     data['is_patient_enable'] = this.isPatientEnable;
     data['last_name'] = this.lastName;
     data['mobile_number'] = this.mobileNumber;
@@ -281,17 +317,21 @@ class UserModel {
     }
 
     if (this.encounterModules != null) {
-      data['enocunter_modules'] = this.encounterModules!.map((v) => v.toJson()).toList();
+      data['enocunter_modules'] =
+          this.encounterModules!.map((v) => v.toJson()).toList();
     }
     if (this.moduleConfig != null) {
-      data['module_config'] = this.moduleConfig!.map((v) => v.toJson()).toList();
+      data['module_config'] =
+          this.moduleConfig!.map((v) => v.toJson()).toList();
     }
 
     if (this.prescriptionModule != null) {
-      data['prescription_module'] = this.prescriptionModule!.map((v) => v.toJson()).toList();
+      data['prescription_module'] =
+          this.prescriptionModule!.map((v) => v.toJson()).toList();
     }
     if (this.qualifications != null) {
-      data['qualifications'] = this.qualifications!.map((v) => v.toJson()).toList();
+      data['qualifications'] =
+          this.qualifications!.map((v) => v.toJson()).toList();
     }
     if (this.specialties != null) {
       data['specialties'] = this.specialties!.map((v) => v.toJson()).toList();

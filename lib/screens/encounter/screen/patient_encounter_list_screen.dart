@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:kivicare_flutter/components/empty_error_state_component.dart';
-import 'package:kivicare_flutter/components/loader_widget.dart';
-import 'package:kivicare_flutter/components/no_data_found_widget.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/model/encounter_model.dart';
-import 'package:kivicare_flutter/model/user_model.dart';
-import 'package:kivicare_flutter/network/encounter_repository.dart';
-import 'package:kivicare_flutter/screens/shimmer/screen/encounter_shimmer_screen.dart';
-import 'package:kivicare_flutter/utils/app_common.dart';
-import 'package:kivicare_flutter/utils/colors.dart';
-import 'package:kivicare_flutter/utils/extensions/string_extensions.dart';
+import 'package:solidcare/components/empty_error_state_component.dart';
+import 'package:solidcare/components/loader_widget.dart';
+import 'package:solidcare/components/no_data_found_widget.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/model/encounter_model.dart';
+import 'package:solidcare/model/user_model.dart';
+import 'package:solidcare/network/encounter_repository.dart';
+import 'package:solidcare/screens/shimmer/screen/encounter_shimmer_screen.dart';
+import 'package:solidcare/utils/app_common.dart';
+import 'package:solidcare/utils/colors.dart';
+import 'package:solidcare/utils/extensions/string_extensions.dart';
 import 'package:nb_utils/nb_utils.dart';
 
-import 'package:kivicare_flutter/screens/encounter/screen/add_encounter_screen.dart';
-import 'package:kivicare_flutter/screens/encounter/component/encounter_list_component.dart';
+import 'package:solidcare/screens/encounter/screen/add_encounter_screen.dart';
+import 'package:solidcare/screens/encounter/component/encounter_list_component.dart';
 
 class PatientEncounterListScreen extends StatefulWidget {
   final UserModel? patientData;
@@ -22,10 +22,12 @@ class PatientEncounterListScreen extends StatefulWidget {
   PatientEncounterListScreen({this.patientData});
 
   @override
-  _PatientEncounterListScreenState createState() => _PatientEncounterListScreenState();
+  _PatientEncounterListScreenState createState() =>
+      _PatientEncounterListScreenState();
 }
 
-class _PatientEncounterListScreenState extends State<PatientEncounterListScreen> {
+class _PatientEncounterListScreenState
+    extends State<PatientEncounterListScreen> {
   Future<List<EncounterModel>>? future;
 
   List<EncounterModel> patientEncounterList = [];
@@ -74,7 +76,9 @@ class _PatientEncounterListScreenState extends State<PatientEncounterListScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBarWidget(
-        widget.patientData!.displayName.validate().capitalizeEachWord() + " " + locale.lblEncounters,
+        widget.patientData!.displayName.validate().capitalizeEachWord() +
+            " " +
+            locale.lblEncounters,
         textColor: Colors.white,
         elevation: 0,
         systemUiOverlayStyle: defaultSystemUiOverlayStyle(context),
@@ -90,7 +94,9 @@ class _PatientEncounterListScreenState extends State<PatientEncounterListScreen>
               );
             },
             onSuccess: (snap) {
-              if (snap.isEmpty) return NoDataFoundWidget(text: locale.lblNoEncounterFound.capitalizeEachWord());
+              if (snap.isEmpty)
+                return NoDataFoundWidget(
+                    text: locale.lblNoEncounterFound.capitalizeEachWord());
               return AnimatedScrollView(
                 physics: AlwaysScrollableScrollPhysics(),
                 disposeScrollController: true,
@@ -114,7 +120,10 @@ class _PatientEncounterListScreenState extends State<PatientEncounterListScreen>
                 },
                 children: [
                   16.height,
-                  Text(locale.lblSwipeMassage, style: secondaryTextStyle(size: 10, color: appSecondaryColor)).paddingOnly(left: 20),
+                  Text(locale.lblSwipeMassage,
+                          style: secondaryTextStyle(
+                              size: 10, color: appSecondaryColor))
+                      .paddingOnly(left: 20),
                   8.height,
                   AnimatedListView(
                     physics: NeverScrollableScrollPhysics(),
@@ -125,7 +134,11 @@ class _PatientEncounterListScreenState extends State<PatientEncounterListScreen>
                       EncounterModel data = snap[index];
                       return GestureDetector(
                         onTap: () {
-                          AddEncounterScreen(patientEncounterData: data, patientId: data.patientId.toInt()).launch(context).then((value) {
+                          AddEncounterScreen(
+                                  patientEncounterData: data,
+                                  patientId: data.patientId.toInt())
+                              .launch(context)
+                              .then((value) {
                             if (value ?? false) {
                               init();
                             }
@@ -145,13 +158,17 @@ class _PatientEncounterListScreenState extends State<PatientEncounterListScreen>
               );
             },
           ),
-          Observer(builder: (context) => LoaderWidget().visible(appStore.isLoading).center())
+          Observer(
+              builder: (context) =>
+                  LoaderWidget().visible(appStore.isLoading).center())
         ],
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () async {
-          await AddEncounterScreen(patientId: widget.patientData!.iD).launch(context).then((value) {
+          await AddEncounterScreen(patientId: widget.patientData!.iD)
+              .launch(context)
+              .then((value) {
             if (value ?? false) {
               init(showLoader: true);
             }

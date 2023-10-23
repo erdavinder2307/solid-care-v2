@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:kivicare_flutter/components/loader_widget.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/model/prescription_model.dart';
-import 'package:kivicare_flutter/network/prescription_repository.dart';
-import 'package:kivicare_flutter/screens/encounter/component/auto_complete_field_screen.dart';
-import 'package:kivicare_flutter/utils/app_common.dart';
-import 'package:kivicare_flutter/utils/common.dart';
+import 'package:solidcare/components/loader_widget.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/model/prescription_model.dart';
+import 'package:solidcare/network/prescription_repository.dart';
+import 'package:solidcare/screens/encounter/component/auto_complete_field_screen.dart';
+import 'package:solidcare/utils/app_common.dart';
+import 'package:solidcare/utils/common.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 // ignore: must_be_immutable
@@ -57,7 +57,8 @@ class _AddPrescriptionScreenState extends State<AddPrescriptionScreen> {
       prescriptionNameCont.text = prescriptionData!.name.validate();
       prescriptionFrequencyCont.text = prescriptionData!.frequency.validate();
       prescriptionDurationCont.text = prescriptionData!.duration.validate();
-      prescriptionInstructionCont.text = prescriptionData!.instruction.validate();
+      prescriptionInstructionCont.text =
+          prescriptionData!.instruction.validate();
     }
     appStore.setLoading(false);
   }
@@ -155,14 +156,17 @@ class _AddPrescriptionScreenState extends State<AddPrescriptionScreen> {
                     AutoCompleteFieldScreen(
                       encounterId: widget.encounterId.validate().toString(),
                       isFrequency: false,
-                      name: isUpdate ? prescriptionNameCont.text.validate() : '',
+                      name:
+                          isUpdate ? prescriptionNameCont.text.validate() : '',
                       onTap: (value) {
                         prescriptionNameCont.text = value;
                       },
                     ),
                     16.height,
                     AutoCompleteFieldScreen(
-                      name: isUpdate ? prescriptionFrequencyCont.text.validate() : '',
+                      name: isUpdate
+                          ? prescriptionFrequencyCont.text.validate()
+                          : '',
                       encounterId: widget.encounterId.validate().toString(),
                       isFrequency: true,
                       onTap: (value) {
@@ -179,10 +183,12 @@ class _AddPrescriptionScreenState extends State<AddPrescriptionScreen> {
                   textFieldType: TextFieldType.OTHER,
                   keyboardType: TextInputType.number,
                   validator: (s) {
-                    if (s!.trim().isEmpty) return locale.lblPrescriptionDurationIsRequired;
+                    if (s!.trim().isEmpty)
+                      return locale.lblPrescriptionDurationIsRequired;
                     return null;
                   },
-                  decoration: inputDecoration(context: context, labelText: locale.lblDurationInDays),
+                  decoration: inputDecoration(
+                      context: context, labelText: locale.lblDurationInDays),
                 ),
                 16.height,
                 AppTextField(
@@ -192,19 +198,24 @@ class _AddPrescriptionScreenState extends State<AddPrescriptionScreen> {
                   maxLines: 10,
                   textInputAction: TextInputAction.done,
                   textFieldType: TextFieldType.OTHER,
-                  decoration: inputDecoration(context: context, labelText: locale.lblInstruction),
+                  decoration: inputDecoration(
+                      context: context, labelText: locale.lblInstruction),
                 ),
               ],
             ),
           ),
-          Observer(builder: (context) => LoaderWidget().visible(appStore.isLoading).center())
+          Observer(
+              builder: (context) =>
+                  LoaderWidget().visible(appStore.isLoading).center())
         ],
       );
     }
 
     return Scaffold(
       appBar: appBarWidget(
-        isUpdate ? locale.lblEditPrescriptionDetail : locale.lblAddNewPrescription,
+        isUpdate
+            ? locale.lblEditPrescriptionDetail
+            : locale.lblAddNewPrescription,
         systemUiOverlayStyle: defaultSystemUiOverlayStyle(context),
         textColor: Colors.white,
         actions: [
@@ -232,10 +243,15 @@ class _AddPrescriptionScreenState extends State<AddPrescriptionScreen> {
             formKey.currentState!.save();
             showConfirmDialogCustom(
               context,
-              dialogType: isUpdate ? DialogType.UPDATE : DialogType.CONFIRMATION,
-              title: isUpdate ? locale.lblDoYouWantToUpdatePrescription : locale.lblDoYouWantToAddPrescription,
+              dialogType:
+                  isUpdate ? DialogType.UPDATE : DialogType.CONFIRMATION,
+              title: isUpdate
+                  ? locale.lblDoYouWantToUpdatePrescription
+                  : locale.lblDoYouWantToAddPrescription,
               onAccept: (p0) {
-                isUpdate ? updatePrescriptionDetails() : savePrescriptionDetails();
+                isUpdate
+                    ? updatePrescriptionDetails()
+                    : savePrescriptionDetails();
               },
             );
           } else {

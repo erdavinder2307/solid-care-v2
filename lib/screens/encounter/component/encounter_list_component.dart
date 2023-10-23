@@ -2,19 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
-import 'package:kivicare_flutter/components/side_date_widget.dart';
-import 'package:kivicare_flutter/components/status_widget.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/model/encounter_model.dart';
-import 'package:kivicare_flutter/model/user_model.dart';
-import 'package:kivicare_flutter/network/encounter_repository.dart';
-import 'package:kivicare_flutter/screens/encounter/screen/add_encounter_screen.dart';
-import 'package:kivicare_flutter/screens/encounter/screen/encounter_dashboard_screen.dart';
-import 'package:kivicare_flutter/screens/encounter/screen/patient_encounter_dashboard_screen.dart';
-import 'package:kivicare_flutter/utils/colors.dart';
-import 'package:kivicare_flutter/utils/common.dart';
-import 'package:kivicare_flutter/utils/constants.dart';
-import 'package:kivicare_flutter/utils/extensions/string_extensions.dart';
+import 'package:solidcare/components/side_date_widget.dart';
+import 'package:solidcare/components/status_widget.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/model/encounter_model.dart';
+import 'package:solidcare/model/user_model.dart';
+import 'package:solidcare/network/encounter_repository.dart';
+import 'package:solidcare/screens/encounter/screen/add_encounter_screen.dart';
+import 'package:solidcare/screens/encounter/screen/encounter_dashboard_screen.dart';
+import 'package:solidcare/screens/encounter/screen/patient_encounter_dashboard_screen.dart';
+import 'package:solidcare/utils/colors.dart';
+import 'package:solidcare/utils/common.dart';
+import 'package:solidcare/utils/constants.dart';
+import 'package:solidcare/utils/extensions/string_extensions.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class EncounterListComponent extends StatefulWidget {
@@ -22,7 +22,8 @@ class EncounterListComponent extends StatefulWidget {
   final EncounterModel data;
   final VoidCallback? refreshCall;
 
-  EncounterListComponent({required this.data, this.patientData, this.refreshCall});
+  EncounterListComponent(
+      {required this.data, this.patientData, this.refreshCall});
 
   @override
   _EncounterListComponentState createState() => _EncounterListComponentState();
@@ -80,12 +81,22 @@ class _EncounterListComponentState extends State<EncounterListComponent> {
             flex: 1,
             backgroundColor: primaryColor,
             foregroundColor: Colors.white,
-            borderRadius: BorderRadius.only(topLeft: Radius.circular(defaultRadius), bottomLeft: Radius.circular(defaultRadius)),
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(defaultRadius),
+                bottomLeft: Radius.circular(defaultRadius)),
             icon: Icons.edit,
             label: locale.lblEdit,
             onPressed: (BuildContext context) async {
-              if ((DateFormat(GLOBAL_FORMAT).parse(widget.data.encounterDate.validate()).difference(DateFormat(SAVE_DATE_FORMAT).parse(DateTime.now().toString())).inDays > 0 ||
-                  DateFormat(SAVE_DATE_FORMAT).parse(DateTime.now().toString()) == DateFormat(GLOBAL_FORMAT).parse(widget.data.encounterDate.validate())))
+              if ((DateFormat(GLOBAL_FORMAT)
+                          .parse(widget.data.encounterDate.validate())
+                          .difference(DateFormat(SAVE_DATE_FORMAT)
+                              .parse(DateTime.now().toString()))
+                          .inDays >
+                      0 ||
+                  DateFormat(SAVE_DATE_FORMAT)
+                          .parse(DateTime.now().toString()) ==
+                      DateFormat(GLOBAL_FORMAT)
+                          .parse(widget.data.encounterDate.validate())))
                 _handleEditAction();
               else
                 toast(locale.lblEditHolidayRestriction);
@@ -93,7 +104,9 @@ class _EncounterListComponentState extends State<EncounterListComponent> {
           ),
           SlidableAction(
             flex: 1,
-            borderRadius: BorderRadius.only(topRight: Radius.circular(defaultRadius), bottomRight: Radius.circular(defaultRadius)),
+            borderRadius: BorderRadius.only(
+                topRight: Radius.circular(defaultRadius),
+                bottomRight: Radius.circular(defaultRadius)),
             backgroundColor: Colors.red,
             foregroundColor: Colors.white,
             icon: Icons.delete,
@@ -106,7 +119,8 @@ class _EncounterListComponentState extends State<EncounterListComponent> {
       ),
       child: Container(
         padding: EdgeInsets.all(16),
-        decoration: boxDecorationDefault(borderRadius: radius(), color: context.cardColor),
+        decoration: boxDecorationDefault(
+            borderRadius: radius(), color: context.cardColor),
         child: Row(
           mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -120,29 +134,52 @@ class _EncounterListComponentState extends State<EncounterListComponent> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(widget.data.clinicName.validate(), style: boldTextStyle(size: 18), maxLines: 2).flexible(),
+                      Text(widget.data.clinicName.validate(),
+                              style: boldTextStyle(size: 18), maxLines: 2)
+                          .flexible(),
                     ],
                   ),
                 if (!isDoctor())
                   RichTextWidget(
                     list: [
-                      if (isPatient()) TextSpan(text: locale.lblDoctor.validate().suffixText(value: ' : '), style: secondaryTextStyle(size: 14)),
-                      TextSpan(text: widget.data.doctorName.validate().capitalizeEachWord().prefixText(value: 'Dr. '), style: boldTextStyle(size: isPatient() ? 16 : 18)),
+                      if (isPatient())
+                        TextSpan(
+                            text: locale.lblDoctor
+                                .validate()
+                                .suffixText(value: ' : '),
+                            style: secondaryTextStyle(size: 14)),
+                      TextSpan(
+                          text: widget.data.doctorName
+                              .validate()
+                              .capitalizeEachWord()
+                              .prefixText(value: 'Dr. '),
+                          style: boldTextStyle(size: isPatient() ? 16 : 18)),
                     ],
                   ),
                 4.height,
                 RichTextWidget(
                   list: [
-                    TextSpan(text: locale.lblDate.suffixText(value: " : "), spellOut: true, style: secondaryTextStyle(size: 14)),
-                    TextSpan(text: widget.data.encounterDate.validate(), style: primaryTextStyle(size: 14)),
+                    TextSpan(
+                        text: locale.lblDate.suffixText(value: " : "),
+                        spellOut: true,
+                        style: secondaryTextStyle(size: 14)),
+                    TextSpan(
+                        text: widget.data.encounterDate.validate(),
+                        style: primaryTextStyle(size: 14)),
                   ],
                 ),
                 if (widget.data.description.validate().isNotEmpty) 4.height,
                 if (widget.data.description.validate().isNotEmpty)
                   RichTextWidget(
                     list: [
-                      TextSpan(text: locale.lblDescription.suffixText(value: " : "), spellOut: true, style: secondaryTextStyle(size: 14)),
-                      TextSpan(text: widget.data.description.validate(value: locale.lblNA), style: primaryTextStyle(size: 14)),
+                      TextSpan(
+                          text: locale.lblDescription.suffixText(value: " : "),
+                          spellOut: true,
+                          style: secondaryTextStyle(size: 14)),
+                      TextSpan(
+                          text: widget.data.description
+                              .validate(value: locale.lblNA),
+                          style: primaryTextStyle(size: 14)),
                     ],
                   )
               ],
@@ -157,11 +194,16 @@ class _EncounterListComponentState extends State<EncounterListComponent> {
                 ).paddingAll(8).onTap(
                   () {
                     if (isDoctor() || isReceptionist()) {
-                      EncounterDashboardScreen(encounterId: widget.data.encounterId).launch(context).then((value) {
+                      EncounterDashboardScreen(
+                              encounterId: widget.data.encounterId)
+                          .launch(context)
+                          .then((value) {
                         widget.refreshCall?.call();
                       });
                     } else
-                      PatientEncounterDashboardScreen(id: widget.data.encounterId).launch(context);
+                      PatientEncounterDashboardScreen(
+                              id: widget.data.encounterId)
+                          .launch(context);
                   },
                 ),
                 12.height,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/model/encounter_type_model.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/model/encounter_type_model.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class EncounterTypeComponent extends StatelessWidget {
@@ -8,7 +8,8 @@ class EncounterTypeComponent extends StatelessWidget {
   final Function? onTap;
   final bool isDeleteOn;
 
-  EncounterTypeComponent({required this.data, this.onTap, this.isDeleteOn = true});
+  EncounterTypeComponent(
+      {required this.data, this.onTap, this.isDeleteOn = true});
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +21,9 @@ class EncounterTypeComponent extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(data.title.validate(value: locale.lblNoTitle), style: primaryTextStyle()).expand(),
+          Text(data.title.validate(value: locale.lblNoTitle),
+                  style: primaryTextStyle())
+              .expand(),
           10.width.visible(isDeleteOn),
           Icon(Icons.delete, color: Colors.red, size: 20)
               .onTap(

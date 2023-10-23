@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:kivicare_flutter/components/loader_widget.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/model/appointment_slot_model.dart';
-import 'package:kivicare_flutter/network/appointment_repository.dart';
-import 'package:kivicare_flutter/utils/colors.dart';
-import 'package:kivicare_flutter/utils/common.dart';
-import 'package:kivicare_flutter/utils/constants.dart';
-import 'package:kivicare_flutter/utils/extensions/date_extensions.dart';
-import 'package:kivicare_flutter/utils/extensions/string_extensions.dart';
-import 'package:kivicare_flutter/utils/images.dart';
+import 'package:solidcare/components/loader_widget.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/model/appointment_slot_model.dart';
+import 'package:solidcare/network/appointment_repository.dart';
+import 'package:solidcare/utils/colors.dart';
+import 'package:solidcare/utils/common.dart';
+import 'package:solidcare/utils/constants.dart';
+import 'package:solidcare/utils/extensions/date_extensions.dart';
+import 'package:solidcare/utils/extensions/string_extensions.dart';
+import 'package:solidcare/utils/images.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class AppointmentSlots extends StatefulWidget {
@@ -18,7 +18,11 @@ class AppointmentSlots extends StatefulWidget {
   final String? doctorId;
   final String? appointmentTime;
 
-  AppointmentSlots({required this.date, required this.clinicId, required this.doctorId, this.appointmentTime});
+  AppointmentSlots(
+      {required this.date,
+      required this.clinicId,
+      required this.doctorId,
+      this.appointmentTime});
 
   @override
   State<AppointmentSlots> createState() => _AppointmentSlotsState();
@@ -43,7 +47,8 @@ class _AppointmentSlotsState extends State<AppointmentSlots> {
     LiveStream().on(CHANGE_DATE, (isUpdate) {
       if (isUpdate as bool) {
         appointmentSlotsCont.clear();
-        if (DateFormat(GLOBAL_FORMAT).parse(widget.date.validate()) == appointmentAppStore.selectedAppointmentDate) {
+        if (DateFormat(GLOBAL_FORMAT).parse(widget.date.validate()) ==
+            appointmentAppStore.selectedAppointmentDate) {
           isFirst = true;
         } else {
           sessionTimeListIndex = -1;
@@ -51,7 +56,9 @@ class _AppointmentSlotsState extends State<AppointmentSlots> {
           if (widget.appointmentTime == null) appointmentSlotsCont.clear();
         }
         setState(() {});
-        init(date: appointmentAppStore.selectedAppointmentDate.getFormattedDate(SAVE_DATE_FORMAT));
+        init(
+            date: appointmentAppStore.selectedAppointmentDate
+                .getFormattedDate(SAVE_DATE_FORMAT));
       }
     });
 
@@ -93,7 +100,9 @@ class _AppointmentSlotsState extends State<AppointmentSlots> {
           decoration: inputDecoration(
             context: context,
             labelText: locale.lblSelectedSlots,
-            suffixIcon: ic_calendar.iconImage(size: 10, color: context.iconColor).paddingAll(14),
+            suffixIcon: ic_calendar
+                .iconImage(size: 10, color: context.iconColor)
+                .paddingAll(14),
           ),
         ),
         16.height,
@@ -122,9 +131,14 @@ class _AppointmentSlotsState extends State<AppointmentSlots> {
                       children: [
                         Row(
                           children: [
-                            Image.asset(ic_morning, height: 20, color: (index + 1).isEven ? appointmentSlotEveningImageColor : null),
+                            Image.asset(ic_morning,
+                                height: 20,
+                                color: (index + 1).isEven
+                                    ? appointmentSlotEveningImageColor
+                                    : null),
                             5.width,
-                            Text(locale.lblSession + ' ${index + 1}', style: boldTextStyle(size: 16)),
+                            Text(locale.lblSession + ' ${index + 1}',
+                                style: boldTextStyle(size: 16)),
                           ],
                         ),
                         16.height,
@@ -134,17 +148,25 @@ class _AppointmentSlotsState extends State<AppointmentSlots> {
                           children: List.generate(
                             sessionList.length,
                             (i) {
-                              AppointmentSlotModel sessionTimeData = sessionList[i];
+                              AppointmentSlotModel sessionTimeData =
+                                  sessionList[i];
 
-                              bool isSelected = sessionTimeListIndex == i && sessionListIndex == index;
-                              Color redColor = sessionTimeData.available == false ? errorBackGroundColor.withOpacity(0.4) : context.scaffoldBackgroundColor;
+                              bool isSelected = sessionTimeListIndex == i &&
+                                  sessionListIndex == index;
+                              Color redColor =
+                                  sessionTimeData.available == false
+                                      ? errorBackGroundColor.withOpacity(0.4)
+                                      : context.scaffoldBackgroundColor;
 
-                              if (isFirst && sessionTimeData.time == widget.appointmentTime) {
+                              if (isFirst &&
+                                  sessionTimeData.time ==
+                                      widget.appointmentTime) {
                                 sessionTimeData.available = true;
                                 sessionTimeListIndex = i;
                                 sessionListIndex = index;
                                 isFirst = false;
-                                appointmentSlotsCont.text = sessionTimeData.time.validate();
+                                appointmentSlotsCont.text =
+                                    sessionTimeData.time.validate();
                               }
 
                               return GestureDetector(
@@ -152,8 +174,10 @@ class _AppointmentSlotsState extends State<AppointmentSlots> {
                                   if (sessionTimeData.available!) {
                                     sessionTimeListIndex = i;
                                     sessionListIndex = index;
-                                    appointmentSlotsCont.text = sessionTimeData.time.validate();
-                                    appointmentAppStore.setSelectedTime(sessionTimeData.time.validate());
+                                    appointmentSlotsCont.text =
+                                        sessionTimeData.time.validate();
+                                    appointmentAppStore.setSelectedTime(
+                                        sessionTimeData.time.validate());
                                     setState(() {});
                                   } else {
                                     Fluttertoast.cancel();
@@ -164,8 +188,10 @@ class _AppointmentSlotsState extends State<AppointmentSlots> {
                                   width: context.width() / 5 - 24,
                                   padding: EdgeInsets.fromLTRB(8, 8, 8, 8),
                                   decoration: boxDecorationWithRoundedCorners(
-                                    backgroundColor: isSelected ? primaryColor : redColor,
-                                    borderRadius: BorderRadius.circular(defaultRadius),
+                                    backgroundColor:
+                                        isSelected ? primaryColor : redColor,
+                                    borderRadius:
+                                        BorderRadius.circular(defaultRadius),
                                   ),
                                   child: FittedBox(
                                     child: Text(
@@ -176,7 +202,10 @@ class _AppointmentSlotsState extends State<AppointmentSlots> {
                                             : sessionTimeData.available == false
                                                 ? Colors.red.withOpacity(0.6)
                                                 : primaryColor,
-                                        decoration: (sessionTimeData.available == false) ? TextDecoration.lineThrough : TextDecoration.none,
+                                        decoration:
+                                            (sessionTimeData.available == false)
+                                                ? TextDecoration.lineThrough
+                                                : TextDecoration.none,
                                       ),
                                     ),
                                   ),
@@ -191,7 +220,8 @@ class _AppointmentSlotsState extends State<AppointmentSlots> {
                 },
               );
             }
-            return snapWidgetHelper(snap, loadingWidget: LoaderWidget(size: 20));
+            return snapWidgetHelper(snap,
+                loadingWidget: LoaderWidget(size: 20));
           },
         ),
       ],

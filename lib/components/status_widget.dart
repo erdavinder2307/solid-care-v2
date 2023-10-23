@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kivicare_flutter/utils/colors.dart';
+import 'package:solidcare/utils/colors.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 import '../utils/common.dart';
@@ -77,7 +77,12 @@ class StatusWidget extends StatelessWidget {
         color: backgroundColor ?? getStatusBackgroundColor(),
         borderRadius: borderRadius ?? radius(),
       ),
-      child: Text(getStatusText().validate(), style: textStyle ?? boldTextStyle(size: isAppointmentStatus ? 12 : 10, color: Colors.white, letterSpacing: 1)),
+      child: Text(getStatusText().validate(),
+          style: textStyle ??
+              boldTextStyle(
+                  size: isAppointmentStatus ? 12 : 10,
+                  color: Colors.white,
+                  letterSpacing: 1)),
     );
   }
 }

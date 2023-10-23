@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kivicare_flutter/utils/extensions/int_extensions.dart';
+import 'package:solidcare/utils/extensions/int_extensions.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class SideDateWidget extends StatelessWidget {
@@ -15,17 +15,21 @@ class SideDateWidget extends StatelessWidget {
           RichText(
             text: TextSpan(
               children: [
-                TextSpan(text: tempDate.day.toString(), style: boldTextStyle(size: 22)),
+                TextSpan(
+                    text: tempDate.day.toString(),
+                    style: boldTextStyle(size: 22)),
                 WidgetSpan(
                   child: Transform.translate(
                     offset: const Offset(2, -10),
-                    child: Text(tempDate.day.validate().toSuffix(), textScaleFactor: 0.7, style: boldTextStyle(size: 14)),
+                    child: Text(tempDate.day.validate().toSuffix(),
+                        textScaleFactor: 0.7, style: boldTextStyle(size: 14)),
                   ),
                 )
               ],
             ),
           ),
-          Text(tempDate.month.getMonthName().validate(), textAlign: TextAlign.center, style: secondaryTextStyle()),
+          Text(tempDate.month.getMonthName().validate(),
+              textAlign: TextAlign.center, style: secondaryTextStyle()),
         ],
       ),
     );

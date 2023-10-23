@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:kivicare_flutter/components/image_border_component.dart';
-import 'package:kivicare_flutter/model/user_model.dart';
-import 'package:kivicare_flutter/screens/receptionist/screens/doctor/doctor_details_screen.dart';
-import 'package:kivicare_flutter/utils/colors.dart';
+import 'package:solidcare/components/image_border_component.dart';
+import 'package:solidcare/model/user_model.dart';
+import 'package:solidcare/screens/receptionist/screens/doctor/doctor_details_screen.dart';
+import 'package:solidcare/utils/colors.dart';
 import 'package:nb_utils/nb_utils.dart';
 
-import 'package:kivicare_flutter/main.dart';
+import 'package:solidcare/main.dart';
 
 class DoctorListComponent extends StatelessWidget {
   final UserModel data;
   final bool isSelected;
   final VoidCallback? callForRefreshAfterDelete;
 
-  DoctorListComponent({required this.data, this.isSelected = false, this.callForRefreshAfterDelete});
+  DoctorListComponent(
+      {required this.data,
+      this.isSelected = false,
+      this.callForRefreshAfterDelete});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +24,8 @@ class DoctorListComponent extends StatelessWidget {
       decoration: boxDecorationDefault(
         borderRadius: radius(),
         color: context.cardColor,
-        border: Border.all(color: isSelected ? context.primaryColor : context.cardColor),
+        border: Border.all(
+            color: isSelected ? context.primaryColor : context.cardColor),
       ),
       child: Stack(
         children: [
@@ -30,7 +34,9 @@ class DoctorListComponent extends StatelessWidget {
             children: [
               data.profileImage.validate().isEmptyOrNull
                   ? GradientBorder(
-                      gradient: LinearGradient(colors: [primaryColor, appSecondaryColor], tileMode: TileMode.mirror),
+                      gradient: LinearGradient(
+                          colors: [primaryColor, appSecondaryColor],
+                          tileMode: TileMode.mirror),
                       strokeWidth: 2,
                       borderRadius: 42,
                       child: PlaceHolderWidget(
@@ -38,10 +44,15 @@ class DoctorListComponent extends StatelessWidget {
                         height: 40,
                         width: 40,
                         alignment: Alignment.center,
-                        child: Text(data.displayName.validate(value: 'D')[0].capitalizeFirstLetter(), style: boldTextStyle(color: Colors.black)),
+                        child: Text(
+                            data.displayName
+                                .validate(value: 'D')[0]
+                                .capitalizeFirstLetter(),
+                            style: boldTextStyle(color: Colors.black)),
                       ),
                     )
-                  : ImageBorder(height: 40, src: data.profileImage.validate()).paddingTop(8),
+                  : ImageBorder(height: 40, src: data.profileImage.validate())
+                      .paddingTop(8),
               16.width,
               AnimatedWrap(
                 runSpacing: 6,
@@ -62,7 +73,11 @@ class DoctorListComponent extends StatelessWidget {
                       splashColor: Colors.transparent,
                       highlightColor: Colors.transparent,
                     ).paddingTop(4),
-                  if (data.noOfExperience.validate().toInt() != 0) Text("${data.noOfExperience.validate()} ${locale.lblYearsOfExperience}", maxLines: 2, style: secondaryTextStyle(size: 14)),
+                  if (data.noOfExperience.validate().toInt() != 0)
+                    Text(
+                        "${data.noOfExperience.validate()} ${locale.lblYearsOfExperience}",
+                        maxLines: 2,
+                        style: secondaryTextStyle(size: 14)),
                 ],
               ).expand(),
             ],
@@ -84,7 +99,11 @@ class DoctorListComponent extends StatelessWidget {
                   refreshCall: () {
                     callForRefreshAfterDelete?.call();
                   },
-                ).launch(context, pageRouteAnimation: PageRouteAnimation.Fade, duration: 800.milliseconds).then(
+                )
+                    .launch(context,
+                        pageRouteAnimation: PageRouteAnimation.Fade,
+                        duration: 800.milliseconds)
+                    .then(
                   (isDoctorDeleted) {
                     if (isDoctorDeleted ?? false) {
                       callForRefreshAfterDelete?.call();

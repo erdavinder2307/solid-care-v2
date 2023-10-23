@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:kivicare_flutter/components/cached_image_widget.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/screens/patient/models/news_model.dart';
-import 'package:kivicare_flutter/screens/patient/screens/feeds/feed_details_screen.dart';
-import 'package:kivicare_flutter/utils/common.dart';
+import 'package:solidcare/components/cached_image_widget.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/screens/patient/models/news_model.dart';
+import 'package:solidcare/screens/patient/screens/feeds/feed_details_screen.dart';
+import 'package:solidcare/utils/common.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class NewsDashboardWidget extends StatelessWidget {
@@ -30,14 +30,19 @@ class NewsDashboardWidget extends StatelessWidget {
                 fit: BoxFit.cover,
               ).cornerRadiusWithClipRRectOnly(topLeft: 8, topRight: 8),
             Container(
-              decoration: boxDecorationDefault(color: context.cardColor, borderRadius: newsData!.image.validate().isNotEmpty ? radiusOnly(bottomLeft: 8, bottomRight: 8) : radius()),
+              decoration: boxDecorationDefault(
+                  color: context.cardColor,
+                  borderRadius: newsData!.image.validate().isNotEmpty
+                      ? radiusOnly(bottomLeft: 8, bottomRight: 8)
+                      : radius()),
               padding: EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(locale.lblHealth, style: primaryTextStyle()),
                   10.height,
-                  Text('${newsData!.postTitle.validate()}', style: boldTextStyle(size: 16)),
+                  Text('${newsData!.postTitle.validate()}',
+                      style: boldTextStyle(size: 16)),
                   5.height,
                   ReadMoreText(
                     parseHtmlString(newsData!.postExcerpt),
@@ -51,7 +56,8 @@ class NewsDashboardWidget extends StatelessWidget {
                   ),
                   8.height,
                   Text(
-                    locale.lblBy + ' ${newsData!.postAuthorName.validate().capitalizeFirstLetter()} ${newsData!.humanTimeDiff.validate()}',
+                    locale.lblBy +
+                        ' ${newsData!.postAuthorName.validate().capitalizeFirstLetter()} ${newsData!.humanTimeDiff.validate()}',
                     style: secondaryTextStyle(size: 12),
                   ),
                 ],

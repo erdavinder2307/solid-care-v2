@@ -3,19 +3,19 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:kivicare_flutter/components/loader_widget.dart';
-import 'package:kivicare_flutter/components/no_data_found_widget.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/model/clinic_list_model.dart';
-import 'package:kivicare_flutter/network/clinic_repository.dart';
-import 'package:kivicare_flutter/screens/appointment/components/clinic_list_component.dart';
+import 'package:solidcare/components/loader_widget.dart';
+import 'package:solidcare/components/no_data_found_widget.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/model/clinic_list_model.dart';
+import 'package:solidcare/network/clinic_repository.dart';
+import 'package:solidcare/screens/appointment/components/clinic_list_component.dart';
 // ignore: unused_import
-import 'package:kivicare_flutter/screens/patient/components/clinic_component.dart';
-import 'package:kivicare_flutter/screens/shimmer/components/clinic_shimmer_component.dart';
-import 'package:kivicare_flutter/utils/app_common.dart';
-import 'package:kivicare_flutter/utils/common.dart';
-import 'package:kivicare_flutter/utils/extensions/string_extensions.dart';
-import 'package:kivicare_flutter/utils/images.dart';
+import 'package:solidcare/screens/patient/components/clinic_component.dart';
+import 'package:solidcare/screens/shimmer/components/clinic_shimmer_component.dart';
+import 'package:solidcare/utils/app_common.dart';
+import 'package:solidcare/utils/common.dart';
+import 'package:solidcare/utils/extensions/string_extensions.dart';
+import 'package:solidcare/utils/images.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class MultiSelectClinicDropDown extends StatefulWidget {
@@ -25,10 +25,15 @@ class MultiSelectClinicDropDown extends StatefulWidget {
 
   final Function(List<Clinic> selectedDoctor)? onSubmit;
 
-  MultiSelectClinicDropDown({this.clinicId, this.refreshMappingTableIdsList, this.selectedClinicIds, this.onSubmit});
+  MultiSelectClinicDropDown(
+      {this.clinicId,
+      this.refreshMappingTableIdsList,
+      this.selectedClinicIds,
+      this.onSubmit});
 
   @override
-  _MultiSelectClinicDropDownState createState() => _MultiSelectClinicDropDownState();
+  _MultiSelectClinicDropDownState createState() =>
+      _MultiSelectClinicDropDownState();
 }
 
 class _MultiSelectClinicDropDownState extends State<MultiSelectClinicDropDown> {
@@ -95,7 +100,9 @@ class _MultiSelectClinicDropDownState extends State<MultiSelectClinicDropDown> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBarWidget(locale.lblSelectClinic, textColor: Colors.white, systemUiOverlayStyle: defaultSystemUiOverlayStyle(context)),
+      appBar: appBarWidget(locale.lblSelectClinic,
+          textColor: Colors.white,
+          systemUiOverlayStyle: defaultSystemUiOverlayStyle(context)),
       body: Observer(builder: (context) {
         return Stack(
           children: [
@@ -156,7 +163,12 @@ class _MultiSelectClinicDropDownState extends State<MultiSelectClinicDropDown> {
                 }
 
                 if (snap.isEmpty && !appStore.isLoading) {
-                  return SingleChildScrollView(child: NoDataFoundWidget(text: searchCont.text.isEmpty ? locale.lblNoDataFound : locale.lblCantFindClinicYouSearchedFor)).center();
+                  return SingleChildScrollView(
+                          child: NoDataFoundWidget(
+                              text: searchCont.text.isEmpty
+                                  ? locale.lblNoDataFound
+                                  : locale.lblCantFindClinicYouSearchedFor))
+                      .center();
                 }
 
                 return AnimatedListView(
@@ -197,7 +209,8 @@ class _MultiSelectClinicDropDownState extends State<MultiSelectClinicDropDown> {
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.done),
         onPressed: () async {
-          widget.onSubmit!.call(clinicList.where((element) => element.isCheck == true).toList());
+          widget.onSubmit!.call(
+              clinicList.where((element) => element.isCheck == true).toList());
           finish(context);
         },
       ),

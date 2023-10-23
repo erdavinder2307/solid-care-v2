@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:kivicare_flutter/components/app_loader.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/network/auth_repository.dart';
-import 'package:kivicare_flutter/utils/colors.dart';
-import 'package:kivicare_flutter/utils/common.dart';
-import 'package:kivicare_flutter/utils/extensions/string_extensions.dart';
-import 'package:kivicare_flutter/utils/images.dart';
+import 'package:solidcare/components/app_loader.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/network/auth_repository.dart';
+import 'package:solidcare/utils/colors.dart';
+import 'package:solidcare/utils/common.dart';
+import 'package:solidcare/utils/extensions/string_extensions.dart';
+import 'package:solidcare/utils/images.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class ForgotPasswordDialogComponent extends StatefulWidget {
   @override
-  ForgotPasswordDialogComponentState createState() => ForgotPasswordDialogComponentState();
+  ForgotPasswordDialogComponentState createState() =>
+      ForgotPasswordDialogComponentState();
 }
 
-class ForgotPasswordDialogComponentState extends State<ForgotPasswordDialogComponent> {
+class ForgotPasswordDialogComponentState
+    extends State<ForgotPasswordDialogComponent> {
   GlobalKey<FormState> formKey = GlobalKey();
 
   TextEditingController emailCont = TextEditingController();
@@ -77,20 +79,30 @@ class ForgotPasswordDialogComponentState extends State<ForgotPasswordDialogCompo
         children: [
           Form(
             key: formKey,
-            autovalidateMode: isFirstTime ? AutovalidateMode.disabled : AutovalidateMode.onUserInteraction,
+            autovalidateMode: isFirstTime
+                ? AutovalidateMode.disabled
+                : AutovalidateMode.onUserInteraction,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(locale.lblEnterYourEmailAddress, style: boldTextStyle(size: 20)),
+                Text(locale.lblEnterYourEmailAddress,
+                    style: boldTextStyle(size: 20)),
                 2.height,
-                Text("${locale.lblAResetPasswordLinkWillBeSentToTheAboveEnteredEmailAddress}", style: secondaryTextStyle()),
+                Text(
+                    "${locale.lblAResetPasswordLinkWillBeSentToTheAboveEnteredEmailAddress}",
+                    style: secondaryTextStyle()),
                 16.height,
                 AppTextField(
                   onChanged: (value) {},
                   controller: emailCont,
                   textFieldType: TextFieldType.EMAIL,
-                  decoration: inputDecoration(context: context, labelText: locale.lblEmail, suffixIcon: ic_message.iconImage(size: 18, color: context.iconColor).paddingAll(14)),
+                  decoration: inputDecoration(
+                      context: context,
+                      labelText: locale.lblEmail,
+                      suffixIcon: ic_message
+                          .iconImage(size: 18, color: context.iconColor)
+                          .paddingAll(14)),
                 ),
                 32.height,
                 AppButton(

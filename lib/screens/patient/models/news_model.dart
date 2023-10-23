@@ -1,4 +1,4 @@
-import 'package:kivicare_flutter/utils/common.dart';
+import 'package:solidcare/utils/common.dart';
 
 class NewsModel {
   List<NewsData>? newsData;
@@ -8,7 +8,9 @@ class NewsModel {
 
   factory NewsModel.fromJson(Map<String, dynamic> json) {
     return NewsModel(
-      newsData: json['data'] != null ? (json['data'] as List).map((i) => NewsData.fromJson(i)).toList() : null,
+      newsData: json['data'] != null
+          ? (json['data'] as List).map((i) => NewsData.fromJson(i)).toList()
+          : null,
       total: json['total'],
     );
   }
@@ -37,7 +39,19 @@ class NewsData {
   String? readableDate;
   String? shareUrl;
 
-  NewsData({this.humanTimeDiff, this.iD, this.image, this.noOfComments, this.postAuthorName, this.postContent, this.postDate, this.postDateGmt, this.postExcerpt, this.postTitle, this.readableDate, this.shareUrl});
+  NewsData(
+      {this.humanTimeDiff,
+      this.iD,
+      this.image,
+      this.noOfComments,
+      this.postAuthorName,
+      this.postContent,
+      this.postDate,
+      this.postDateGmt,
+      this.postExcerpt,
+      this.postTitle,
+      this.readableDate,
+      this.shareUrl});
 
   factory NewsData.fromJson(Map<String, dynamic> json) {
     return NewsData(

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/utils/colors.dart';
-import 'package:kivicare_flutter/utils/constants.dart';
-import 'package:kivicare_flutter/utils/extensions/date_extensions.dart';
-import 'package:kivicare_flutter/utils/images.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/utils/colors.dart';
+import 'package:solidcare/utils/constants.dart';
+import 'package:solidcare/utils/extensions/date_extensions.dart';
+import 'package:solidcare/utils/images.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 extension StExt on String {
@@ -13,7 +13,9 @@ extension StExt on String {
   }
 
   String getFormattedTime() {
-    return DateFormat(TIME_WITH_SECONDS).parse(this.validate()).getFormattedDate(FORMAT_12_HOUR);
+    return DateFormat(TIME_WITH_SECONDS)
+        .parse(this.validate())
+        .getFormattedDate(FORMAT_12_HOUR);
   }
 
   Widget iconImage({double? size, Color? color, BoxFit? fit}) {
@@ -22,7 +24,8 @@ extension StExt on String {
       height: size ?? 24,
       width: size ?? 24,
       fit: fit ?? BoxFit.cover,
-      color: color ?? (appStore.isDarkModeOn ? Colors.white : appSecondaryColor),
+      color:
+          color ?? (appStore.isDarkModeOn ? Colors.white : appSecondaryColor),
       errorBuilder: (context, error, stackTrace) {
         return PlaceHolderWidget();
       },

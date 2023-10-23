@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:kivicare_flutter/components/empty_error_state_component.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/model/dashboard_model.dart';
-import 'package:kivicare_flutter/network/dashboard_repository.dart';
-import 'package:kivicare_flutter/screens/doctor/components/dashboard_fragment_analytics_component.dart';
-import 'package:kivicare_flutter/screens/doctor/components/dashboard_fragment_appointment_component.dart';
-import 'package:kivicare_flutter/screens/doctor/components/dashboard_fragment_chart_component.dart';
-import 'package:kivicare_flutter/screens/shimmer/screen/doctor_dashboard_shimmer_fragment.dart';
-import 'package:kivicare_flutter/utils/cached_value.dart';
-import 'package:kivicare_flutter/utils/images.dart';
+import 'package:solidcare/components/empty_error_state_component.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/model/dashboard_model.dart';
+import 'package:solidcare/network/dashboard_repository.dart';
+import 'package:solidcare/screens/doctor/components/dashboard_fragment_analytics_component.dart';
+import 'package:solidcare/screens/doctor/components/dashboard_fragment_appointment_component.dart';
+import 'package:solidcare/screens/doctor/components/dashboard_fragment_chart_component.dart';
+import 'package:solidcare/screens/shimmer/screen/doctor_dashboard_shimmer_fragment.dart';
+import 'package:solidcare/utils/cached_value.dart';
+import 'package:solidcare/utils/images.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class DashboardFragment extends StatefulWidget {
@@ -58,7 +58,8 @@ class _DashboardFragmentState extends State<DashboardFragment> {
         future: future,
         errorBuilder: (error) {
           return NoDataWidget(
-            imageWidget: Image.asset(ic_somethingWentWrong, height: 180, width: 180),
+            imageWidget:
+                Image.asset(ic_somethingWentWrong, height: 180, width: 180),
             title: error.toString(),
           );
         },
@@ -76,7 +77,9 @@ class _DashboardFragmentState extends State<DashboardFragment> {
                 },
               ),
             ],
-          ).visible(!appStore.isLoading, defaultWidget: DoctorDashboardShimmerFragment().visible(appStore.isLoading));
+          ).visible(!appStore.isLoading,
+              defaultWidget:
+                  DoctorDashboardShimmerFragment().visible(appStore.isLoading));
         },
       ),
     );

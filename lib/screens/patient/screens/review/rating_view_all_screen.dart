@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:kivicare_flutter/components/internet_connectivity_widget.dart';
-import 'package:kivicare_flutter/components/no_data_found_widget.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/model/rating_model.dart';
-import 'package:kivicare_flutter/network/review_repository.dart';
-import 'package:kivicare_flutter/screens/patient/screens/review/component/review_widget.dart';
-import 'package:kivicare_flutter/screens/shimmer/screen/review_rating_shimmer_screen.dart';
-import 'package:kivicare_flutter/utils/app_common.dart';
+import 'package:solidcare/components/internet_connectivity_widget.dart';
+import 'package:solidcare/components/no_data_found_widget.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/model/rating_model.dart';
+import 'package:solidcare/network/review_repository.dart';
+import 'package:solidcare/screens/patient/screens/review/component/review_widget.dart';
+import 'package:solidcare/screens/shimmer/screen/review_rating_shimmer_screen.dart';
+import 'package:solidcare/utils/app_common.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class RatingViewAllScreen extends StatefulWidget {
@@ -78,7 +78,8 @@ class _RatingViewAllScreenState extends State<RatingViewAllScreen> {
                 shrinkWrap: true,
                 padding: EdgeInsets.all(16),
                 itemCount: data.length,
-                itemBuilder: (context, index) => ReviewWidget(data: data[index]),
+                itemBuilder: (context, index) =>
+                    ReviewWidget(data: data[index]),
               );
             } else {
               return NoDataFoundWidget(

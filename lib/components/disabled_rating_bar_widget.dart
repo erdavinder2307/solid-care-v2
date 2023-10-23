@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kivicare_flutter/utils/extensions/int_extensions.dart';
+import 'package:solidcare/utils/extensions/int_extensions.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class DisabledRatingBarWidget extends StatelessWidget {
@@ -7,7 +7,8 @@ class DisabledRatingBarWidget extends StatelessWidget {
   final double? size;
   final bool showRatingText;
 
-  DisabledRatingBarWidget({required this.rating, this.size, this.showRatingText = false});
+  DisabledRatingBarWidget(
+      {required this.rating, this.size, this.showRatingText = false});
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +27,8 @@ class DisabledRatingBarWidget extends StatelessWidget {
         if (showRatingText)
           Text(
             rating.validate().toStringAsFixed(1).toString(),
-            style: secondaryTextStyle(size: 14, color: rating.toInt().getRatingBarColor()),
+            style: secondaryTextStyle(
+                size: 14, color: rating.toInt().getRatingBarColor()),
           ),
       ],
     );

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/utils/constants.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/utils/constants.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class ThemeSelectionDialog extends StatefulWidget {
@@ -11,7 +11,11 @@ class ThemeSelectionDialog extends StatefulWidget {
 }
 
 class ThemeSelectionDialogState extends State<ThemeSelectionDialog> {
-  List<String> themeModeList = [locale.lblLight, locale.lblDark, locale.lblSystemDefault];
+  List<String> themeModeList = [
+    locale.lblLight,
+    locale.lblDark,
+    locale.lblSystemDefault
+  ];
 
   int? currentIndex = 0;
 
@@ -53,7 +57,9 @@ class ThemeSelectionDialogState extends State<ThemeSelectionDialog> {
                   currentIndex = val;
 
                   if (val == THEME_MODE_SYSTEM) {
-                    appStore.setDarkMode(MediaQuery.of(context).platformBrightness == Brightness.dark);
+                    appStore.setDarkMode(
+                        MediaQuery.of(context).platformBrightness ==
+                            Brightness.dark);
                   } else if (val == THEME_MODE_LIGHT) {
                     appStore.setDarkMode(false);
                   } else {

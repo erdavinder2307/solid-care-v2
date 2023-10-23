@@ -1,27 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:kivicare_flutter/components/loader_widget.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/model/drop_down_options_class.dart';
-import 'package:kivicare_flutter/network/dashboard_repository.dart';
-import 'package:kivicare_flutter/screens/doctor/components/monthly_chart_component.dart';
-import 'package:kivicare_flutter/screens/doctor/components/weekly_chart_component.dart';
-import 'package:kivicare_flutter/screens/doctor/components/yearly_chart_component.dart';
-import 'package:kivicare_flutter/utils/app_common.dart';
-import 'package:kivicare_flutter/utils/app_widgets.dart';
-import 'package:kivicare_flutter/utils/constants.dart';
+import 'package:solidcare/components/loader_widget.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/model/drop_down_options_class.dart';
+import 'package:solidcare/network/dashboard_repository.dart';
+import 'package:solidcare/screens/doctor/components/monthly_chart_component.dart';
+import 'package:solidcare/screens/doctor/components/weekly_chart_component.dart';
+import 'package:solidcare/screens/doctor/components/yearly_chart_component.dart';
+import 'package:solidcare/utils/app_common.dart';
+import 'package:solidcare/utils/app_widgets.dart';
+import 'package:solidcare/utils/constants.dart';
 import 'package:nb_utils/nb_utils.dart';
 
-import 'package:kivicare_flutter/model/upcoming_appointment_model.dart';
+import 'package:solidcare/model/upcoming_appointment_model.dart';
 
 class ShowAppointmentChartScreen extends StatefulWidget {
   const ShowAppointmentChartScreen({Key? key}) : super(key: key);
 
   @override
-  State<ShowAppointmentChartScreen> createState() => _ShowAppointmentChartScreenState();
+  State<ShowAppointmentChartScreen> createState() =>
+      _ShowAppointmentChartScreenState();
 }
 
-class _ShowAppointmentChartScreenState extends State<ShowAppointmentChartScreen> {
+class _ShowAppointmentChartScreenState
+    extends State<ShowAppointmentChartScreen> {
   DropDownOptionsClass? dropdownValue;
   DropDownOptionsClass? dropdownValueSpecific;
 
@@ -41,7 +43,8 @@ class _ShowAppointmentChartScreenState extends State<ShowAppointmentChartScreen>
   void init() async {
     dropdownValue = statsOptions.first;
     dropDownList = weeksList;
-    dropdownValueSpecific = weeksList!.firstWhere((element) => element.isCurrentWeek);
+    dropdownValueSpecific =
+        weeksList!.firstWhere((element) => element.isCurrentWeek);
 
     setState(() {});
   }
@@ -51,7 +54,12 @@ class _ShowAppointmentChartScreenState extends State<ShowAppointmentChartScreen>
     Map request;
 
     if (dropdownValue!.value == StatsFilters.weekly) {
-      request = {"filter_by": "weekly", "specific_filter": 49, "start_date": dropdownValueSpecific?.startDate, "end_date": dropdownValueSpecific?.endDate};
+      request = {
+        "filter_by": "weekly",
+        "specific_filter": 49,
+        "start_date": dropdownValueSpecific?.startDate,
+        "end_date": dropdownValueSpecific?.endDate
+      };
     } else {
       request = {
         "filter_by": dropdownValue!.value,
@@ -84,7 +92,9 @@ class _ShowAppointmentChartScreenState extends State<ShowAppointmentChartScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBarWidget(locale.lblAppointmentCount, textColor: Colors.white, systemUiOverlayStyle: defaultSystemUiOverlayStyle(context)),
+      appBar: appBarWidget(locale.lblAppointmentCount,
+          textColor: Colors.white,
+          systemUiOverlayStyle: defaultSystemUiOverlayStyle(context)),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -92,7 +102,8 @@ class _ShowAppointmentChartScreenState extends State<ShowAppointmentChartScreen>
             Row(
               children: [
                 Container(
-                  decoration: BoxDecoration(color: context.cardColor, borderRadius: radius()),
+                  decoration: BoxDecoration(
+                      color: context.cardColor, borderRadius: radius()),
                   child: DropdownButtonHideUnderline(
                     child: ButtonTheme(
                       alignedDropdown: true,
@@ -108,20 +119,31 @@ class _ShowAppointmentChartScreenState extends State<ShowAppointmentChartScreen>
 
                           if (newValue!.value == StatsFilters.monthly) {
                             dropDownList = getMonthsList;
-                            dropdownValueSpecific = getMonthsList.firstWhere((element) => element.value == DateTime.now().month.toString());
+                            dropdownValueSpecific = getMonthsList.firstWhere(
+                                (element) =>
+                                    element.value ==
+                                    DateTime.now().month.toString());
                           } else if (newValue.value == StatsFilters.yearly) {
                             dropDownList = yearsList;
-                            dropdownValueSpecific = yearsList!.firstWhere((element) => element.value == DateTime.now().year.toString());
+                            dropdownValueSpecific = yearsList!.firstWhere(
+                                (element) =>
+                                    element.value ==
+                                    DateTime.now().year.toString());
                           } else if (newValue.value == StatsFilters.weekly) {
                             init();
                           }
                           getCounts();
                           setState(() {});
                         },
-                        items: statsOptions.validate().map<DropdownMenuItem<DropDownOptionsClass>>((DropDownOptionsClass value) {
+                        items: statsOptions
+                            .validate()
+                            .map<DropdownMenuItem<DropDownOptionsClass>>(
+                                (DropDownOptionsClass value) {
                           return DropdownMenuItem<DropDownOptionsClass>(
                             value: value,
-                            child: Text(value.title, style: primaryTextStyle(), overflow: TextOverflow.ellipsis),
+                            child: Text(value.title,
+                                style: primaryTextStyle(),
+                                overflow: TextOverflow.ellipsis),
                           );
                         }).toList(),
                         value: dropdownValue,
@@ -131,7 +153,8 @@ class _ShowAppointmentChartScreenState extends State<ShowAppointmentChartScreen>
                 ).expand(),
                 16.width,
                 Container(
-                  decoration: BoxDecoration(color: context.cardColor, borderRadius: radius()),
+                  decoration: BoxDecoration(
+                      color: context.cardColor, borderRadius: radius()),
                   child: DropdownButtonHideUnderline(
                     child: ButtonTheme(
                       alignedDropdown: true,
@@ -148,10 +171,15 @@ class _ShowAppointmentChartScreenState extends State<ShowAppointmentChartScreen>
 
                           setState(() {});
                         },
-                        items: dropDownList.validate().map<DropdownMenuItem<DropDownOptionsClass>>((DropDownOptionsClass value) {
+                        items: dropDownList
+                            .validate()
+                            .map<DropdownMenuItem<DropDownOptionsClass>>(
+                                (DropDownOptionsClass value) {
                           return DropdownMenuItem<DropDownOptionsClass>(
                             value: value,
-                            child: Text(value.title, style: primaryTextStyle(), overflow: TextOverflow.ellipsis),
+                            child: Text(value.title,
+                                style: primaryTextStyle(),
+                                overflow: TextOverflow.ellipsis),
                           );
                         }).toList(),
                         value: dropdownValueSpecific,
@@ -169,20 +197,26 @@ class _ShowAppointmentChartScreenState extends State<ShowAppointmentChartScreen>
                       margin: EdgeInsets.all(8),
                       padding: EdgeInsets.only(left: 16, right: 16, top: 24),
                       decoration: boxDecorationWithRoundedCorners(
-                        borderRadius: BorderRadius.all(radiusCircular(defaultRadius)),
+                        borderRadius:
+                            BorderRadius.all(radiusCircular(defaultRadius)),
                         backgroundColor: context.scaffoldBackgroundColor,
                       ),
-                      child: WeeklyChartComponent(weeklyAppointment: appointmentsCount).withWidth(context.width()),
+                      child: WeeklyChartComponent(
+                              weeklyAppointment: appointmentsCount)
+                          .withWidth(context.width()),
                     )
                   : Container(
                       height: 220,
                       margin: EdgeInsets.all(8),
                       padding: EdgeInsets.only(left: 16, right: 16, top: 24),
                       decoration: boxDecorationWithRoundedCorners(
-                        borderRadius: BorderRadius.all(radiusCircular(defaultRadius)),
+                        borderRadius:
+                            BorderRadius.all(radiusCircular(defaultRadius)),
                         backgroundColor: context.scaffoldBackgroundColor,
                       ),
-                      child: WeeklyChartComponent(weeklyAppointment: emptyGraphList).withWidth(context.width()),
+                      child: WeeklyChartComponent(
+                              weeklyAppointment: emptyGraphList)
+                          .withWidth(context.width()),
                     )
             else if (dropdownValue!.value == StatsFilters.monthly)
               appointmentsCount.isNotEmpty
@@ -191,20 +225,26 @@ class _ShowAppointmentChartScreenState extends State<ShowAppointmentChartScreen>
                       margin: EdgeInsets.all(8),
                       padding: EdgeInsets.only(left: 16, right: 16, top: 24),
                       decoration: boxDecorationWithRoundedCorners(
-                        borderRadius: BorderRadius.all(radiusCircular(defaultRadius)),
+                        borderRadius:
+                            BorderRadius.all(radiusCircular(defaultRadius)),
                         backgroundColor: context.scaffoldBackgroundColor,
                       ),
-                      child: MonthlyChartComponent(weeklyAppointment: appointmentsCount).withWidth(context.width()),
+                      child: MonthlyChartComponent(
+                              weeklyAppointment: appointmentsCount)
+                          .withWidth(context.width()),
                     )
                   : Container(
                       height: 220,
                       margin: EdgeInsets.all(8),
                       padding: EdgeInsets.only(left: 16, right: 16, top: 24),
                       decoration: boxDecorationWithRoundedCorners(
-                        borderRadius: BorderRadius.all(radiusCircular(defaultRadius)),
+                        borderRadius:
+                            BorderRadius.all(radiusCircular(defaultRadius)),
                         backgroundColor: context.scaffoldBackgroundColor,
                       ),
-                      child: MonthlyChartComponent(weeklyAppointment: emptyGraphListMonthly).withWidth(context.width()),
+                      child: MonthlyChartComponent(
+                              weeklyAppointment: emptyGraphListMonthly)
+                          .withWidth(context.width()),
                     )
             else
               appointmentsCount.isNotEmpty
@@ -213,22 +253,30 @@ class _ShowAppointmentChartScreenState extends State<ShowAppointmentChartScreen>
                       margin: EdgeInsets.all(8),
                       padding: EdgeInsets.only(left: 16, right: 16, top: 24),
                       decoration: boxDecorationWithRoundedCorners(
-                        borderRadius: BorderRadius.all(radiusCircular(defaultRadius)),
+                        borderRadius:
+                            BorderRadius.all(radiusCircular(defaultRadius)),
                         backgroundColor: context.scaffoldBackgroundColor,
                       ),
-                      child: YearlyChartComponent(weeklyAppointment: appointmentsCount).withWidth(context.width()),
+                      child: YearlyChartComponent(
+                              weeklyAppointment: appointmentsCount)
+                          .withWidth(context.width()),
                     )
                   : Container(
                       height: 220,
                       margin: EdgeInsets.all(8),
                       padding: EdgeInsets.only(left: 16, right: 16, top: 24),
                       decoration: boxDecorationWithRoundedCorners(
-                        borderRadius: BorderRadius.all(radiusCircular(defaultRadius)),
+                        borderRadius:
+                            BorderRadius.all(radiusCircular(defaultRadius)),
                         backgroundColor: context.scaffoldBackgroundColor,
                       ),
-                      child: YearlyChartComponent(weeklyAppointment: emptyGraphListYearly).withWidth(context.width()),
+                      child: YearlyChartComponent(
+                              weeklyAppointment: emptyGraphListYearly)
+                          .withWidth(context.width()),
                     ),
-            Observer(builder: (context) => LoaderWidget().visible(appStore.isLoading).center())
+            Observer(
+                builder: (context) =>
+                    LoaderWidget().visible(appStore.isLoading).center())
           ],
         ),
       ),

@@ -1,4 +1,4 @@
-import 'package:kivicare_flutter/model/encounter_model.dart';
+import 'package:solidcare/model/encounter_model.dart';
 
 class PatientEncounterListModel {
   List<EncounterModel>? patientEncounterData;
@@ -8,7 +8,11 @@ class PatientEncounterListModel {
 
   factory PatientEncounterListModel.fromJson(Map<String, dynamic> json) {
     return PatientEncounterListModel(
-      patientEncounterData: json['data'] != null ? (json['data'] as List).map((i) => EncounterModel.fromJson(i)).toList() : null,
+      patientEncounterData: json['data'] != null
+          ? (json['data'] as List)
+              .map((i) => EncounterModel.fromJson(i))
+              .toList()
+          : null,
       total: json['total'],
     );
   }

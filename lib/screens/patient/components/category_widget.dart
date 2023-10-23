@@ -1,11 +1,11 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:kivicare_flutter/components/cached_image_widget../../../model/service_model.dart';
-import 'package:kivicare_flutter/components/image_border_component.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/model/user_model.dart';
-import 'package:kivicare_flutter/utils/colors.dart';
+import 'package:solidcare/components/cached_image_widget../../../model/service_model.dart';
+import 'package:solidcare/components/image_border_component.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/model/user_model.dart';
+import 'package:solidcare/utils/colors.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class CategoryWidget extends StatelessWidget {
@@ -13,7 +13,8 @@ class CategoryWidget extends StatelessWidget {
 
   final bool hideMoreButton;
 
-  CategoryWidget({Key? key, required this.data, this.hideMoreButton = true}) : super(key: key);
+  CategoryWidget({Key? key, required this.data, this.hideMoreButton = true})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +26,8 @@ class CategoryWidget extends StatelessWidget {
               color: context.cardColor,
               image: DecorationImage(
                 fit: BoxFit.cover,
-                colorFilter: ColorFilter.mode(Colors.black54, BlendMode.multiply),
+                colorFilter:
+                    ColorFilter.mode(Colors.black54, BlendMode.multiply),
                 image: NetworkImage(
                   data.image.validate(),
                 ),
@@ -42,7 +44,11 @@ class CategoryWidget extends StatelessWidget {
           Text(
             data.name.validate().capitalizeEachWord(),
             textAlign: TextAlign.start,
-            style: boldTextStyle(size: 14, color: data.image.validate().isNotEmpty ? Colors.white : Colors.black),
+            style: boldTextStyle(
+                size: 14,
+                color: data.image.validate().isNotEmpty
+                    ? Colors.white
+                    : Colors.black),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
@@ -50,7 +56,10 @@ class CategoryWidget extends StatelessWidget {
           if (data.doctorList.validate().length > 0)
             Text(
               '${data.doctorList.validate().length} ${(data.doctorList.validate().length > 1) ? locale.lblDoctorsAvailable : locale.lblDoctorAvailable}',
-              style: secondaryTextStyle(color: data.image.validate().isNotEmpty ? Colors.white70 : Colors.black54),
+              style: secondaryTextStyle(
+                  color: data.image.validate().isNotEmpty
+                      ? Colors.white70
+                      : Colors.black54),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
@@ -61,9 +70,11 @@ class CategoryWidget extends StatelessWidget {
             children: [
               Stack(
                 alignment: Alignment.centerLeft,
-                children: List.generate(data.doctorList.validate().length, (index) {
+                children:
+                    List.generate(data.doctorList.validate().length, (index) {
                   UserModel userData = data.doctorList.validate()[index];
-                  if (userData.profileImage != null && userData.profileImage!.isNotEmpty)
+                  if (userData.profileImage != null &&
+                      userData.profileImage!.isNotEmpty)
                     return ImageBorder(
                       src: userData.profileImage.validate(),
                       height: 30,
@@ -71,7 +82,9 @@ class CategoryWidget extends StatelessWidget {
                     ).paddingLeft(index == 0 ? 0 : (index) * 20);
                   else
                     return GradientBorder(
-                      gradient: LinearGradient(colors: [primaryColor, appSecondaryColor], tileMode: TileMode.mirror),
+                      gradient: LinearGradient(
+                          colors: [primaryColor, appSecondaryColor],
+                          tileMode: TileMode.mirror),
                       strokeWidth: 2,
                       borderRadius: 80,
                       child: PlaceHolderWidget(
@@ -79,7 +92,9 @@ class CategoryWidget extends StatelessWidget {
                         width: 30,
                         alignment: Alignment.center,
                         shape: BoxShape.circle,
-                        child: Text('${userData.displayName.validate(value: 'D')[0].capitalizeFirstLetter()}', style: boldTextStyle(size: 18)),
+                        child: Text(
+                            '${userData.displayName.validate(value: 'D')[0].capitalizeFirstLetter()}',
+                            style: boldTextStyle(size: 18)),
                       ),
                     ).paddingLeft(index == 0 ? 0 : (index * 20));
                 }),

@@ -2,17 +2,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:kivicare_flutter/components/gender_selection_component.dart';
-import 'package:kivicare_flutter/components/loader_widget.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/network/auth_repository.dart';
-import 'package:kivicare_flutter/network/patient_list_repository.dart';
-import 'package:kivicare_flutter/utils/app_common.dart';
-import 'package:kivicare_flutter/utils/common.dart';
-import 'package:kivicare_flutter/utils/constants.dart';
-import 'package:kivicare_flutter/utils/extensions/date_extensions.dart';
-import 'package:kivicare_flutter/utils/extensions/string_extensions.dart';
-import 'package:kivicare_flutter/utils/images.dart';
+import 'package:solidcare/components/gender_selection_component.dart';
+import 'package:solidcare/components/loader_widget.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/network/auth_repository.dart';
+import 'package:solidcare/network/patient_list_repository.dart';
+import 'package:solidcare/utils/app_common.dart';
+import 'package:solidcare/utils/common.dart';
+import 'package:solidcare/utils/constants.dart';
+import 'package:solidcare/utils/extensions/date_extensions.dart';
+import 'package:solidcare/utils/extensions/string_extensions.dart';
+import 'package:solidcare/utils/images.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class AddPatientScreen extends StatefulWidget {
@@ -36,7 +36,16 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
   bool isUpdate = false;
   bool isFirstTime = true;
 
-  List<String> bloodGroupList = ['A+', 'B+', 'AB+', 'O+', 'A-', 'B-', 'AB-', 'O-'];
+  List<String> bloodGroupList = [
+    'A+',
+    'B+',
+    'AB+',
+    'O+',
+    'A-',
+    'B-',
+    'AB-',
+    'O-'
+  ];
 
   TextEditingController firstNameCont = TextEditingController();
   TextEditingController lastNameCont = TextEditingController();
@@ -86,8 +95,10 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
         genderCont.text = value.gender.validate();
         genderKey = UniqueKey();
         dOBCont.text = value.dob.validate();
-        if (!value.dob.isEmptyOrNull) birthDate = DateTime.parse(value.dob.validate(value: ' '));
-        if (!value.bloodGroup.isEmptyOrNull) bloodGroup = value.bloodGroup.validate(value: '');
+        if (!value.dob.isEmptyOrNull)
+          birthDate = DateTime.parse(value.dob.validate(value: ' '));
+        if (!value.bloodGroup.isEmptyOrNull)
+          bloodGroup = value.bloodGroup.validate(value: '');
         setState(() {});
       }).catchError((e) {
         appStore.setLoading(false);
@@ -134,7 +145,9 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
       "user_email": emailCont.text.validate(),
       "mobile_number": contactNumberCont.text.validate(),
       "gender": genderCont.text.validate(),
-      "dob": birthDate != null ? birthDate!.getFormattedDate(SAVE_DATE_FORMAT).validate() : null,
+      "dob": birthDate != null
+          ? birthDate!.getFormattedDate(SAVE_DATE_FORMAT).validate()
+          : null,
       "address": addressCont.text.validate(),
       "city": cityCont.text.validate(),
       "country": countryCont.text.validate(),
@@ -164,7 +177,9 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
         width: context.width() * 0.7,
         height: context.height() * 0.2,
         dialogType: isUpdate ? DialogType.UPDATE : DialogType.CONFIRMATION,
-        title: isUpdate ? locale.lblDoYouWantToUpdatePatientDetails : locale.lblDoYouWantToSaveNewPatientDetails,
+        title: isUpdate
+            ? locale.lblDoYouWantToUpdatePatientDetails
+            : locale.lblDoYouWantToSaveNewPatientDetails,
         positiveText: locale.lblYes,
         negativeText: locale.lblCancel,
         onAccept: (p0) {
@@ -215,10 +230,14 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
                     Text(locale.lblDone, style: boldTextStyle()).onTap(
                       () {
                         if (DateTime.now().year - birthDate!.year < 18) {
-                          toast(locale.lblMinimumAgeRequired + locale.lblCurrentAgeIs + ' ${DateTime.now().year - birthDate!.year}');
+                          toast(locale.lblMinimumAgeRequired +
+                              locale.lblCurrentAgeIs +
+                              ' ${DateTime.now().year - birthDate!.year}');
                         } else {
                           finish(context);
-                          dOBCont.text = birthDate!.getFormattedDate(SAVE_DATE_FORMAT).toString();
+                          dOBCont.text = birthDate!
+                              .getFormattedDate(SAVE_DATE_FORMAT)
+                              .toString();
                         }
                       },
                       splashColor: Colors.transparent,
@@ -230,7 +249,9 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
               Container(
                 height: 200,
                 child: CupertinoTheme(
-                  data: CupertinoThemeData(textTheme: CupertinoTextThemeData(dateTimePickerTextStyle: primaryTextStyle(size: 20))),
+                  data: CupertinoThemeData(
+                      textTheme: CupertinoTextThemeData(
+                          dateTimePickerTextStyle: primaryTextStyle(size: 20))),
                   child: CupertinoDatePicker(
                     minimumDate: DateTime(1900, 1, 1),
                     minuteInterval: 1,
@@ -262,12 +283,17 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
         children: [
           Form(
             key: formKey,
-            autovalidateMode: isFirstTime ? AutovalidateMode.disabled : AutovalidateMode.onUserInteraction,
+            autovalidateMode: isFirstTime
+                ? AutovalidateMode.disabled
+                : AutovalidateMode.onUserInteraction,
             child: AnimatedScrollView(
-              padding: EdgeInsets.only(bottom: 80, left: 16, right: 16, top: 16),
+              padding:
+                  EdgeInsets.only(bottom: 80, left: 16, right: 16, top: 16),
               listAnimationType: ListAnimationType.None,
               children: [
-                Text(locale.lblBasicInformation, style: boldTextStyle(size: titleTextSize, color: context.primaryColor)),
+                Text(locale.lblBasicInformation,
+                    style: boldTextStyle(
+                        size: titleTextSize, color: context.primaryColor)),
                 Divider(color: viewLineColor, height: 24),
                 Wrap(
                   spacing: 16,
@@ -283,7 +309,8 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
                           textFieldType: TextFieldType.NAME,
                           textInputAction: TextInputAction.next,
                           errorThisFieldRequired: locale.lblFirstNameIsRequired,
-                          decoration: inputDecoration(context: context, labelText: locale.lblFirstName),
+                          decoration: inputDecoration(
+                              context: context, labelText: locale.lblFirstName),
                         ).expand(),
                         16.width,
                         AppTextField(
@@ -293,7 +320,8 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
                           textInputAction: TextInputAction.next,
                           errorThisFieldRequired: locale.lblLastNameIsRequired,
                           textFieldType: TextFieldType.NAME,
-                          decoration: inputDecoration(context: context, labelText: locale.lblLastName),
+                          decoration: inputDecoration(
+                              context: context, labelText: locale.lblLastName),
                         ).expand(),
                       ],
                     ),
@@ -304,7 +332,12 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
                       textInputAction: TextInputAction.next,
                       textFieldType: TextFieldType.EMAIL,
                       errorThisFieldRequired: locale.lblEmailIsRequired,
-                      decoration: inputDecoration(context: context, labelText: locale.lblEmail, suffixIcon: ic_message.iconImage(size: 10, color: context.iconColor).paddingAll(14)),
+                      decoration: inputDecoration(
+                          context: context,
+                          labelText: locale.lblEmail,
+                          suffixIcon: ic_message
+                              .iconImage(size: 10, color: context.iconColor)
+                              .paddingAll(14)),
                     ),
                     AppTextField(
                       focus: contactNumberFocus,
@@ -314,14 +347,21 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
                       textInputAction: TextInputAction.next,
                       maxLength: 10,
                       isValidationRequired: true,
-                      buildCounter: (context, {int? currentLength, bool? isFocused, maxLength}) {
+                      buildCounter: (context,
+                          {int? currentLength, bool? isFocused, maxLength}) {
                         return null;
                       },
                       validator: (value) {
-                        if (contactNumberCont.text.length < 10) return locale.lblPleaseCheckYourNumber;
+                        if (contactNumberCont.text.length < 10)
+                          return locale.lblPleaseCheckYourNumber;
                         return null;
                       },
-                      decoration: inputDecoration(context: context, labelText: locale.lblContactNumber, suffixIcon: ic_phone.iconImage(size: 10, color: context.iconColor).paddingAll(14)),
+                      decoration: inputDecoration(
+                          context: context,
+                          labelText: locale.lblContactNumber,
+                          suffixIcon: ic_phone
+                              .iconImage(size: 10, color: context.iconColor)
+                              .paddingAll(14)),
                     ),
                     AppTextField(
                       controller: dOBCont,
@@ -330,7 +370,12 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
                       textInputAction: TextInputAction.next,
                       textFieldType: TextFieldType.OTHER,
                       readOnly: true,
-                      decoration: inputDecoration(context: context, labelText: locale.lblDOB, suffixIcon: ic_calendar.iconImage(size: 10, color: context.iconColor).paddingAll(14)),
+                      decoration: inputDecoration(
+                          context: context,
+                          labelText: locale.lblDOB,
+                          suffixIcon: ic_calendar
+                              .iconImage(size: 10, color: context.iconColor)
+                              .paddingAll(14)),
                       onTap: () {
                         if (dOBCont.text.isNotEmpty) {
                           dateBottomSheet(context, bDate: birthDate);
@@ -349,9 +394,17 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
                   dropdownColor: context.cardColor,
                   items: List.generate(
                     bloodGroupList.length,
-                    (index) => DropdownMenuItem(value: bloodGroupList[index], child: Text("${bloodGroupList[index]}", style: primaryTextStyle())),
+                    (index) => DropdownMenuItem(
+                        value: bloodGroupList[index],
+                        child: Text("${bloodGroupList[index]}",
+                            style: primaryTextStyle())),
                   ),
-                  decoration: inputDecoration(context: context, labelText: locale.lblBloodGroup, suffixIcon: ic_arrow_down.iconImage(size: 10, color: context.iconColor).paddingAll(14)),
+                  decoration: inputDecoration(
+                      context: context,
+                      labelText: locale.lblBloodGroup,
+                      suffixIcon: ic_arrow_down
+                          .iconImage(size: 10, color: context.iconColor)
+                          .paddingAll(14)),
                   onChanged: (dynamic value) {
                     bloodGroup = value;
                     setState(() {});
@@ -365,7 +418,9 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
                   },
                 ),
                 24.height,
-                Text(locale.lblAddressDetail, style: boldTextStyle(size: titleTextSize, color: context.primaryColor)),
+                Text(locale.lblAddressDetail,
+                    style: boldTextStyle(
+                        size: titleTextSize, color: context.primaryColor)),
                 Divider(color: viewLineColor, height: 24),
                 Wrap(
                   runSpacing: 16,
@@ -380,7 +435,8 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
                       minLines: 3,
                       maxLines: 3,
                       textInputAction: TextInputAction.newline,
-                      decoration: inputDecoration(context: context, labelText: locale.lblAddress),
+                      decoration: inputDecoration(
+                          context: context, labelText: locale.lblAddress),
                     ),
                     AppTextField(
                       controller: cityCont,
@@ -391,7 +447,11 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
                       decoration: inputDecoration(
                         context: context,
                         labelText: locale.lblCity,
-                        suffixIcon: Icon(Icons.location_on_outlined, size: 16, color: appStore.isDarkModeOn ? context.iconColor : Colors.black26),
+                        suffixIcon: Icon(Icons.location_on_outlined,
+                            size: 16,
+                            color: appStore.isDarkModeOn
+                                ? context.iconColor
+                                : Colors.black26),
                       ),
                     ),
                     Row(
@@ -405,7 +465,11 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
                           decoration: inputDecoration(
                             context: context,
                             labelText: locale.lblCountry,
-                            suffixIcon: Icon(Icons.location_on_outlined, size: 16, color: appStore.isDarkModeOn ? context.iconColor : Colors.black26),
+                            suffixIcon: Icon(Icons.location_on_outlined,
+                                size: 16,
+                                color: appStore.isDarkModeOn
+                                    ? context.iconColor
+                                    : Colors.black26),
                           ),
                         ).expand(),
                         16.width,
@@ -414,13 +478,18 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
                           focus: postalCodeFocus,
                           isValidationRequired: false,
                           inputFormatters: [
-                            FilteringTextInputFormatter.digitsOnly, // Only allows digits
+                            FilteringTextInputFormatter
+                                .digitsOnly, // Only allows digits
                           ],
                           textFieldType: TextFieldType.NUMBER,
                           decoration: inputDecoration(
                               context: context,
                               labelText: locale.lblPostalCode,
-                              suffixIcon: Icon(Icons.location_on_outlined, size: 16, color: appStore.isDarkModeOn ? context.iconColor : Colors.black26)),
+                              suffixIcon: Icon(Icons.location_on_outlined,
+                                  size: 16,
+                                  color: appStore.isDarkModeOn
+                                      ? context.iconColor
+                                      : Colors.black26)),
                         ).expand(),
                       ],
                     ),
@@ -429,10 +498,14 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
               ],
             ),
           ),
-          Observer(builder: (context) => LoaderWidget().visible(appStore.isLoading).center())
+          Observer(
+              builder: (context) =>
+                  LoaderWidget().visible(appStore.isLoading).center())
         ],
       ),
-      bottomNavigationBar: AppButton(text: locale.lblSave, onTap: savePatientDetails).paddingAll(16),
+      bottomNavigationBar:
+          AppButton(text: locale.lblSave, onTap: savePatientDetails)
+              .paddingAll(16),
     );
   }
 }

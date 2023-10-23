@@ -1,4 +1,4 @@
-# kivicare_flutter
+# solidcare
 
 A new Flutter application.
 

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kivicare_flutter/utils/extensions/string_extensions.dart';
+import 'package:solidcare/utils/extensions/string_extensions.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class DoctorDetailWidget extends StatelessWidget {
@@ -11,7 +11,16 @@ class DoctorDetailWidget extends StatelessWidget {
   final Widget? trailing;
   final int? paddingBeforeTrailing;
 
-  DoctorDetailWidget({Key? key, this.image, this.trailing, this.paddingBeforeTrailing, this.title, this.subTitle, this.bgColor, this.width}) : super(key: key);
+  DoctorDetailWidget(
+      {Key? key,
+      this.image,
+      this.trailing,
+      this.paddingBeforeTrailing,
+      this.title,
+      this.subTitle,
+      this.bgColor,
+      this.width})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {

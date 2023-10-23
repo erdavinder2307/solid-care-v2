@@ -1,4 +1,4 @@
-import 'package:kivicare_flutter/locale/base_language_key.dart';
+import 'package:solidcare/locale/base_language_key.dart';
 
 class LanguageAr extends BaseLanguage {
   @override
@@ -29,7 +29,8 @@ class LanguageAr extends BaseLanguage {
   String get lblDoYouWantToAddEncounter => "هل تريد إضافة لقاء؟";
 
   @override
-  String get lblDoYouWantToUpdateYourDetails => "هل تريد تحديث التفاصيل الخاصة بك؟";
+  String get lblDoYouWantToUpdateYourDetails =>
+      "هل تريد تحديث التفاصيل الخاصة بك؟";
 
   @override
   String get lblNoBillsFound => "لم يتم العثور على فواتير";
@@ -50,7 +51,8 @@ class LanguageAr extends BaseLanguage {
   String get lblLoginSuccessfullyAsAPatient => "سجل الدخول بنجاح كمريض";
 
   @override
-  String get lblLoginSuccessfullyAsAReceptionist => "سجل الدخول بنجاح كموظف استقبال";
+  String get lblLoginSuccessfullyAsAReceptionist =>
+      "سجل الدخول بنجاح كموظف استقبال";
 
   @override
   String get lblLoginSuccessfullyAsADoctor => "سجل الدخول بنجاح كطبيب";
@@ -68,7 +70,8 @@ class LanguageAr extends BaseLanguage {
   String get lblDoYouWantToLogout => "هل ترغب بالخروج؟";
 
   @override
-  String get lblDoYouWantToDeleteAccountPermanently => "هل تريد حذف الحساب بشكل دائم؟";
+  String get lblDoYouWantToDeleteAccountPermanently =>
+      "هل تريد حذف الحساب بشكل دائم؟";
 
   @override
   String get lblDoYouWantToDeleteSession => "هل تريد حذف الجلسة؟";
@@ -128,25 +131,31 @@ class LanguageAr extends BaseLanguage {
   String get lblDoYouWantToSwitchYourClinicTo => "هل تريد تبديل عيادتك?";
 
   @override
-  String get lblDoYouWantToUpdatePatientDetails => "هل تريد تحديث تفاصيل المريض؟";
+  String get lblDoYouWantToUpdatePatientDetails =>
+      "هل تريد تحديث تفاصيل المريض؟";
 
   @override
-  String get lblDoYouWantToSaveNewPatientDetails => "هل تريد إرسال تفاصيل New Pateint؟";
+  String get lblDoYouWantToSaveNewPatientDetails =>
+      "هل تريد إرسال تفاصيل New Pateint؟";
 
   @override
-  String get lblDoYouWantToUpdateDoctorDetails => "هل تريد تحديث تفاصيل الطبيب؟";
+  String get lblDoYouWantToUpdateDoctorDetails =>
+      "هل تريد تحديث تفاصيل الطبيب؟";
 
   @override
-  String get lblDoYouWantToSaveNewDoctorDetails => "هل تريد إرسال تفاصيل الطبيب الجديد؟";
+  String get lblDoYouWantToSaveNewDoctorDetails =>
+      "هل تريد إرسال تفاصيل الطبيب الجديد؟";
 
   @override
-  String get lblDoYouWantToDeleteEncounterDetailsOf => "هل تريد حذف تفاصيل المواجهة؟";
+  String get lblDoYouWantToDeleteEncounterDetailsOf =>
+      "هل تريد حذف تفاصيل المواجهة؟";
 
   @override
   String get lblDoYouWantToCheckoutAppointment => "هل تريد الخروج الموعد؟";
 
   @override
-  String get lblTermsConditionSubTitle => "معلومات مهمة تنتظر: نظرة خاطفة على الداخل!";
+  String get lblTermsConditionSubTitle =>
+      "معلومات مهمة تنتظر: نظرة خاطفة على الداخل!";
 
   @override
   String get lblYears => "سنين";
@@ -191,7 +200,8 @@ class LanguageAr extends BaseLanguage {
   String get lblIncorrectPwd => "كلمة المرور التي أدخلتها غير صحيحة";
 
   @override
-  String get lblPleaseChoose => "الرجاء اختيار الحالة/الاختيار/الاختيار المتعدد عن بعد عن بذرة";
+  String get lblPleaseChoose =>
+      "الرجاء اختيار الحالة/الاختيار/الاختيار المتعدد عن بعد عن بذرة";
 
   @override
   String get lblPatientList => "قائمة المريض";
@@ -224,31 +234,38 @@ class LanguageAr extends BaseLanguage {
   String get lblPending => "قيد الانتظار";
 
   @override
-  String get lblPleaseTryAgainAfterSometimes => "يرجى المحاولة مرة أخرى بعد أحيانًا";
+  String get lblPleaseTryAgainAfterSometimes =>
+      "يرجى المحاولة مرة أخرى بعد أحيانًا";
 
   @override
   String get lblTapToSelect => "اضغط للاختيار";
 
   @override
-  String get lblDoctorTapMsg => "اضغط على الأسماء أدناه تحرير تفاصيل خدمة الطبيب المحددة ";
+  String get lblDoctorTapMsg =>
+      "اضغط على الأسماء أدناه تحرير تفاصيل خدمة الطبيب المحددة ";
 
   @override
-  String get lblCantFindClinicYouSearchedFor => 'لا يمكن العثور على العيادة التي بحثت عنها';
+  String get lblCantFindClinicYouSearchedFor =>
+      'لا يمكن العثور على العيادة التي بحثت عنها';
 
   @override
-  String get lblCantFindDoctorYouSearchedFor => 'لا يمكن العثور على الطبيب الذي بحثت عنه';
+  String get lblCantFindDoctorYouSearchedFor =>
+      'لا يمكن العثور على الطبيب الذي بحثت عنه';
 
   @override
-  String get lblCantFindPatientYouSearchedFor => 'لا يمكن العثور على المريض الذي بحثت عنه';
+  String get lblCantFindPatientYouSearchedFor =>
+      'لا يمكن العثور على المريض الذي بحثت عنه';
 
   @override
-  String get lblCantFindServiceYouSearchedFor => 'لا يمكن العثور على الخدمة التي بحثت عنها';
+  String get lblCantFindServiceYouSearchedFor =>
+      'لا يمكن العثور على الخدمة التي بحثت عنها';
 
   @override
   String get lblNoActiveClinicAvailable => 'جميع العيادات مغلقة';
 
   @override
-  String get lblRecheckPassword => "يرجى التحقق من كلمة المرور الجديدة والتأكيد";
+  String get lblRecheckPassword =>
+      "يرجى التحقق من كلمة المرور الجديدة والتأكيد";
 
   @override
   String get lblDoctorsAvailable => "الأطباء المتاحين";
@@ -320,14 +337,16 @@ class LanguageAr extends BaseLanguage {
   String get lblWalkThroughTitle4 => 'تحدث مع الأطباء';
 
   @override
-  String get lblWalkThroughSubTitle1 => '""تطبيق Kivicare هو حل السجلات الصحية الإلكترونية الجاهزة والمطلقة (EHR) للأطباء والمهنيين الطبيين وإدارة العيادة وإدارة المرضى.';
+  String get lblWalkThroughSubTitle1 =>
+      '""تطبيق Kivicare هو حل السجلات الصحية الإلكترونية الجاهزة والمطلقة (EHR) للأطباء والمهنيين الطبيين وإدارة العيادة وإدارة المرضى.';
 
   @override
   String get lblWalkThroughSubTitle2 =>
       'قم ببناء تطبيق الهاتف المحمول الخاص بك عن طريق سرد الأطباء. يمكنك العثور على طبيب أقرب إليك مع نموذج الأطباء المذهلين هذا. إضافة وإدارة قائمة الأطباء مع Kivicare.';
 
   @override
-  String get lblWalkThroughSubTitle3 => 'إدارة المواعيد في العيادة أو المستشفى ، أو جدولة المرضى في وقت مبكر مع واجهة Kivicare الذكية. تجنب أي تأخيرات أو أكثر في الانتظار في قوائم الانتظار';
+  String get lblWalkThroughSubTitle3 =>
+      'إدارة المواعيد في العيادة أو المستشفى ، أو جدولة المرضى في وقت مبكر مع واجهة Kivicare الذكية. تجنب أي تأخيرات أو أكثر في الانتظار في قوائم الانتظار';
 
   @override
   String get lblWalkThroughSubTitle4 =>
@@ -460,7 +479,8 @@ class LanguageAr extends BaseLanguage {
   String get lblInstruction => 'تعليمات';
 
   @override
-  String get lblSignInToContinue => 'مرحبًا بك مرة أخرى ، قم بتسجيل الدخول إلى حسابك';
+  String get lblSignInToContinue =>
+      'مرحبًا بك مرة أخرى ، قم بتسجيل الدخول إلى حسابك';
 
   @override
   String get lblNewMember => 'ليس لديك حساب؟';
@@ -586,7 +606,8 @@ class LanguageAr extends BaseLanguage {
   String get lblNoPatientFound => 'لم يجد مريض';
 
   @override
-  String get lblDeleteRecordConfirmation => 'هل أنت متأكد أنك تريد حذف جميع السجلات';
+  String get lblDeleteRecordConfirmation =>
+      'هل أنت متأكد أنك تريد حذف جميع السجلات';
 
   @override
   String get lblAllRecordsFor => 'جميع السجلات ل';
@@ -646,7 +667,8 @@ class LanguageAr extends BaseLanguage {
   String get lbl2 => '2';
 
   @override
-  String get lblClickOnDevelopButton => 'انقر/تحوم على زر تطوير على اليمين في شريط التنقل وانقر على إنشاء تطبيق';
+  String get lblClickOnDevelopButton =>
+      'انقر/تحوم على زر تطوير على اليمين في شريط التنقل وانقر على إنشاء تطبيق';
 
   @override
   String get lblCreateApp => 'إنشاء التطبيق';
@@ -661,13 +683,15 @@ class LanguageAr extends BaseLanguage {
   String get lbl4 => '4';
 
   @override
-  String get lblMandatoryMessage => 'املأ المعلومات الإلزامية وفي علامة بيانات اعتماد التطبيق ، يمكنك رؤية مفتاح API و Secret API.';
+  String get lblMandatoryMessage =>
+      'املأ المعلومات الإلزامية وفي علامة بيانات اعتماد التطبيق ، يمكنك رؤية مفتاح API و Secret API.';
 
   @override
   String get lbl5 => '5';
 
   @override
-  String get lblCopyAndPasteAPIKey => 'نسخ ولصق مفتاح API و Secret API هنا وانقر على زر حفظ وأنت جاهز للذهاب.';
+  String get lblCopyAndPasteAPIKey =>
+      'نسخ ولصق مفتاح API و Secret API هنا وانقر على زر حفظ وأنت جاهز للذهاب.';
 
   @override
   String get lblEncounterClosed => 'لقاء مغلق';
@@ -742,7 +766,8 @@ class LanguageAr extends BaseLanguage {
   String get lblNewPatientAddedSuccessfully => 'أضاف مريض جديد بنجاح';
 
   @override
-  String get lblPatientDetailUpdatedSuccessfully => 'تم تحديث تفاصيل المريض بنجاح';
+  String get lblPatientDetailUpdatedSuccessfully =>
+      'تم تحديث تفاصيل المريض بنجاح';
 
   @override
   String get lblBasicInformation => 'معلومات اساسية';
@@ -793,13 +818,16 @@ class LanguageAr extends BaseLanguage {
   String get lblPleaseSelectTime => 'الرجاء تحديد الوقت';
 
   @override
-  String get lblStartAndEndTimeNotSame => 'لا يمكن أن يكون وقت البدء والنهاية هو نفسه';
+  String get lblStartAndEndTimeNotSame =>
+      'لا يمكن أن يكون وقت البدء والنهاية هو نفسه';
 
   @override
-  String get lblTimeNotBeforeMorningStartTime => 'لا يمكن أن يكون الوقت قبل وقت بدء الصباح';
+  String get lblTimeNotBeforeMorningStartTime =>
+      'لا يمكن أن يكون الوقت قبل وقت بدء الصباح';
 
   @override
-  String get lblTimeNotBeforeEveningStartTime => 'لا يمكن أن يكون الوقت قبل وقت بدء المساء';
+  String get lblTimeNotBeforeEveningStartTime =>
+      'لا يمكن أن يكون الوقت قبل وقت بدء المساء';
 
   @override
   String get lblTimeShouldBeInMultiplyOf5 => 'يجب أن يكون الوقت مضاعفًا من 5';
@@ -1000,7 +1028,7 @@ class LanguageAr extends BaseLanguage {
   String get lblClinicTAndC => 'عيادة T&C';
 
   @override
-  String get lblAboutKiviCare => 'حول كيفيكاري';
+  String get lblAboutSolidCare => 'حول كيفيكاري';
 
   @override
   String get lblYourReviewCounts => 'تهم مراجعتك';
@@ -1015,7 +1043,7 @@ class LanguageAr extends BaseLanguage {
   String get lblSubmitYourQueriesHere => 'أرسل استفساراتك هنا';
 
   @override
-  String get lblShareKiviCare => 'مشاركة Kivicare';
+  String get lblShareSolidCare => 'مشاركة Kivicare';
 
   @override
   String get lblLogout => 'تسجيل خروج';
@@ -1043,7 +1071,8 @@ class LanguageAr extends BaseLanguage {
   String get lblPurchase => 'شراء';
 
   @override
-  String get lblDemoUserPasswordNotChanged => 'لا يمكن تغيير كلمة مرور المستخدمين التجريبيين';
+  String get lblDemoUserPasswordNotChanged =>
+      'لا يمكن تغيير كلمة مرور المستخدمين التجريبيين';
 
   @override
   String get lblPasswordLengthMessage => 'يجب أن يكون طول كلمة المرور أكثر من';
@@ -1082,7 +1111,8 @@ class LanguageAr extends BaseLanguage {
   String get lblBloodGroupIsRequired => 'مطلوب مجموعة الدم';
 
   @override
-  String get lblAppointmentBookedSuccessfully => 'تم حجز الموعد بنجاح ، يرجى التحقق من بريدك الإلكتروني.';
+  String get lblAppointmentBookedSuccessfully =>
+      'تم حجز الموعد بنجاح ، يرجى التحقق من بريدك الإلكتروني.';
 
   @override
   String get lblSelectedSlots => 'فتحات مختارة';
@@ -1145,7 +1175,8 @@ class LanguageAr extends BaseLanguage {
   String get lblExpertsHealthTipsAndAdvice => 'نصائح ونصائح صحية الخبراء';
 
   @override
-  String get lblArticlesByHighlyQualifiedDoctors => 'مقالات من قبل الأطباء المؤهلين تأهيلا عاليا على الصحة اليومية ..';
+  String get lblArticlesByHighlyQualifiedDoctors =>
+      'مقالات من قبل الأطباء المؤهلين تأهيلا عاليا على الصحة اليومية ..';
 
   @override
   String get lblChooseYourDoctor => 'اختر طبيبك';
@@ -1346,22 +1377,27 @@ class LanguageAr extends BaseLanguage {
   String get lblTryIt => 'جربها';
 
   @override
-  String get lblYouAreJustOneStepAwayFromHavingAHandsOnBackendDemo => 'أنت على بعد خطوة واحدة على بعد خطوة واحدة من التوضيح العملي.';
+  String get lblYouAreJustOneStepAwayFromHavingAHandsOnBackendDemo =>
+      'أنت على بعد خطوة واحدة على بعد خطوة واحدة من التوضيح العملي.';
 
   @override
   String get lblChooseYourRole => 'اختر دورك';
 
   @override
-  String get lblEnterYourEmailAddressAsWellAsTheTemporaryLink => 'أدخل عنوان بريدك الإلكتروني وكذلك الرابط المؤقت';
+  String get lblEnterYourEmailAddressAsWellAsTheTemporaryLink =>
+      'أدخل عنوان بريدك الإلكتروني وكذلك الرابط المؤقت';
 
   @override
-  String get lblClickOnThatAndScanItFromTheApp => 'انقر على ذلك وفحصه من التطبيق';
+  String get lblClickOnThatAndScanItFromTheApp =>
+      'انقر على ذلك وفحصه من التطبيق';
 
   @override
-  String get lblYouWillSeeAQRForAppOptionOnTheRightHandCorner => 'سترى خيار QR للتطبيق في الزاوية اليمنى ،';
+  String get lblYouWillSeeAQRForAppOptionOnTheRightHandCorner =>
+      'سترى خيار QR للتطبيق في الزاوية اليمنى ،';
 
   @override
-  String get lblEnjoyTheFlawlessKivicareSystemWithEase => 'يتمتع! نظام Kivicare الذي لا تشوبه شائبة بسهولة.';
+  String get lblEnjoyTheFlawlessKivicareSystemWithEase =>
+      'يتمتع! نظام Kivicare الذي لا تشوبه شائبة بسهولة.';
 
   @override
   String get lblCamera => 'آلة تصوير';
@@ -1379,7 +1415,8 @@ class LanguageAr extends BaseLanguage {
   String get lblNoConnection => 'لا يوجد اتصال';
 
   @override
-  String get lblYourInternetConnectionWasInterrupted => 'تمت مقاطعة اتصال الإنترنت الخاص بك';
+  String get lblYourInternetConnectionWasInterrupted =>
+      'تمت مقاطعة اتصال الإنترنت الخاص بك';
 
   @override
   String get lblPlease => 'لو سمحت';
@@ -1403,13 +1440,15 @@ class LanguageAr extends BaseLanguage {
   String get lblPleaseChooseAnotherDay => 'الرجاء اختيار يوم آخر';
 
   @override
-  String get lblPleaseCloseTheEncounterToCheckoutPatient => 'يرجى إغلاق اللقاء للتغلب على المريض';
+  String get lblPleaseCloseTheEncounterToCheckoutPatient =>
+      'يرجى إغلاق اللقاء للتغلب على المريض';
 
   @override
   String get lblRemove => 'يزيل';
 
   @override
-  String get lblAResetPasswordLinkWillBeSentToTheAboveEnteredEmailAddress => 'سيتم إرسال رابط كلمة مرور إعادة تعيين إلى عنوان البريد الإلكتروني الذي تم إدخاله أعلاه';
+  String get lblAResetPasswordLinkWillBeSentToTheAboveEnteredEmailAddress =>
+      'سيتم إرسال رابط كلمة مرور إعادة تعيين إلى عنوان البريد الإلكتروني الذي تم إدخاله أعلاه';
 
   @override
   String get lblEnterYourEmailAddress => 'أدخل عنوان بريدك الالكتروني';
@@ -1436,7 +1475,8 @@ class LanguageAr extends BaseLanguage {
   String get lblLoading => 'تحميل';
 
   @override
-  String get lblAnErrorOccurredWhileCheckingInternetConnectivity => 'حدث خطأ أثناء التحقق من اتصال الإنترنت';
+  String get lblAnErrorOccurredWhileCheckingInternetConnectivity =>
+      'حدث خطأ أثناء التحقق من اتصال الإنترنت';
 
   @override
   String get lblBloodGroup => 'فصيلة الدم';
@@ -1520,7 +1560,8 @@ class LanguageAr extends BaseLanguage {
   String get lblClose => 'يغلق';
 
   @override
-  String get lblAllTheAppointmentOnSelectedDateWillBeCancelled => 'سيتم إلغاء جميع الموعد في التاريخ المحدد.';
+  String get lblAllTheAppointmentOnSelectedDateWillBeCancelled =>
+      'سيتم إلغاء جميع الموعد في التاريخ المحدد.';
 
   @override
   String get lblApr => 'أبريل';
@@ -1664,16 +1705,19 @@ class LanguageAr extends BaseLanguage {
   String get lblToWifi => 'إلى wifi';
 
   @override
-  String get lblMultipleSelectionIsNotAvailableForThisService => "خيار الاختيار متعدد اللقاح غير متوفر لهذه الخدمة";
+  String get lblMultipleSelectionIsNotAvailableForThisService =>
+      "خيار الاختيار متعدد اللقاح غير متوفر لهذه الخدمة";
 
   @override
-  String get lblMultipleSelectionIsAvailableForThisService => 'يتوفر خيار الاختيار المتعدد لهذه الخدمة';
+  String get lblMultipleSelectionIsAvailableForThisService =>
+      'يتوفر خيار الاختيار المتعدد لهذه الخدمة';
 
   @override
   String get lblNote => 'ملحوظة';
 
   @override
-  String get lblToCloseTheEncounterInvoicePaymentIsMandatory => 'لإغلاق اللقاء ، يكون دفع الفاتورة إلزاميًا';
+  String get lblToCloseTheEncounterInvoicePaymentIsMandatory =>
+      'لإغلاق اللقاء ، يكون دفع الفاتورة إلزاميًا';
 
   @override
   String get lblUpdate => 'تحديث';
@@ -1751,7 +1795,8 @@ class LanguageAr extends BaseLanguage {
   String get lblPayBill => 'فاتورة الأجرة';
 
   @override
-  String get lblPleaseCheckYourEmailInboxToSetNewPassword => 'يرجى التحقق من صندوق بريدك الإلكتروني لتعيين كلمة مرور جديدة';
+  String get lblPleaseCheckYourEmailInboxToSetNewPassword =>
+      'يرجى التحقق من صندوق بريدك الإلكتروني لتعيين كلمة مرور جديدة';
 
   @override
   String get lblReview => 'مراجعة';
@@ -1778,13 +1823,15 @@ class LanguageAr extends BaseLanguage {
   String get lblSpecialities => 'التخصصات';
 
   @override
-  String get lblKnowWhatYourPatientsSaysAboutYou => 'تعرف على ما يقوله مرضاك عنك';
+  String get lblKnowWhatYourPatientsSaysAboutYou =>
+      'تعرف على ما يقوله مرضاك عنك';
 
   @override
   String get lblSchedule => 'جدول';
 
   @override
-  String get lblAllowMultiSelectionWhileBooking => 'السماح باختيار متعدد أثناء الحجز؟';
+  String get lblAllowMultiSelectionWhileBooking =>
+      'السماح باختيار متعدد أثناء الحجز؟';
 
   @override
   String get lblNo => 'لا';

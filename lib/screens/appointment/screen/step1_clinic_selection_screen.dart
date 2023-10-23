@@ -2,33 +2,36 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:kivicare_flutter/components/empty_error_state_component.dart';
-import 'package:kivicare_flutter/components/loader_widget.dart';
-import 'package:kivicare_flutter/components/no_data_found_widget.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/model/clinic_list_model.dart';
-import 'package:kivicare_flutter/network/clinic_repository.dart';
-import 'package:kivicare_flutter/screens/appointment/appointment_functions.dart';
-import 'package:kivicare_flutter/screens/appointment/components/clinic_list_component.dart';
-import 'package:kivicare_flutter/screens/shimmer/components/doctor_shimmer_component.dart';
-import 'package:kivicare_flutter/utils/app_common.dart';
-import 'package:kivicare_flutter/utils/common.dart';
-import 'package:kivicare_flutter/utils/constants.dart';
-import 'package:kivicare_flutter/utils/extensions/string_extensions.dart';
-import 'package:kivicare_flutter/utils/images.dart';
+import 'package:solidcare/components/empty_error_state_component.dart';
+import 'package:solidcare/components/loader_widget.dart';
+import 'package:solidcare/components/no_data_found_widget.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/model/clinic_list_model.dart';
+import 'package:solidcare/network/clinic_repository.dart';
+import 'package:solidcare/screens/appointment/appointment_functions.dart';
+import 'package:solidcare/screens/appointment/components/clinic_list_component.dart';
+import 'package:solidcare/screens/shimmer/components/doctor_shimmer_component.dart';
+import 'package:solidcare/utils/app_common.dart';
+import 'package:solidcare/utils/common.dart';
+import 'package:solidcare/utils/constants.dart';
+import 'package:solidcare/utils/extensions/string_extensions.dart';
+import 'package:solidcare/utils/images.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class Step1ClinicSelectionScreen extends StatefulWidget {
   final bool sessionOrEncounter;
   final int? clinicId;
 
-  Step1ClinicSelectionScreen({Key? key, this.sessionOrEncounter = false, this.clinicId});
+  Step1ClinicSelectionScreen(
+      {Key? key, this.sessionOrEncounter = false, this.clinicId});
 
   @override
-  State<Step1ClinicSelectionScreen> createState() => _Step1ClinicSelectionScreenState();
+  State<Step1ClinicSelectionScreen> createState() =>
+      _Step1ClinicSelectionScreenState();
 }
 
-class _Step1ClinicSelectionScreenState extends State<Step1ClinicSelectionScreen> {
+class _Step1ClinicSelectionScreenState
+    extends State<Step1ClinicSelectionScreen> {
   Future<List<Clinic>>? future;
 
   TextEditingController searchCont = TextEditingController();
@@ -105,7 +108,9 @@ class _Step1ClinicSelectionScreenState extends State<Step1ClinicSelectionScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBarWidget(
-        widget.sessionOrEncounter ? locale.lblSelectClinic : locale.lblAddNewAppointment,
+        widget.sessionOrEncounter
+            ? locale.lblSelectClinic
+            : locale.lblAddNewAppointment,
         systemUiOverlayStyle: defaultSystemUiOverlayStyle(context),
         textColor: Colors.white,
       ),
@@ -170,17 +175,21 @@ class _Step1ClinicSelectionScreenState extends State<Step1ClinicSelectionScreen>
               ),
               errorBuilder: (error) {
                 return NoDataWidget(
-                  imageWidget: Image.asset(ic_somethingWentWrong, height: 180, width: 180),
+                  imageWidget: Image.asset(ic_somethingWentWrong,
+                      height: 180, width: 180),
                   title: error.toString(),
                 );
               },
               errorWidget: ErrorStateWidget(),
               onSuccess: (snap) {
-                snap.retainWhere((element) => element.status == ACTIVE_CLINIC_STATUS);
+                snap.retainWhere(
+                    (element) => element.status == ACTIVE_CLINIC_STATUS);
                 if (snap.isEmpty && !appStore.isLoading) {
                   return SingleChildScrollView(
                     child: NoDataFoundWidget(
-                      text: searchCont.text.isEmpty ? locale.lblNoActiveClinicAvailable : locale.lblCantFindClinicYouSearchedFor,
+                      text: searchCont.text.isEmpty
+                          ? locale.lblNoActiveClinicAvailable
+                          : locale.lblCantFindClinicYouSearchedFor,
                     ),
                   ).center();
                 }
@@ -218,7 +227,11 @@ class _Step1ClinicSelectionScreenState extends State<Step1ClinicSelectionScreen>
                         if (widget.sessionOrEncounter) {
                           appointmentAppStore.setSelectedClinic(snap[index]);
                         } else {
-                          if (appointmentAppStore.mClinicSelected != null ? appointmentAppStore.mClinicSelected!.id.validate() == data.id.validate() : false) {
+                          if (appointmentAppStore.mClinicSelected != null
+                              ? appointmentAppStore.mClinicSelected!.id
+                                      .validate() ==
+                                  data.id.validate()
+                              : false) {
                             appointmentAppStore.setSelectedClinic(null);
                           } else {
                             appointmentAppStore.setSelectedClinic(data);
@@ -227,8 +240,14 @@ class _Step1ClinicSelectionScreenState extends State<Step1ClinicSelectionScreen>
                       },
                       child: Observer(
                         builder: (context) {
-                          bool isSelected = appointmentAppStore.mClinicSelected != null ? appointmentAppStore.mClinicSelected!.id.validate() == data.id.validate() : false;
-                          return ClinicListComponent(data: data, isSelected: isSelected);
+                          bool isSelected =
+                              appointmentAppStore.mClinicSelected != null
+                                  ? appointmentAppStore.mClinicSelected!.id
+                                          .validate() ==
+                                      data.id.validate()
+                                  : false;
+                          return ClinicListComponent(
+                              data: data, isSelected: isSelected);
                         },
                       ),
                     );
@@ -241,7 +260,9 @@ class _Step1ClinicSelectionScreenState extends State<Step1ClinicSelectionScreen>
         ).paddingOnly(left: 16, right: 16, top: 16);
       }),
       floatingActionButton: FloatingActionButton(
-        child: Icon(widget.sessionOrEncounter ? Icons.done : Icons.arrow_forward_outlined),
+        child: Icon(widget.sessionOrEncounter
+            ? Icons.done
+            : Icons.arrow_forward_outlined),
         onPressed: () {
           if (widget.sessionOrEncounter) {
             finish(context, appointmentAppStore.mClinicSelected);
@@ -249,7 +270,10 @@ class _Step1ClinicSelectionScreenState extends State<Step1ClinicSelectionScreen>
             if (appointmentAppStore.mClinicSelected == null)
               toast(locale.lblSelectOneClinic);
             else
-              clinicNavigation(context, clinicId: appointmentAppStore.mClinicSelected!.id.validate().toInt());
+              clinicNavigation(context,
+                  clinicId: appointmentAppStore.mClinicSelected!.id
+                      .validate()
+                      .toInt());
           }
         },
       ),

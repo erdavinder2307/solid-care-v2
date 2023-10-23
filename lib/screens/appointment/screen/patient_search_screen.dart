@@ -2,20 +2,20 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:kivicare_flutter/components/empty_error_state_component.dart';
-import 'package:kivicare_flutter/components/image_border_component.dart';
-import 'package:kivicare_flutter/components/loader_widget.dart';
-import 'package:kivicare_flutter/components/no_data_found_widget.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/model/user_model.dart';
-import 'package:kivicare_flutter/network/patient_list_repository.dart';
-import 'package:kivicare_flutter/screens/shimmer/screen/patient_search_shimmer_screen.dart';
-import 'package:kivicare_flutter/utils/app_common.dart';
-import 'package:kivicare_flutter/utils/colors.dart';
-import 'package:kivicare_flutter/utils/common.dart';
-import 'package:kivicare_flutter/utils/constants.dart';
-import 'package:kivicare_flutter/utils/extensions/string_extensions.dart';
-import 'package:kivicare_flutter/utils/images.dart';
+import 'package:solidcare/components/empty_error_state_component.dart';
+import 'package:solidcare/components/image_border_component.dart';
+import 'package:solidcare/components/loader_widget.dart';
+import 'package:solidcare/components/no_data_found_widget.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/model/user_model.dart';
+import 'package:solidcare/network/patient_list_repository.dart';
+import 'package:solidcare/screens/shimmer/screen/patient_search_shimmer_screen.dart';
+import 'package:solidcare/utils/app_common.dart';
+import 'package:solidcare/utils/colors.dart';
+import 'package:solidcare/utils/common.dart';
+import 'package:solidcare/utils/constants.dart';
+import 'package:solidcare/utils/extensions/string_extensions.dart';
+import 'package:solidcare/utils/images.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class PatientSearchScreen extends StatefulWidget {
@@ -56,7 +56,9 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
     future = getPatientListAPI(
       searchString: searchCont.text,
       patientList: patientList,
-      clinicId: isReceptionist() ? userStore.userClinicId.toInt() : appointmentAppStore.mClinicSelected?.id.toInt(),
+      clinicId: isReceptionist()
+          ? userStore.userClinicId.toInt()
+          : appointmentAppStore.mClinicSelected?.id.toInt(),
       page: 1,
       lastPageCallback: (b) => isLastPage = b,
     ).then((value) {
@@ -94,7 +96,9 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBarWidget('${locale.lblPatientList} ', textColor: Colors.white, systemUiOverlayStyle: defaultSystemUiOverlayStyle(context)),
+      appBar: appBarWidget('${locale.lblPatientList} ',
+          textColor: Colors.white,
+          systemUiOverlayStyle: defaultSystemUiOverlayStyle(context)),
       body: Observer(builder: (context) {
         return Stack(
           fit: StackFit.expand,
@@ -152,12 +156,20 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
               errorWidget: ErrorStateWidget(),
               onSuccess: (snap) {
                 if (widget.selectedData != null && isFirst) {
-                  selectedData = snap.firstWhere((element) => element.iD.validate() == widget.selectedData!.iD.validate());
+                  selectedData = snap.firstWhere((element) =>
+                      element.iD.validate() ==
+                      widget.selectedData!.iD.validate());
                   isFirst = false;
                 }
-                snap.retainWhere((element) => element.userStatus.toInt() == ACTIVE_USER_INT_STATUS);
+                snap.retainWhere((element) =>
+                    element.userStatus.toInt() == ACTIVE_USER_INT_STATUS);
                 if (snap.isEmpty && !appStore.isLoading) {
-                  return SingleChildScrollView(child: NoDataFoundWidget(text: searchCont.text.isEmpty ? locale.lblNoActivePatientAvailable : locale.lblCantFindPatientYouSearchedFor)).center();
+                  return SingleChildScrollView(
+                          child: NoDataFoundWidget(
+                              text: searchCont.text.isEmpty
+                                  ? locale.lblNoActivePatientAvailable
+                                  : locale.lblCantFindPatientYouSearchedFor))
+                      .center();
                 }
                 return AnimatedScrollView(
                   padding: EdgeInsets.fromLTRB(16, 16, 16, 80),
@@ -184,7 +196,8 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
                       (e) {
                         UserModel data = e;
                         return Container(
-                          decoration: boxDecorationDefault(boxShadow: [], color: context.cardColor),
+                          decoration: boxDecorationDefault(
+                              boxShadow: [], color: context.cardColor),
                           child: RadioListTile<UserModel>(
                             controlAffinity: ListTileControlAffinity.trailing,
                             tileColor: context.cardColor,
@@ -194,7 +207,10 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
                                     height: 30,
                                   )
                                 : GradientBorder(
-                                    gradient: LinearGradient(colors: [primaryColor, appSecondaryColor], tileMode: TileMode.mirror),
+                                    gradient: LinearGradient(colors: [
+                                      primaryColor,
+                                      appSecondaryColor
+                                    ], tileMode: TileMode.mirror),
                                     strokeWidth: 2,
                                     borderRadius: 80,
                                     child: PlaceHolderWidget(
@@ -202,12 +218,24 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
                                       width: 30,
                                       alignment: Alignment.center,
                                       shape: BoxShape.circle,
-                                      child: Text(data.displayName.validate(value: 'P')[0].capitalizeFirstLetter(), style: boldTextStyle(color: Colors.black)),
+                                      child: Text(
+                                          data.displayName
+                                              .validate(value: 'P')[0]
+                                              .capitalizeFirstLetter(),
+                                          style: boldTextStyle(
+                                              color: Colors.black)),
                                     ),
                                   ),
-                            shape: RoundedRectangleBorder(borderRadius: radius()),
+                            shape:
+                                RoundedRectangleBorder(borderRadius: radius()),
                             value: data,
-                            title: Text(data.displayName.capitalizeEachWord().validate(), maxLines: 2, overflow: TextOverflow.ellipsis, style: primaryTextStyle()),
+                            title: Text(
+                                data.displayName
+                                    .capitalizeEachWord()
+                                    .validate(),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                style: primaryTextStyle()),
                             onChanged: (v) {
                               selectedData = v;
                               setState(() {});

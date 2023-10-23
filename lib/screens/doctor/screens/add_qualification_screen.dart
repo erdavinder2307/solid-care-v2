@@ -1,12 +1,12 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/model/qualification_model.dart';
-import 'package:kivicare_flutter/utils/colors.dart';
-import 'package:kivicare_flutter/utils/common.dart';
-import 'package:kivicare_flutter/utils/extensions/string_extensions.dart';
-import 'package:kivicare_flutter/utils/images.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/model/qualification_model.dart';
+import 'package:solidcare/utils/colors.dart';
+import 'package:solidcare/utils/common.dart';
+import 'package:solidcare/utils/extensions/string_extensions.dart';
+import 'package:solidcare/utils/images.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class AddQualificationScreen extends StatefulWidget {
@@ -71,7 +71,8 @@ class _AddQualificationScreenState extends State<AddQualificationScreen> {
         Container(
           height: 4,
           width: 60,
-          decoration: boxDecorationDefault(color: context.primaryColor, borderRadius: radius()),
+          decoration: boxDecorationDefault(
+              color: context.primaryColor, borderRadius: radius()),
         ).center(),
         4.height,
         Text(
@@ -89,7 +90,9 @@ class _AddQualificationScreenState extends State<AddQualificationScreen> {
           decoration: inputDecoration(
             context: context,
             labelText: locale.lblDegree,
-            suffixIcon: ic_degree.iconImage(size: 10, color: context.iconColor).paddingAll(14),
+            suffixIcon: ic_degree
+                .iconImage(size: 10, color: context.iconColor)
+                .paddingAll(14),
           ),
         ),
         16.height,
@@ -101,7 +104,9 @@ class _AddQualificationScreenState extends State<AddQualificationScreen> {
           decoration: inputDecoration(
             context: context,
             labelText: locale.lblUniversity,
-            suffixIcon: ic_collage.iconImage(size: 10, color: context.iconColor).paddingAll(14),
+            suffixIcon: ic_collage
+                .iconImage(size: 10, color: context.iconColor)
+                .paddingAll(14),
           ),
         ),
         16.height,
@@ -113,7 +118,9 @@ class _AddQualificationScreenState extends State<AddQualificationScreen> {
           decoration: inputDecoration(
             context: context,
             labelText: locale.lblYear,
-            suffixIcon: ic_calendar.iconImage(size: 10, color: context.iconColor).paddingAll(14),
+            suffixIcon: ic_calendar
+                .iconImage(size: 10, color: context.iconColor)
+                .paddingAll(14),
           ),
           readOnly: true,
           onTap: () {
@@ -127,7 +134,8 @@ class _AddQualificationScreenState extends State<AddQualificationScreen> {
                     Container(
                       height: 4,
                       width: 60,
-                      decoration: boxDecorationDefault(color: context.primaryColor, borderRadius: radius()),
+                      decoration: boxDecorationDefault(
+                          color: context.primaryColor, borderRadius: radius()),
                     ).center(),
                     16.height,
                     8.height,

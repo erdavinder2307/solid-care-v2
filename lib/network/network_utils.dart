@@ -3,12 +3,12 @@ import 'dart:io';
 
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
-import 'package:kivicare_flutter/config.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/model/base_response.dart';
-import 'package:kivicare_flutter/network/auth_repository.dart';
-import 'package:kivicare_flutter/utils/common.dart';
-import 'package:kivicare_flutter/utils/constants.dart';
+import 'package:solidcare/config.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/model/base_response.dart';
+import 'package:solidcare/network/auth_repository.dart';
+import 'package:solidcare/utils/common.dart';
+import 'package:solidcare/utils/constants.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 Map<String, String> buildHeaderTokens() {
@@ -19,7 +19,8 @@ Map<String, String> buildHeaderTokens() {
   };
 
   if (appStore.isLoggedIn) {
-    header.putIfAbsent(HttpHeaders.authorizationHeader, () => 'Bearer ${getStringAsync(TOKEN)}');
+    header.putIfAbsent(HttpHeaders.authorizationHeader,
+        () => 'Bearer ${getStringAsync(TOKEN)}');
   }
 
   return header;
@@ -27,12 +28,14 @@ Map<String, String> buildHeaderTokens() {
 
 Uri buildBaseUrl(String endPoint) {
   Uri url = Uri.parse(endPoint);
-  if (!endPoint.startsWith('http')) url = Uri.parse('${appStore.tempBaseUrl}$endPoint');
+  if (!endPoint.startsWith('http'))
+    url = Uri.parse('${appStore.tempBaseUrl}$endPoint');
 
   return url;
 }
 
-Future<Response> buildHttpResponse(String endPoint, {HttpMethod method = HttpMethod.GET, Map? request}) async {
+Future<Response> buildHttpResponse(String endPoint,
+    {HttpMethod method = HttpMethod.GET, Map? request}) async {
   if (await isNetworkAvailable()) {
     var headers = buildHeaderTokens();
 
@@ -41,7 +44,8 @@ Future<Response> buildHttpResponse(String endPoint, {HttpMethod method = HttpMet
     Response response;
 
     if (method == HttpMethod.POST) {
-      response = await http.post(url, body: jsonEncode(request), headers: headers);
+      response =
+          await http.post(url, body: jsonEncode(request), headers: headers);
     } else if (method == HttpMethod.DELETE) {
       response = await delete(url, headers: headers);
     } else if (method == HttpMethod.PUT) {
@@ -134,8 +138,10 @@ Future<MultipartRequest> getMultiPartRequest(String endPoint) async {
   return MultipartRequest('POST', Uri.parse('$BASE_URL$endPoint'));
 }
 
-Future<dynamic> sendMultiPartRequest(MultipartRequest multiPartRequest, {Function(dynamic)? onSuccess, Function(dynamic)? onError}) async {
-  http.Response response = await http.Response.fromStream(await multiPartRequest.send());
+Future<dynamic> sendMultiPartRequest(MultipartRequest multiPartRequest,
+    {Function(dynamic)? onSuccess, Function(dynamic)? onError}) async {
+  http.Response response =
+      await http.Response.fromStream(await multiPartRequest.send());
 
   log('response : ${response.body}');
 
@@ -146,12 +152,16 @@ Future<dynamic> sendMultiPartRequest(MultipartRequest multiPartRequest, {Functio
       onSuccess?.call(response.body);
     }
   } else {
-    onError?.call(jsonDecode(response.body)['message'].toString().isNotEmpty ? jsonDecode(response.body)['message'] : errorSomethingWentWrong);
+    onError?.call(jsonDecode(response.body)['message'].toString().isNotEmpty
+        ? jsonDecode(response.body)['message']
+        : errorSomethingWentWrong);
   }
 }
 
-Future<dynamic> sendMultiPartRequestNew(MultipartRequest multiPartRequest) async {
-  http.Response response = await http.Response.fromStream(await multiPartRequest.send());
+Future<dynamic> sendMultiPartRequestNew(
+    MultipartRequest multiPartRequest) async {
+  http.Response response =
+      await http.Response.fromStream(await multiPartRequest.send());
 
   apiPrint(
     url: multiPartRequest.url.toString(),
@@ -170,7 +180,9 @@ Future<dynamic> sendMultiPartRequestNew(MultipartRequest multiPartRequest) async
       return response.body;
     }
   } else {
-    throw jsonDecode(response.body)['message'].toString().isNotEmpty ? jsonDecode(response.body)['message'] : errorSomethingWentWrong;
+    throw jsonDecode(response.body)['message'].toString().isNotEmpty
+        ? jsonDecode(response.body)['message']
+        : errorSomethingWentWrong;
   }
 }
 

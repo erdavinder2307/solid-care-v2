@@ -1,11 +1,11 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:kivicare_flutter/config.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/utils/app_common.dart';
-import 'package:kivicare_flutter/utils/colors.dart';
-import 'package:kivicare_flutter/utils/common.dart';
-import 'package:kivicare_flutter/utils/images.dart';
+import 'package:solidcare/config.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/utils/app_common.dart';
+import 'package:solidcare/utils/colors.dart';
+import 'package:solidcare/utils/common.dart';
+import 'package:solidcare/utils/images.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class QrInfoScreen extends StatefulWidget {
@@ -53,12 +53,17 @@ class _QrInfoScreenState extends State<QrInfoScreen> {
             16.height,
             RichTextWidget(
               list: [
-                TextSpan(text: APP_FIRST_NAME, style: boldTextStyle(size: 24, letterSpacing: 1)),
-                TextSpan(text: APP_SECOND_NAME, style: primaryTextStyle(size: 24, letterSpacing: 1)),
+                TextSpan(
+                    text: APP_FIRST_NAME,
+                    style: boldTextStyle(size: 24, letterSpacing: 1)),
+                TextSpan(
+                    text: APP_SECOND_NAME,
+                    style: primaryTextStyle(size: 24, letterSpacing: 1)),
               ],
             ),
             32.height,
-            Text('${locale.lblTryIt}! ${locale.lblBuyIt}!', style: boldTextStyle(size: 26)),
+            Text('${locale.lblTryIt}! ${locale.lblBuyIt}!',
+                style: boldTextStyle(size: 26)),
             32.height,
             Text(
               locale.lblYouAreJustOneStepAwayFromHavingAHandsOnBackendDemo,
@@ -68,7 +73,8 @@ class _QrInfoScreenState extends State<QrInfoScreen> {
             32.height,
             Align(
               alignment: Alignment.topLeft,
-              child: Text(locale.lblStepsToGenerateQRCode, style: boldTextStyle(size: 18)),
+              child: Text(locale.lblStepsToGenerateQRCode,
+                  style: boldTextStyle(size: 18)),
             ),
             16.height,
             ULNew(
@@ -77,10 +83,14 @@ class _QrInfoScreenState extends State<QrInfoScreen> {
               children: [
                 RichTextWidget(
                   list: [
-                    TextSpan(text: locale.lblOpenTheDemoUrlInWeb + '\n', style: primaryTextStyle()),
+                    TextSpan(
+                        text: locale.lblOpenTheDemoUrlInWeb + '\n',
+                        style: primaryTextStyle()),
                     TextSpan(
                       text: 'https://demo.kivicare.io/',
-                      style: primaryTextStyle(color: primaryColor, decoration: TextDecoration.underline),
+                      style: primaryTextStyle(
+                          color: primaryColor,
+                          decoration: TextDecoration.underline),
                       recognizer: TapGestureRecognizer()
                         ..onTap = () {
                           commonLaunchUrl("https://demo.kivicare.io/");
@@ -89,12 +99,16 @@ class _QrInfoScreenState extends State<QrInfoScreen> {
                   ],
                 ),
                 Text(locale.lblChooseYourRole, style: primaryTextStyle()),
-                Text(locale.lblEnterYourEmailAddressAsWellAsTheTemporaryLink, style: primaryTextStyle()),
-                Text('${locale.lblYouWillSeeAQRForAppOptionOnTheRightHandCorner}${locale.lblClickOnThatAndScanItFromTheApp}', style: primaryTextStyle()),
+                Text(locale.lblEnterYourEmailAddressAsWellAsTheTemporaryLink,
+                    style: primaryTextStyle()),
+                Text(
+                    '${locale.lblYouWillSeeAQRForAppOptionOnTheRightHandCorner}${locale.lblClickOnThatAndScanItFromTheApp}',
+                    style: primaryTextStyle()),
               ],
             ),
             64.height,
-            Text(locale.lblEnjoyTheFlawlessKivicareSystemWithEase, style: primaryTextStyle(size: 20, color: primaryColor)),
+            Text(locale.lblEnjoyTheFlawlessKivicareSystemWithEase,
+                style: primaryTextStyle(size: 20, color: primaryColor)),
           ],
         ),
       ),
@@ -133,19 +147,30 @@ class ULNew extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: List.generate(children.validate().length, (index) {
         return Container(
-          margin: EdgeInsets.only(bottom: (index == children.validate().length - 1) ? 0 : spacing),
+          margin: EdgeInsets.only(
+              bottom: (index == children.validate().length - 1) ? 0 : spacing),
           padding: edgeInsets ?? EdgeInsets.zero,
           child: Row(
-            crossAxisAlignment: symbolType == SymbolType.Numbered ? CrossAxisAlignment.start : CrossAxisAlignment.center,
+            crossAxisAlignment: symbolType == SymbolType.Numbered
+                ? CrossAxisAlignment.start
+                : CrossAxisAlignment.center,
             children: [
               symbolType == SymbolType.Bullet
                   ? Text(
                       '•',
-                      style: boldTextStyle(color: symbolColor ?? textPrimaryColorGlobal, size: 24),
+                      style: boldTextStyle(
+                          color: symbolColor ?? textPrimaryColorGlobal,
+                          size: 24),
                     )
                   : SizedBox(),
-              symbolType == SymbolType.Numbered ? Text('${prefixText.validate()} ${index + 1}.', style: boldTextStyle(color: symbolColor ?? textPrimaryColorGlobal)) : SizedBox(),
-              (symbolType == SymbolType.Custom && customSymbol != null) ? customSymbol! : SizedBox(),
+              symbolType == SymbolType.Numbered
+                  ? Text('${prefixText.validate()} ${index + 1}.',
+                      style: boldTextStyle(
+                          color: symbolColor ?? textPrimaryColorGlobal))
+                  : SizedBox(),
+              (symbolType == SymbolType.Custom && customSymbol != null)
+                  ? customSymbol!
+                  : SizedBox(),
               SizedBox(width: padding),
               children![index].expand(),
             ],

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/utils/common.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/utils/common.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class AddressWidget extends StatefulWidget {
@@ -39,7 +39,8 @@ class _AddressWidgetState extends State<AddressWidget> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(locale.lblAddressDetail, style: boldTextStyle(color: context.primaryColor, size: 18)),
+        Text(locale.lblAddressDetail,
+            style: boldTextStyle(color: context.primaryColor, size: 18)),
         Divider(color: viewLineColor),
         Wrap(
           runSpacing: 16,
@@ -53,7 +54,9 @@ class _AddressWidgetState extends State<AddressWidget> {
               textFieldType: TextFieldType.MULTILINE,
               minLines: 2,
               maxLines: 4,
-              decoration: inputDecoration(context: context, labelText: locale.lblAddress).copyWith(alignLabelWithHint: true),
+              decoration: inputDecoration(
+                      context: context, labelText: locale.lblAddress)
+                  .copyWith(alignLabelWithHint: true),
             ),
             Row(
               children: [
@@ -62,7 +65,8 @@ class _AddressWidgetState extends State<AddressWidget> {
                   focus: countryFocus,
                   nextFocus: cityFocus,
                   textFieldType: TextFieldType.OTHER,
-                  decoration: inputDecoration(context: context, labelText: locale.lblCountry),
+                  decoration: inputDecoration(
+                      context: context, labelText: locale.lblCountry),
                 ).expand(),
                 16.width,
                 AppTextField(
@@ -71,7 +75,8 @@ class _AddressWidgetState extends State<AddressWidget> {
                   textInputAction: TextInputAction.next,
                   nextFocus: postalCodeFocus,
                   textFieldType: TextFieldType.OTHER,
-                  decoration: inputDecoration(context: context, labelText: locale.lblCity),
+                  decoration: inputDecoration(
+                      context: context, labelText: locale.lblCity),
                 ).expand(),
               ],
             ),
@@ -83,7 +88,8 @@ class _AddressWidgetState extends State<AddressWidget> {
               inputFormatters: [
                 FilteringTextInputFormatter.digitsOnly, // Only allows digits
               ],
-              decoration: inputDecoration(context: context, labelText: locale.lblPostalCode),
+              decoration: inputDecoration(
+                  context: context, labelText: locale.lblPostalCode),
             ),
           ],
         ).paddingTop(8)

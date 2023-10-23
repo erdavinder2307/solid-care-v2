@@ -2,21 +2,21 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:kivicare_flutter/components/empty_error_state_component.dart';
-import 'package:kivicare_flutter/components/loader_widget.dart';
-import 'package:kivicare_flutter/components/no_data_found_widget.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/model/user_model.dart';
-import 'package:kivicare_flutter/network/doctor_list_repository.dart';
-import 'package:kivicare_flutter/screens/receptionist/screens/doctor/component/doctor_list_component.dart';
-import 'package:kivicare_flutter/screens/receptionist/screens/doctor/doctor_details_screen.dart';
-import 'package:kivicare_flutter/screens/shimmer/screen/doctor_fragment_shimmer.dart';
-import 'package:kivicare_flutter/utils/app_common.dart';
-import 'package:kivicare_flutter/utils/cached_value.dart';
-import 'package:kivicare_flutter/utils/colors.dart';
-import 'package:kivicare_flutter/utils/common.dart';
-import 'package:kivicare_flutter/utils/extensions/string_extensions.dart';
-import 'package:kivicare_flutter/utils/images.dart';
+import 'package:solidcare/components/empty_error_state_component.dart';
+import 'package:solidcare/components/loader_widget.dart';
+import 'package:solidcare/components/no_data_found_widget.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/model/user_model.dart';
+import 'package:solidcare/network/doctor_list_repository.dart';
+import 'package:solidcare/screens/receptionist/screens/doctor/component/doctor_list_component.dart';
+import 'package:solidcare/screens/receptionist/screens/doctor/doctor_details_screen.dart';
+import 'package:solidcare/screens/shimmer/screen/doctor_fragment_shimmer.dart';
+import 'package:solidcare/utils/app_common.dart';
+import 'package:solidcare/utils/cached_value.dart';
+import 'package:solidcare/utils/colors.dart';
+import 'package:solidcare/utils/common.dart';
+import 'package:solidcare/utils/extensions/string_extensions.dart';
+import 'package:solidcare/utils/images.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'add_doctor_screen.dart';
 
@@ -146,7 +146,11 @@ class _DoctorListScreenState extends State<DoctorListScreen> {
                     },
                   ),
                 ],
-              ).paddingOnly(left: 16, right: 16, bottom: 16, top: isReceptionist() ? 0 : 16),
+              ).paddingOnly(
+                  left: 16,
+                  right: 16,
+                  bottom: 16,
+                  top: isReceptionist() ? 0 : 16),
               SnapHelperWidget<List<UserModel>>(
                 future: future,
                 initialData: cachedDoctorList,
@@ -166,7 +170,8 @@ class _DoctorListScreenState extends State<DoctorListScreen> {
                   return AnimatedScrollView(
                     physics: AlwaysScrollableScrollPhysics(),
                     disposeScrollController: true,
-                    padding: EdgeInsets.fromLTRB(16, isPatient() ? 16 : 0, 16, 140),
+                    padding:
+                        EdgeInsets.fromLTRB(16, isPatient() ? 16 : 0, 16, 140),
                     listAnimationType: ListAnimationType.None,
                     slideConfiguration: SlideConfiguration(verticalOffset: 400),
                     onSwipeRefresh: () async {
@@ -202,7 +207,11 @@ class _DoctorListScreenState extends State<DoctorListScreen> {
                               refreshCall: () {
                                 init();
                               },
-                            ).launch(context, pageRouteAnimation: PageRouteAnimation.Fade, duration: 800.milliseconds).then(
+                            )
+                                .launch(context,
+                                    pageRouteAnimation: PageRouteAnimation.Fade,
+                                    duration: 800.milliseconds)
+                                .then(
                               (isDoctorDeleted) {
                                 if (isDoctorDeleted ?? false) {
                                   init();
@@ -217,7 +226,10 @@ class _DoctorListScreenState extends State<DoctorListScreen> {
                     ],
                   ).visible(snap.isNotEmpty,
                       defaultWidget: SingleChildScrollView(
-                        child: NoDataFoundWidget(text: searchCont.text.isEmpty ? locale.lblNoDataFound : locale.lblCantFindDoctorYouSearchedFor),
+                        child: NoDataFoundWidget(
+                            text: searchCont.text.isEmpty
+                                ? locale.lblNoDataFound
+                                : locale.lblCantFindDoctorYouSearchedFor),
                       ).center().visible(snap.isEmpty && !appStore.isLoading));
                 },
               ).paddingTop(74),

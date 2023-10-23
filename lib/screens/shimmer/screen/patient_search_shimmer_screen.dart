@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:kivicare_flutter/screens/shimmer/components/shimmer_component.dart';
-import 'package:kivicare_flutter/utils/app_common.dart';
-import 'package:kivicare_flutter/utils/colors.dart';
+import 'package:solidcare/screens/shimmer/components/shimmer_component.dart';
+import 'package:solidcare/utils/app_common.dart';
+import 'package:solidcare/utils/colors.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class PatientSearchShimmerScreen extends StatelessWidget {
@@ -27,14 +27,18 @@ class PatientSearchShimmerScreen extends StatelessWidget {
                 ShimmerComponent(
                   child: Container(
                     padding: EdgeInsets.symmetric(horizontal: 25, vertical: 25),
-                    decoration: boxDecorationDefault(boxShadow: [], color: primaryColor.withOpacity(0.6), shape: BoxShape.circle),
+                    decoration: boxDecorationDefault(
+                        boxShadow: [],
+                        color: primaryColor.withOpacity(0.6),
+                        shape: BoxShape.circle),
                   ),
                 ),
                 16.width,
                 ShimmerComponent(
                   child: Container(
                     padding: EdgeInsets.symmetric(horizontal: 30, vertical: 8),
-                    decoration: boxDecorationDefault(boxShadow: [], color: primaryColor.withOpacity(0.6)),
+                    decoration: boxDecorationDefault(
+                        boxShadow: [], color: primaryColor.withOpacity(0.6)),
                   ),
                 ).expand(),
               ],

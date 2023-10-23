@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:kivicare_flutter/components/cached_image_widget.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/screens/auth/screens/edit_profile_screen.dart';
+import 'package:solidcare/components/cached_image_widget.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/screens/auth/screens/edit_profile_screen.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class DashboardTopProfileWidget extends StatelessWidget {
@@ -17,7 +17,10 @@ class DashboardTopProfileWidget extends StatelessWidget {
         });
       },
       child: Container(
-        decoration: boxDecorationDefault(color: context.primaryColor, border: Border.all(color: white, width: 3), shape: BoxShape.circle),
+        decoration: boxDecorationDefault(
+            color: context.primaryColor,
+            border: Border.all(color: white, width: 3),
+            shape: BoxShape.circle),
         margin: EdgeInsets.only(right: 14),
         child: userStore.profileImage.validate().isNotEmpty
             ? CachedImageWidget(
@@ -33,7 +36,11 @@ class DashboardTopProfileWidget extends StatelessWidget {
                 height: 38,
                 width: 38,
                 alignment: Alignment.center,
-                child: Text(userStore.firstName.validate(value: 'P')[0].capitalizeFirstLetter(), style: boldTextStyle(color: Colors.black)),
+                child: Text(
+                    userStore.firstName
+                        .validate(value: 'P')[0]
+                        .capitalizeFirstLetter(),
+                    style: boldTextStyle(color: Colors.black)),
               ),
       ),
     );

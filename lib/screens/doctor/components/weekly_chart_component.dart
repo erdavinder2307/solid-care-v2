@@ -1,8 +1,8 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/model/upcoming_appointment_model.dart';
-import 'package:kivicare_flutter/utils/colors.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/model/upcoming_appointment_model.dart';
+import 'package:solidcare/utils/colors.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class WeeklyChartComponent extends StatefulWidget {
@@ -108,7 +108,8 @@ class WeeklyChartComponentState extends State<WeeklyChartComponent> {
                   weekDay = locale.lblSun;
                   break;
               }
-              return BarTooltipItem(weekDay + '\n' + (rod.toY).toString(), TextStyle(color: primaryColor));
+              return BarTooltipItem(weekDay + '\n' + (rod.toY).toString(),
+                  TextStyle(color: primaryColor));
             }),
       ),
       titlesData: FlTitlesData(
@@ -140,19 +141,26 @@ class WeeklyChartComponentState extends State<WeeklyChartComponent> {
     Widget text;
     switch (value.toInt()) {
       case 0:
-        return text = Text('\n${locale.lblMon}', style: secondaryTextStyle(size: 12));
+        return text =
+            Text('\n${locale.lblMon}', style: secondaryTextStyle(size: 12));
       case 1:
-        return text = Text('\n${locale.lblTue}', style: secondaryTextStyle(size: 12));
+        return text =
+            Text('\n${locale.lblTue}', style: secondaryTextStyle(size: 12));
       case 2:
-        return text = Text('\n${locale.lblWed}', style: secondaryTextStyle(size: 12));
+        return text =
+            Text('\n${locale.lblWed}', style: secondaryTextStyle(size: 12));
       case 3:
-        return text = Text('\n${locale.lblThu}', style: secondaryTextStyle(size: 12));
+        return text =
+            Text('\n${locale.lblThu}', style: secondaryTextStyle(size: 12));
       case 4:
-        return text = Text('\n${locale.lblFri}', style: secondaryTextStyle(size: 12));
+        return text =
+            Text('\n${locale.lblFri}', style: secondaryTextStyle(size: 12));
       case 5:
-        return text = Text('\n${locale.lblSat}', style: secondaryTextStyle(size: 12));
+        return text =
+            Text('\n${locale.lblSat}', style: secondaryTextStyle(size: 12));
       case 6:
-        return text = Text('\n${locale.lblSun}', style: secondaryTextStyle(size: 12));
+        return text =
+            Text('\n${locale.lblSun}', style: secondaryTextStyle(size: 12));
       default:
         text = Text('', style: boldTextStyle(size: 14));
         break;
@@ -167,7 +175,8 @@ class WeeklyChartComponentState extends State<WeeklyChartComponent> {
         return text = Text('M', style: boldTextStyle(size: 14));
 
       default:
-        text = Text('${(value % 100).toInt()}', style: secondaryTextStyle(size: 12));
+        text = Text('${(value % 100).toInt()}',
+            style: secondaryTextStyle(size: 12));
         break;
     }
     return Padding(padding: EdgeInsets.only(top: 16), child: text);

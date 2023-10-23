@@ -1,15 +1,18 @@
-import 'package:kivicare_flutter/config.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/model/doctor_list_model.dart';
-import 'package:kivicare_flutter/model/user_model.dart';
-import 'package:kivicare_flutter/network/network_utils.dart';
-import 'package:kivicare_flutter/utils/cached_value.dart';
-import 'package:kivicare_flutter/utils/common.dart';
+import 'package:solidcare/config.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/model/doctor_list_model.dart';
+import 'package:solidcare/model/user_model.dart';
+import 'package:solidcare/network/network_utils.dart';
+import 'package:solidcare/utils/cached_value.dart';
+import 'package:solidcare/utils/common.dart';
 import 'package:nb_utils/nb_utils.dart';
 
-Future<UserModel> getSelectedDoctorAPI({int? clinicId, required int doctorId}) async {
+Future<UserModel> getSelectedDoctorAPI(
+    {int? clinicId, required int doctorId}) async {
   return await getDoctorListAPI(clinicId: clinicId, page: null).then((value) {
-    UserModel data = value.doctorList.validate().firstWhere((element) => element.iD.validate() == doctorId);
+    UserModel data = value.doctorList
+        .validate()
+        .firstWhere((element) => element.iD.validate() == doctorId);
     appointmentAppStore.setSelectedDoctor(data);
     return data;
   }).catchError((e) {
@@ -20,7 +23,10 @@ Future<UserModel> getSelectedDoctorAPI({int? clinicId, required int doctorId}) a
 }
 
 Future<void> deleteDoctorAPI(Map request) async {
-  return await handleResponse(await buildHttpResponse('kivicare/api/v1/doctor/delete-doctor', request: request, method: HttpMethod.POST));
+  return await handleResponse(await buildHttpResponse(
+      'kivicare/api/v1/doctor/delete-doctor',
+      request: request,
+      method: HttpMethod.POST));
 }
 
 Future<List<UserModel>> getDoctorListWithPagination({
@@ -42,7 +48,9 @@ Future<List<UserModel>> getDoctorListWithPagination({
 
   if (searchString.validate().isNotEmpty) param.add('s=$searchString');
 
-  DoctorListModel res = DoctorListModel.fromJson(await handleResponse(await buildHttpResponse('kivicare/api/v1/doctor/get-list${param.validate().join('&')}')));
+  DoctorListModel res = DoctorListModel.fromJson(await handleResponse(
+      await buildHttpResponse(
+          'kivicare/api/v1/doctor/get-list${param.validate().join('&')}')));
 
   if (page == 1) doctorList.clear();
 
@@ -65,8 +73,10 @@ Future<DoctorListModel> getDoctorListAPI({int? page, int? clinicId}) async {
   }
 
   if (page == null) {
-    return DoctorListModel.fromJson(await (handleResponse(await buildHttpResponse('kivicare/api/v1/doctor/get-list?clinic_id=${id != null ? id : ''}&limit=-1'))));
+    return DoctorListModel.fromJson(await (handleResponse(await buildHttpResponse(
+        'kivicare/api/v1/doctor/get-list?clinic_id=${id != null ? id : ''}&limit=-1'))));
   } else {
-    return DoctorListModel.fromJson(await (handleResponse(await buildHttpResponse('kivicare/api/v1/doctor/get-list?clinic_id=${id != null ? id : ''}&limit=$PER_PAGE&page=$page'))));
+    return DoctorListModel.fromJson(await (handleResponse(await buildHttpResponse(
+        'kivicare/api/v1/doctor/get-list?clinic_id=${id != null ? id : ''}&limit=$PER_PAGE&page=$page'))));
   }
 }

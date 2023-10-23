@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:intl/intl.dart';
-import 'package:kivicare_flutter/components/loader_widget.dart';
-import 'package:kivicare_flutter/components/role_widget.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/model/clinic_list_model.dart';
-import 'package:kivicare_flutter/model/encounter_model.dart';
-import 'package:kivicare_flutter/model/user_model.dart';
-import 'package:kivicare_flutter/network/encounter_repository.dart';
-import 'package:kivicare_flutter/screens/appointment/screen/patient_search_screen.dart';
-import 'package:kivicare_flutter/screens/appointment/screen/step1_clinic_selection_screen.dart';
-import 'package:kivicare_flutter/screens/appointment/screen/step2_doctor_selection_screen.dart';
-import 'package:kivicare_flutter/utils/app_common.dart';
-import 'package:kivicare_flutter/utils/common.dart';
-import 'package:kivicare_flutter/utils/constants.dart';
-import 'package:kivicare_flutter/utils/extensions/date_extensions.dart';
-import 'package:kivicare_flutter/utils/extensions/string_extensions.dart';
+import 'package:solidcare/components/loader_widget.dart';
+import 'package:solidcare/components/role_widget.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/model/clinic_list_model.dart';
+import 'package:solidcare/model/encounter_model.dart';
+import 'package:solidcare/model/user_model.dart';
+import 'package:solidcare/network/encounter_repository.dart';
+import 'package:solidcare/screens/appointment/screen/patient_search_screen.dart';
+import 'package:solidcare/screens/appointment/screen/step1_clinic_selection_screen.dart';
+import 'package:solidcare/screens/appointment/screen/step2_doctor_selection_screen.dart';
+import 'package:solidcare/utils/app_common.dart';
+import 'package:solidcare/utils/common.dart';
+import 'package:solidcare/utils/constants.dart';
+import 'package:solidcare/utils/extensions/date_extensions.dart';
+import 'package:solidcare/utils/extensions/string_extensions.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class AddEncounterScreen extends StatefulWidget {
@@ -62,15 +62,21 @@ class _AddEncounterScreenState extends State<AddEncounterScreen> {
     isUpdate = widget.patientEncounterData != null;
     if (isUpdate) {
       patientEncounterData = widget.patientEncounterData;
-      selectedPatientNameCont.text = widget.patientEncounterData!.patientName.validate();
-      selectedClinicNameCont.text = widget.patientEncounterData!.clinicName.validate();
-      selectedDoctorNameCont.text = widget.patientEncounterData!.doctorName.validate().prefixText(value: 'Dr. ');
+      selectedPatientNameCont.text =
+          widget.patientEncounterData!.patientName.validate();
+      selectedClinicNameCont.text =
+          widget.patientEncounterData!.clinicName.validate();
+      selectedDoctorNameCont.text = widget.patientEncounterData!.doctorName
+          .validate()
+          .prefixText(value: 'Dr. ');
       if (patientEncounterData!.encounterDate.validate().isNotEmpty) {
-        current = DateFormat(SAVE_DATE_FORMAT).parse(patientEncounterData!.encounterDateGlobal.validate());
+        current = DateFormat(SAVE_DATE_FORMAT)
+            .parse(patientEncounterData!.encounterDateGlobal.validate());
         encounterDateCont.text = current.getFormattedDate(SAVE_DATE_FORMAT);
       }
 
-      encounterDescriptionCont.text = patientEncounterData!.description.validate();
+      encounterDescriptionCont.text =
+          patientEncounterData!.description.validate();
       clinicId = patientEncounterData!.clinicId.toInt();
 
       setState(() {});
@@ -93,16 +99,19 @@ class _AddEncounterScreenState extends State<AddEncounterScreen> {
 
     if (isUpdate) {
       request.putIfAbsent('id', () => widget.patientEncounterData!.encounterId);
-      request.putIfAbsent('patient_id', () => widget.patientEncounterData!.patientId.validate());
+      request.putIfAbsent('patient_id',
+          () => widget.patientEncounterData!.patientId.validate());
     } else {
-      if (selectedPatient != null) request.putIfAbsent('patient_id', () => selectedPatient?.iD);
+      if (selectedPatient != null)
+        request.putIfAbsent('patient_id', () => selectedPatient?.iD);
     }
 
     if (isDoctor()) {
       request.putIfAbsent("doctor_id", () => userStore.userId);
       if (isProEnabled()) {
         if (isUpdate) {
-          request.putIfAbsent("clinic_id", () => widget.patientEncounterData!.clinicId);
+          request.putIfAbsent(
+              "clinic_id", () => widget.patientEncounterData!.clinicId);
         } else
           request.putIfAbsent("clinic_id", () => selectedClinic?.id);
       } else {
@@ -111,7 +120,11 @@ class _AddEncounterScreenState extends State<AddEncounterScreen> {
     } else if (isReceptionist()) {
       request.putIfAbsent('patient_id', () => widget.patientId);
       request.putIfAbsent("clinic_id", () => userStore.userClinicId);
-      request.putIfAbsent("doctor_id", () => selectedDoctor != null ? selectedDoctor?.iD : widget.patientEncounterData?.doctorId);
+      request.putIfAbsent(
+          "doctor_id",
+          () => selectedDoctor != null
+              ? selectedDoctor?.iD
+              : widget.patientEncounterData?.doctorId);
     }
 
     if (widget.patientId != null) {
@@ -120,7 +133,8 @@ class _AddEncounterScreenState extends State<AddEncounterScreen> {
 
     addEncounterData(request).then((value) {
       appStore.setLoading(false);
-      toast(isUpdate ? locale.lblEncounterUpdated : locale.lblAddedNewEncounter);
+      toast(
+          isUpdate ? locale.lblEncounterUpdated : locale.lblAddedNewEncounter);
 
       finish(context, true);
     }).catchError((e) {
@@ -147,7 +161,9 @@ class _AddEncounterScreenState extends State<AddEncounterScreen> {
         children: [
           Form(
             key: formKey,
-            autovalidateMode: isFirstTime ? AutovalidateMode.disabled : AutovalidateMode.onUserInteraction,
+            autovalidateMode: isFirstTime
+                ? AutovalidateMode.disabled
+                : AutovalidateMode.onUserInteraction,
             child: AnimatedScrollView(
               padding: EdgeInsets.all(16),
               children: [
@@ -161,13 +177,21 @@ class _AddEncounterScreenState extends State<AddEncounterScreen> {
                             textFieldType: TextFieldType.NAME,
                             controller: selectedPatientNameCont,
                             readOnly: true,
-                            decoration: inputDecoration(context: context, labelText: isUpdate ? locale.lblPatientName : locale.lblSelectPatient),
+                            decoration: inputDecoration(
+                                context: context,
+                                labelText: isUpdate
+                                    ? locale.lblPatientName
+                                    : locale.lblSelectPatient),
                             onTap: () async {
                               if (!isUpdate) {
-                                await PatientSearchScreen().launch(context).then((value) {
+                                await PatientSearchScreen()
+                                    .launch(context)
+                                    .then((value) {
                                   if (value != null) {
                                     selectedPatient = value;
-                                    selectedPatientNameCont.text = selectedPatient!.userDisplayName.validate();
+                                    selectedPatientNameCont.text =
+                                        selectedPatient!.userDisplayName
+                                            .validate();
                                     setState(() {});
                                   }
                                 });
@@ -180,15 +204,29 @@ class _AddEncounterScreenState extends State<AddEncounterScreen> {
                           controller: selectedClinicNameCont,
                           textFieldType: TextFieldType.NAME,
                           readOnly: true,
-                          decoration: inputDecoration(context: context, labelText: isUpdate ? locale.lblClinicName : locale.lblSelectClinic),
+                          decoration: inputDecoration(
+                              context: context,
+                              labelText: isUpdate
+                                  ? locale.lblClinicName
+                                  : locale.lblSelectClinic),
                           onTap: () async {
                             if (!isUpdate) {
-                              await Step1ClinicSelectionScreen(sessionOrEncounter: true, clinicId: isUpdate ? widget.patientEncounterData!.clinicId.toInt() : null).launch(context).then((value) {
+                              await Step1ClinicSelectionScreen(
+                                      sessionOrEncounter: true,
+                                      clinicId: isUpdate
+                                          ? widget
+                                              .patientEncounterData!.clinicId
+                                              .toInt()
+                                          : null)
+                                  .launch(context)
+                                  .then((value) {
                                 if (value != null) {
                                   selectedClinic = value!;
-                                  selectedClinicNameCont.text = selectedClinic!.name.validate();
+                                  selectedClinicNameCont.text =
+                                      selectedClinic!.name.validate();
                                 } else {
-                                  toast('${locale.lblPlease} ${locale.lblSelectClinic}');
+                                  toast(
+                                      '${locale.lblPlease} ${locale.lblSelectClinic}');
                                 }
                                 setState(() {});
                               }).catchError((e) {
@@ -208,16 +246,26 @@ class _AddEncounterScreenState extends State<AddEncounterScreen> {
                   child: AppTextField(
                     textFieldType: TextFieldType.NAME,
                     controller: selectedDoctorNameCont,
-                    decoration: inputDecoration(context: context, labelText: isUpdate ? locale.lblDoctorName : locale.lblSelectDoctor),
+                    decoration: inputDecoration(
+                        context: context,
+                        labelText: isUpdate
+                            ? locale.lblDoctorName
+                            : locale.lblSelectDoctor),
                     readOnly: true,
                     onTap: () {
                       if (!isUpdate) {
-                        Step2DoctorSelectionScreen(doctorId: widget.patientEncounterData?.doctorId.toInt()).launch(context).then((value) {
+                        Step2DoctorSelectionScreen(
+                                doctorId: widget.patientEncounterData?.doctorId
+                                    .toInt())
+                            .launch(context)
+                            .then((value) {
                           if (value != null) {
                             selectedDoctor = value;
-                            selectedDoctorNameCont.text = selectedDoctor!.displayName.validate();
+                            selectedDoctorNameCont.text =
+                                selectedDoctor!.displayName.validate();
                           } else {
-                            toast('${locale.lblPlease} ${locale.lblSelectDoctor}');
+                            toast(
+                                '${locale.lblPlease} ${locale.lblSelectDoctor}');
                           }
                           setState(() {});
                         }).catchError((e) {
@@ -229,11 +277,18 @@ class _AddEncounterScreenState extends State<AddEncounterScreen> {
                 ),
                 16.height,
                 AppTextField(
-                  keyboardAppearance: appStore.isDarkModeOn ? Brightness.dark : Brightness.light,
+                  keyboardAppearance: appStore.isDarkModeOn
+                      ? Brightness.dark
+                      : Brightness.light,
                   selectionControls: EmptyTextSelectionControls(),
                   onTap: () {
                     if (isUpdate &&
-                        DateFormat(SAVE_DATE_FORMAT).parse(widget.patientEncounterData!.encounterDateGlobal.validate()).isBefore(DateFormat(SAVE_DATE_FORMAT).parse(DateTime.now().toString()))) {
+                        DateFormat(SAVE_DATE_FORMAT)
+                            .parse(widget
+                                .patientEncounterData!.encounterDateGlobal
+                                .validate())
+                            .isBefore(DateFormat(SAVE_DATE_FORMAT)
+                                .parse(DateTime.now().toString()))) {
                       toast(locale.lblEditHolidayRestriction);
                     } else {
                       datePickerComponent(
@@ -243,7 +298,8 @@ class _AddEncounterScreenState extends State<AddEncounterScreen> {
                         onDateSelected: (selectedDate) {
                           if (selectedDate != null) {
                             current = selectedDate;
-                            encounterDateCont.text = current.getFormattedDate(SAVE_DATE_FORMAT);
+                            encounterDateCont.text =
+                                current.getFormattedDate(SAVE_DATE_FORMAT);
                             setState(() {});
                           } else {
                             //
@@ -256,7 +312,8 @@ class _AddEncounterScreenState extends State<AddEncounterScreen> {
                   readOnly: true,
                   textFieldType: TextFieldType.NAME,
                   suffix: Icon(Icons.date_range),
-                  decoration: inputDecoration(context: context, labelText: locale.lblDate),
+                  decoration: inputDecoration(
+                      context: context, labelText: locale.lblDate),
                 ),
                 16.height,
                 AppTextField(
@@ -266,12 +323,15 @@ class _AddEncounterScreenState extends State<AddEncounterScreen> {
                   maxLines: 14,
                   textAlign: TextAlign.start,
                   minLines: 5,
-                  decoration: inputDecoration(context: context, labelText: locale.lblDescription),
+                  decoration: inputDecoration(
+                      context: context, labelText: locale.lblDescription),
                 ),
               ],
             ),
           ),
-          Observer(builder: (context) => LoaderWidget().visible(appStore.isLoading).center())
+          Observer(
+              builder: (context) =>
+                  LoaderWidget().visible(appStore.isLoading).center())
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -281,9 +341,12 @@ class _AddEncounterScreenState extends State<AddEncounterScreen> {
             formKey.currentState!.save();
             showConfirmDialogCustom(
               context,
-              dialogType: isUpdate ? DialogType.UPDATE : DialogType.CONFIRMATION,
+              dialogType:
+                  isUpdate ? DialogType.UPDATE : DialogType.CONFIRMATION,
               primaryColor: context.primaryColor,
-              title: isUpdate ? locale.lblDoYouWantToUpdateEncounter : locale.lblDoYouWantToAddEncounter,
+              title: isUpdate
+                  ? locale.lblDoYouWantToUpdateEncounter
+                  : locale.lblDoYouWantToAddEncounter,
               onAccept: (p0) {
                 saveEncounter();
               },

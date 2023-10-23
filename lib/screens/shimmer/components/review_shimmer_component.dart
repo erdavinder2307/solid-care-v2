@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:kivicare_flutter/screens/shimmer/components/shimmer_component.dart';
-import 'package:kivicare_flutter/utils/app_common.dart';
-import 'package:kivicare_flutter/utils/colors.dart';
+import 'package:solidcare/screens/shimmer/components/shimmer_component.dart';
+import 'package:solidcare/utils/app_common.dart';
+import 'package:solidcare/utils/colors.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class ReviewShimmerComponent extends StatelessWidget {
@@ -34,15 +34,21 @@ class ReviewShimmerComponent extends StatelessWidget {
                 children: [
                   ShimmerComponent(
                     child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 60, vertical: 4),
-                      decoration: shimmerBoxInputDecoration(borderRadiusValue: 8, color: primaryColor.withOpacity(0.6)),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 60, vertical: 4),
+                      decoration: shimmerBoxInputDecoration(
+                          borderRadiusValue: 8,
+                          color: primaryColor.withOpacity(0.6)),
                     ),
                   ),
                   4.height,
                   ShimmerComponent(
                     child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 60, vertical: 4),
-                      decoration: shimmerBoxInputDecoration(borderRadiusValue: 8, color: primaryColor.withOpacity(0.6)),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 60, vertical: 4),
+                      decoration: shimmerBoxInputDecoration(
+                          borderRadiusValue: 8,
+                          color: primaryColor.withOpacity(0.6)),
                     ),
                   ),
                 ],
@@ -54,7 +60,8 @@ class ReviewShimmerComponent extends StatelessWidget {
             child: Container(
               width: context.width() - 32,
               padding: EdgeInsets.all(4),
-              decoration: shimmerBoxInputDecoration(borderRadiusValue: 8, color: primaryColor.withOpacity(0.6)),
+              decoration: shimmerBoxInputDecoration(
+                  borderRadiusValue: 8, color: primaryColor.withOpacity(0.6)),
             ),
           ),
           4.height,
@@ -62,7 +69,8 @@ class ReviewShimmerComponent extends StatelessWidget {
             child: Container(
               width: context.width() - 32,
               padding: EdgeInsets.all(4),
-              decoration: shimmerBoxInputDecoration(borderRadiusValue: 8, color: primaryColor.withOpacity(0.6)),
+              decoration: shimmerBoxInputDecoration(
+                  borderRadiusValue: 8, color: primaryColor.withOpacity(0.6)),
             ),
           ),
           4.height,
@@ -70,7 +78,8 @@ class ReviewShimmerComponent extends StatelessWidget {
             child: Container(
               width: context.width() - 32,
               padding: EdgeInsets.all(4),
-              decoration: shimmerBoxInputDecoration(borderRadiusValue: 8, color: primaryColor.withOpacity(0.6)),
+              decoration: shimmerBoxInputDecoration(
+                  borderRadiusValue: 8, color: primaryColor.withOpacity(0.6)),
             ),
           ),
           4.height,
@@ -78,7 +87,8 @@ class ReviewShimmerComponent extends StatelessWidget {
             child: Container(
               width: context.width() / 2 - 24,
               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 4),
-              decoration: shimmerBoxInputDecoration(borderRadiusValue: 8, color: primaryColor.withOpacity(0.6)),
+              decoration: shimmerBoxInputDecoration(
+                  borderRadiusValue: 8, color: primaryColor.withOpacity(0.6)),
             ),
           ),
         ],

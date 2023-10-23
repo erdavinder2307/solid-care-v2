@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kivicare_flutter/utils/colors.dart';
+import 'package:solidcare/utils/colors.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -11,7 +11,13 @@ class ShimmerComponent extends StatelessWidget {
   final Color? baseColor;
   final Color? highlightColor;
 
-  ShimmerComponent({this.height, this.width, this.child, this.backgroundColor, this.baseColor, this.highlightColor});
+  ShimmerComponent(
+      {this.height,
+      this.width,
+      this.child,
+      this.backgroundColor,
+      this.baseColor,
+      this.highlightColor});
   @override
   Widget build(BuildContext context) {
     return Shimmer.fromColors(
@@ -24,7 +30,8 @@ class ShimmerComponent extends StatelessWidget {
           Container(
             height: height?.validate(),
             width: width.validate(),
-            decoration: boxDecorationWithRoundedCorners(backgroundColor: backgroundColor ?? Colors.white10),
+            decoration: boxDecorationWithRoundedCorners(
+                backgroundColor: backgroundColor ?? Colors.white10),
           ),
     );
   }

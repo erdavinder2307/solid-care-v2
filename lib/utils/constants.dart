@@ -1,4 +1,4 @@
-import 'package:kivicare_flutter/main.dart';
+import 'package:solidcare/main.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 import '../model/upcoming_appointment_model.dart';
@@ -21,7 +21,14 @@ List<WeeklyAppointment> emptyGraphList = [
   WeeklyAppointment(x: locale.lblSunday, y: 0),
 ];
 
-List<String> appointmentStatusList = [locale.lblAll, locale.lblLatest, locale.lblPending, locale.lblCompleted, locale.lblCancelled, locale.lblPast];
+List<String> appointmentStatusList = [
+  locale.lblAll,
+  locale.lblLatest,
+  locale.lblPending,
+  locale.lblCompleted,
+  locale.lblCancelled,
+  locale.lblPast
+];
 
 List<String> userRoles = [locale.lblDoctor, locale.lblClinic];
 
@@ -163,7 +170,8 @@ const UPDATE_SESSIONS = 'UPDATE_SESSIONS';
 
 const CACHED_FEEDS_ARTICLES = 'CACHED_FEEDS_ARTICLES';
 
-const DOCTOR_ADD_API_UNSUCCESS_MESSAGE = "Sorry, that email address is already used!";
+const DOCTOR_ADD_API_UNSUCCESS_MESSAGE =
+    "Sorry, that email address is already used!";
 
 const PLAYER_ID = "PLAYER_ID";
 

@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
 
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/model/prescription_model.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/model/prescription_model.dart';
 
 class EncounterPrescriptionComponent extends StatelessWidget {
   final PrescriptionData prescriptionData;
   final Function? onTap;
   final bool isDeleteOn;
 
-  EncounterPrescriptionComponent({required this.prescriptionData, this.onTap, this.isDeleteOn = true});
+  EncounterPrescriptionComponent(
+      {required this.prescriptionData, this.onTap, this.isDeleteOn = true});
 
   @override
   Widget build(BuildContext context) {
@@ -25,13 +26,25 @@ class EncounterPrescriptionComponent extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(prescriptionData.name.validate(value: locale.lblNoTitle).capitalizeFirstLetter(), style: boldTextStyle()),
+              Text(
+                  prescriptionData.name
+                      .validate(value: locale.lblNoTitle)
+                      .capitalizeFirstLetter(),
+                  style: boldTextStyle()),
               4.height,
-              Text(locale.lblDays.capitalizeFirstLetter() + " : " + prescriptionData.duration.validate(), style: primaryTextStyle()),
+              Text(
+                  locale.lblDays.capitalizeFirstLetter() +
+                      " : " +
+                      prescriptionData.duration.validate(),
+                  style: primaryTextStyle()),
               2.height,
-              Text("${locale.lblTime.capitalizeFirstLetter()} : ${prescriptionData.frequency.validate(value: locale.lblNoTitle)}", style: primaryTextStyle()),
+              Text(
+                  "${locale.lblTime.capitalizeFirstLetter()} : ${prescriptionData.frequency.validate(value: locale.lblNoTitle)}",
+                  style: primaryTextStyle()),
               if (prescriptionData.instruction.validate().isNotEmpty) 2.height,
-              if (prescriptionData.instruction.validate().isNotEmpty) Text(prescriptionData.instruction.validate(), style: secondaryTextStyle())
+              if (prescriptionData.instruction.validate().isNotEmpty)
+                Text(prescriptionData.instruction.validate(),
+                    style: secondaryTextStyle())
             ],
           ).expand(),
           10.width.visible(isDeleteOn),

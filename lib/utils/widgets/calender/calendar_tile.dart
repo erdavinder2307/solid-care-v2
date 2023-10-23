@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import "package:intl/intl.dart";
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/utils/colors.dart';
-import 'package:kivicare_flutter/utils/widgets/calender/date_utils.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/utils/colors.dart';
+import 'package:solidcare/utils/widgets/calender/date_utils.dart';
 
 class CalendarTile extends StatelessWidget {
   final VoidCallback? onDateSelected;
@@ -92,12 +92,14 @@ class CalendarTile extends StatelessWidget {
                           eventCount++;
                           if (eventCount > 1) return Container();
                           return Container(
-                            margin: EdgeInsets.only(left: 2.0, right: 2.0, top: 1.0),
+                            margin: EdgeInsets.only(
+                                left: 2.0, right: 2.0, top: 1.0),
                             width: 5.0,
                             height: 5.0,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: isSelected ? appSecondaryColor : primaryColor,
+                              color:
+                                  isSelected ? appSecondaryColor : primaryColor,
                             ),
                           );
                         }).toList())

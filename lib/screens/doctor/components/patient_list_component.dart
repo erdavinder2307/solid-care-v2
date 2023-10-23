@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:kivicare_flutter/components/image_border_component.dart';
-import 'package:kivicare_flutter/components/status_widget.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/model/user_model.dart';
-import 'package:kivicare_flutter/screens/encounter/screen/patient_encounter_list_screen.dart';
-import 'package:kivicare_flutter/screens/receptionist/screens/patient/add_patient_screen.dart';
-import 'package:kivicare_flutter/utils/colors.dart';
-import 'package:kivicare_flutter/utils/common.dart';
-import 'package:kivicare_flutter/utils/extensions/string_extensions.dart';
-import 'package:kivicare_flutter/utils/images.dart';
+import 'package:solidcare/components/image_border_component.dart';
+import 'package:solidcare/components/status_widget.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/model/user_model.dart';
+import 'package:solidcare/screens/encounter/screen/patient_encounter_list_screen.dart';
+import 'package:solidcare/screens/receptionist/screens/patient/add_patient_screen.dart';
+import 'package:solidcare/utils/colors.dart';
+import 'package:solidcare/utils/common.dart';
+import 'package:solidcare/utils/extensions/string_extensions.dart';
+import 'package:solidcare/utils/images.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class PatientListComponent extends StatefulWidget {
@@ -18,7 +18,8 @@ class PatientListComponent extends StatefulWidget {
   final VoidCallback? refreshCall;
   final Function(int, String)? callDeletePatient;
 
-  PatientListComponent({required this.patientData, this.refreshCall, this.callDeletePatient});
+  PatientListComponent(
+      {required this.patientData, this.refreshCall, this.callDeletePatient});
 
   @override
   _PatientListComponentState createState() => _PatientListComponentState();
@@ -44,7 +45,9 @@ class _PatientListComponentState extends State<PatientListComponent> {
         children: [
           SlidableAction(
             onPressed: (BuildContext context) async {
-              await AddPatientScreen(userId: widget.patientData!.iD).launch(context).then((value) {
+              await AddPatientScreen(userId: widget.patientData!.iD)
+                  .launch(context)
+                  .then((value) {
                 if (value ?? false) {
                   widget.refreshCall?.call();
                 }
@@ -82,7 +85,8 @@ class _PatientListComponentState extends State<PatientListComponent> {
       ),
       child: Container(
         padding: EdgeInsets.only(left: 8, top: 10, bottom: 10, right: 8),
-        decoration: boxDecorationDefault(borderRadius: radius(), color: context.cardColor),
+        decoration: boxDecorationDefault(
+            borderRadius: radius(), color: context.cardColor),
         child: Stack(
           children: [
             Row(
@@ -90,7 +94,9 @@ class _PatientListComponentState extends State<PatientListComponent> {
               children: [
                 if (widget.patientData!.profileImage.validate().isEmptyOrNull)
                   GradientBorder(
-                    gradient: LinearGradient(colors: [primaryColor, appSecondaryColor], tileMode: TileMode.mirror),
+                    gradient: LinearGradient(
+                        colors: [primaryColor, appSecondaryColor],
+                        tileMode: TileMode.mirror),
                     strokeWidth: 2,
                     borderRadius: 80,
                     child: PlaceHolderWidget(
@@ -98,17 +104,29 @@ class _PatientListComponentState extends State<PatientListComponent> {
                       height: 40,
                       width: 40,
                       alignment: Alignment.center,
-                      child: Text(widget.patientData!.displayName.validate().isNotEmpty ? widget.patientData!.displayName.validate()[0].capitalizeFirstLetter() : '',
+                      child: Text(
+                          widget.patientData!.displayName.validate().isNotEmpty
+                              ? widget.patientData!.displayName
+                                  .validate()[0]
+                                  .capitalizeFirstLetter()
+                              : '',
                           style: boldTextStyle(color: Colors.black)),
                     ),
                   )
                 else
-                  ImageBorder(src: widget.patientData!.profileImage.validate(), height: 40),
+                  ImageBorder(
+                      src: widget.patientData!.profileImage.validate(),
+                      height: 40),
                 16.width,
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(widget.patientData!.displayName.validate().capitalizeEachWord(), style: boldTextStyle(size: 16), maxLines: 2),
+                    Text(
+                        widget.patientData!.displayName
+                            .validate()
+                            .capitalizeEachWord(),
+                        style: boldTextStyle(size: 16),
+                        maxLines: 2),
                     8.height,
                     if (widget.patientData!.mobileNumber.validate().isNotEmpty)
                       TextIcon(
@@ -117,7 +135,8 @@ class _PatientListComponentState extends State<PatientListComponent> {
                         text: widget.patientData!.mobileNumber.validate(),
                         edgeInsets: EdgeInsets.all(0),
                         textStyle: primaryTextStyle(size: 16),
-                        onTap: () => launchCall(widget.patientData!.mobileNumber.validate()),
+                        onTap: () => launchCall(
+                            widget.patientData!.mobileNumber.validate()),
                       ),
                     4.height,
                     Row(
@@ -146,7 +165,10 @@ class _PatientListComponentState extends State<PatientListComponent> {
                       spacing: 8,
                       prefix: ic_appointment.iconImage(size: 14),
                       text: widget.patientData!.totalEncounter != '0'
-                          ? widget.patientData!.totalEncounter.validate().prefixText(value: locale.lblTotal + ' ').suffixText(value: ' ' + locale.lblEncounter)
+                          ? widget.patientData!.totalEncounter
+                              .validate()
+                              .prefixText(value: locale.lblTotal + ' ')
+                              .suffixText(value: ' ' + locale.lblEncounter)
                           : locale.lblNoEncounterFound.capitalizeEachWord(),
                       textStyle: primaryTextStyle(size: 16),
                       edgeInsets: EdgeInsets.all(0),
@@ -164,10 +186,18 @@ class _PatientListComponentState extends State<PatientListComponent> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  StatusWidget(status: widget.patientData!.userStatus.validate(), isActivityStatus: true),
-                  FaIcon(FontAwesomeIcons.gaugeHigh, size: 20, color: appSecondaryColor).paddingAll(8).onTap(
+                  StatusWidget(
+                      status: widget.patientData!.userStatus.validate(),
+                      isActivityStatus: true),
+                  FaIcon(FontAwesomeIcons.gaugeHigh,
+                          size: 20, color: appSecondaryColor)
+                      .paddingAll(8)
+                      .onTap(
                     () {
-                      return PatientEncounterListScreen(patientData: widget.patientData!).launch(context).then((value) {
+                      return PatientEncounterListScreen(
+                              patientData: widget.patientData!)
+                          .launch(context)
+                          .then((value) {
                         widget.refreshCall?.call();
                       });
                     },

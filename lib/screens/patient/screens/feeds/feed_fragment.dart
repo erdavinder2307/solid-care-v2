@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:kivicare_flutter/components/empty_error_state_component.dart';
-import 'package:kivicare_flutter/components/internet_connectivity_widget.dart';
-import 'package:kivicare_flutter/components/no_data_found_widget.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/screens/patient/components/news_feed_component.dart';
-import 'package:kivicare_flutter/screens/patient/models/news_model.dart';
-import 'package:kivicare_flutter/screens/shimmer/screen/feed_and_articles_shimmer_screen.dart';
-import 'package:kivicare_flutter/utils/cached_value.dart';
-import 'package:kivicare_flutter/utils/images.dart';
+import 'package:solidcare/components/empty_error_state_component.dart';
+import 'package:solidcare/components/internet_connectivity_widget.dart';
+import 'package:solidcare/components/no_data_found_widget.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/screens/patient/components/news_feed_component.dart';
+import 'package:solidcare/screens/patient/models/news_model.dart';
+import 'package:solidcare/screens/shimmer/screen/feed_and_articles_shimmer_screen.dart';
+import 'package:solidcare/utils/cached_value.dart';
+import 'package:solidcare/utils/images.dart';
 import 'package:nb_utils/nb_utils.dart';
 
-import 'package:kivicare_flutter/network/patient_list_repository.dart';
+import 'package:solidcare/network/patient_list_repository.dart';
 
 class FeedFragment extends StatefulWidget {
   @override
@@ -54,7 +54,8 @@ class _FeedFragmentState extends State<FeedFragment> {
         loadingWidget: FeedAndArticlesShimmer(),
         errorBuilder: (error) {
           return NoDataWidget(
-            imageWidget: Image.asset(ic_somethingWentWrong, height: 180, width: 180),
+            imageWidget:
+                Image.asset(ic_somethingWentWrong, height: 180, width: 180),
             title: error.toString(),
           );
         },
@@ -70,9 +71,12 @@ class _FeedFragmentState extends State<FeedFragment> {
             },
             itemBuilder: (BuildContext context, int index) {
               NewsData data = snap.newsData![index];
-              return NewsFeedComponent(data: data).paddingSymmetric(vertical: 8);
+              return NewsFeedComponent(data: data)
+                  .paddingSymmetric(vertical: 8);
             },
-          ).visible(snap.newsData.validate().isNotEmpty, defaultWidget: NoDataFoundWidget(text: locale.lblNoArticlesFound).center());
+          ).visible(snap.newsData.validate().isNotEmpty,
+              defaultWidget:
+                  NoDataFoundWidget(text: locale.lblNoArticlesFound).center());
         },
       ),
     );

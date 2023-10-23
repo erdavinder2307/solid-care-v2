@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/model/dashboard_model.dart';
-import 'package:kivicare_flutter/screens/doctor/components/dashboard_count_widget.dart';
-import 'package:kivicare_flutter/utils/colors.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/model/dashboard_model.dart';
+import 'package:solidcare/screens/doctor/components/dashboard_count_widget.dart';
+import 'package:solidcare/utils/colors.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class DashboardFragmentAnalyticsComponent extends StatelessWidget {

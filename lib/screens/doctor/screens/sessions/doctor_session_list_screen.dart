@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:kivicare_flutter/components/empty_error_state_component.dart';
-import 'package:kivicare_flutter/components/internet_connectivity_widget.dart';
-import 'package:kivicare_flutter/components/loader_widget.dart';
-import 'package:kivicare_flutter/components/no_data_found_widget.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/model/doctor_session_model.dart';
-import 'package:kivicare_flutter/network/doctor_sessions_repository.dart';
-import 'package:kivicare_flutter/screens/doctor/screens/sessions/add_session_screen.dart';
-import 'package:kivicare_flutter/screens/doctor/screens/sessions/components/session_widget.dart';
-import 'package:kivicare_flutter/screens/shimmer/screen/session_shimmer_screen.dart';
-import 'package:kivicare_flutter/utils/app_common.dart';
-import 'package:kivicare_flutter/utils/colors.dart';
-import 'package:kivicare_flutter/utils/common.dart';
+import 'package:solidcare/components/empty_error_state_component.dart';
+import 'package:solidcare/components/internet_connectivity_widget.dart';
+import 'package:solidcare/components/loader_widget.dart';
+import 'package:solidcare/components/no_data_found_widget.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/model/doctor_session_model.dart';
+import 'package:solidcare/network/doctor_sessions_repository.dart';
+import 'package:solidcare/screens/doctor/screens/sessions/add_session_screen.dart';
+import 'package:solidcare/screens/doctor/screens/sessions/components/session_widget.dart';
+import 'package:solidcare/screens/shimmer/screen/session_shimmer_screen.dart';
+import 'package:solidcare/utils/app_common.dart';
+import 'package:solidcare/utils/colors.dart';
+import 'package:solidcare/utils/common.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class DoctorSessionListScreen extends StatefulWidget {
   @override
-  _DoctorSessionListScreenState createState() => _DoctorSessionListScreenState();
+  _DoctorSessionListScreenState createState() =>
+      _DoctorSessionListScreenState();
 }
 
 class _DoctorSessionListScreenState extends State<DoctorSessionListScreen> {
@@ -34,7 +35,9 @@ class _DoctorSessionListScreenState extends State<DoctorSessionListScreen> {
       appStore.setLoading(true);
     }
 
-    future = getDoctorSessionDataAPI(clinicId: isReceptionist() ? userStore.userClinicId : null).whenComplete(() {
+    future = getDoctorSessionDataAPI(
+            clinicId: isReceptionist() ? userStore.userClinicId : null)
+        .whenComplete(() {
       setState(() {});
       appStore.setLoading(false);
     }).catchError((e) {
@@ -57,7 +60,10 @@ class _DoctorSessionListScreenState extends State<DoctorSessionListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBarWidget(isReceptionist() ? locale.lblDoctorSessions : locale.lblSessions, textColor: Colors.white, systemUiOverlayStyle: defaultSystemUiOverlayStyle(context)),
+      appBar: appBarWidget(
+          isReceptionist() ? locale.lblDoctorSessions : locale.lblSessions,
+          textColor: Colors.white,
+          systemUiOverlayStyle: defaultSystemUiOverlayStyle(context)),
       body: InternetConnectivityWidget(
         retryCallback: () {
           setState(() {});
@@ -69,7 +75,9 @@ class _DoctorSessionListScreenState extends State<DoctorSessionListScreen> {
               loadingWidget: SessionShimmerScreen(),
               errorWidget: ErrorStateWidget(),
               onSuccess: (data) {
-                if (data.sessionData.validate().isEmpty) return NoDataFoundWidget(text: locale.lblNoSessionAvailable).center();
+                if (data.sessionData.validate().isEmpty)
+                  return NoDataFoundWidget(text: locale.lblNoSessionAvailable)
+                      .center();
                 return AnimatedScrollView(
                   padding: EdgeInsets.fromLTRB(16, 16, 16, 80),
                   disposeScrollController: true,
@@ -81,7 +89,9 @@ class _DoctorSessionListScreenState extends State<DoctorSessionListScreen> {
                     return await 2.seconds.delay;
                   },
                   children: [
-                    Text('${locale.lblNote} : ${locale.lblSessionTapMsg}', style: secondaryTextStyle(size: 10, color: appSecondaryColor)),
+                    Text('${locale.lblNote} : ${locale.lblSessionTapMsg}',
+                        style: secondaryTextStyle(
+                            size: 10, color: appSecondaryColor)),
                     8.height,
                     ...data.sessionData
                         .validate()
@@ -98,7 +108,9 @@ class _DoctorSessionListScreenState extends State<DoctorSessionListScreen> {
                 );
               },
             ),
-            Observer(builder: (context) => LoaderWidget().center().visible(appStore.isLoading))
+            Observer(
+                builder: (context) =>
+                    LoaderWidget().center().visible(appStore.isLoading))
           ],
         ),
       ),

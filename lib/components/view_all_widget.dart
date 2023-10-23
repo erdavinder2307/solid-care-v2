@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/utils/colors.dart';
-import 'package:kivicare_flutter/utils/constants.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/utils/colors.dart';
+import 'package:solidcare/utils/constants.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class ViewAllLabel extends StatelessWidget {
@@ -13,7 +13,14 @@ class ViewAllLabel extends StatelessWidget {
   final int? labelSize;
   final int? subLabelSize;
 
-  ViewAllLabel({required this.label, this.subLabel, this.onTap, this.viewAllShowLimit = 4, this.labelSize, this.list, this.subLabelSize});
+  ViewAllLabel(
+      {required this.label,
+      this.subLabel,
+      this.onTap,
+      this.viewAllShowLimit = 4,
+      this.labelSize,
+      this.list,
+      this.subLabelSize});
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +32,9 @@ class ViewAllLabel extends StatelessWidget {
           children: [
             Text(label, style: boldTextStyle(size: labelSize ?? titleTextSize)),
             if (subLabel != null) 2.height,
-            if (subLabel != null) Text(subLabel.validate(), style: secondaryTextStyle(size: subLabelSize ?? 12)),
+            if (subLabel != null)
+              Text(subLabel.validate(),
+                  style: secondaryTextStyle(size: subLabelSize ?? 12)),
           ],
         ).expand(),
         TextButton(
@@ -34,7 +43,10 @@ class ViewAllLabel extends StatelessWidget {
                   onTap?.call();
                 }
               : null,
-          child: (list == null ? true : isViewAllVisible(list!)) ? Text(locale.lblViewAll, style: secondaryTextStyle(color: appSecondaryColor)) : SizedBox(),
+          child: (list == null ? true : isViewAllVisible(list!))
+              ? Text(locale.lblViewAll,
+                  style: secondaryTextStyle(color: appSecondaryColor))
+              : SizedBox(),
         )
       ],
     );

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:kivicare_flutter/locale/base_language_key.dart';
-import 'package:kivicare_flutter/locale/language_ar.dart';
-import 'package:kivicare_flutter/locale/language_de.dart';
-import 'package:kivicare_flutter/locale/language_en.dart';
-import 'package:kivicare_flutter/locale/language_fr.dart';
-import 'package:kivicare_flutter/locale/language_hi.dart';
+import 'package:solidcare/locale/base_language_key.dart';
+import 'package:solidcare/locale/language_ar.dart';
+import 'package:solidcare/locale/language_de.dart';
+import 'package:solidcare/locale/language_en.dart';
+import 'package:solidcare/locale/language_fr.dart';
+import 'package:solidcare/locale/language_hi.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class AppLocalizations extends LocalizationsDelegate<BaseLanguage> {
@@ -30,7 +30,8 @@ class AppLocalizations extends LocalizationsDelegate<BaseLanguage> {
   }
 
   @override
-  bool isSupported(Locale locale) => LanguageDataModel.languages().contains(locale.languageCode);
+  bool isSupported(Locale locale) =>
+      LanguageDataModel.languages().contains(locale.languageCode);
 
   @override
   bool shouldReload(LocalizationsDelegate<BaseLanguage> old) => false;

@@ -1,5 +1,5 @@
 import 'package:intl/intl.dart';
-import 'package:kivicare_flutter/utils/constants.dart';
+import 'package:solidcare/utils/constants.dart';
 
 class ReportModel {
   int? total;
@@ -10,7 +10,9 @@ class ReportModel {
   factory ReportModel.fromJson(Map<String, dynamic> json) {
     return ReportModel(
       total: json['total'],
-      reportData: json['data'] != null ? (json['data'] as List).map((i) => ReportData.fromJson(i)).toList() : null,
+      reportData: json['data'] != null
+          ? (json['data'] as List).map((i) => ReportData.fromJson(i)).toList()
+          : null,
     );
   }
 
@@ -34,7 +36,13 @@ class ReportData {
 
   DateTime get getReportDate => DateFormat(SAVE_DATE_FORMAT).parse(date!);
 
-  ReportData({this.date, this.id, this.name, this.patientId, this.uploadReport, this.reportDate});
+  ReportData(
+      {this.date,
+      this.id,
+      this.name,
+      this.patientId,
+      this.uploadReport,
+      this.reportDate});
 
   factory ReportData.fromJson(Map<String, dynamic> json) {
     return ReportData(

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/model/qualification_model.dart';
-import 'package:kivicare_flutter/screens/doctor/screens/add_qualification_screen.dart';
-import 'package:kivicare_flutter/screens/receptionist/components/qualification_item_widget.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/model/qualification_model.dart';
+import 'package:solidcare/screens/doctor/screens/add_qualification_screen.dart';
+import 'package:solidcare/screens/receptionist/components/qualification_item_widget.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class QualificationWidget extends StatefulWidget {
@@ -35,13 +35,17 @@ class _QualificationWidgetState extends State<QualificationWidget> {
       children: [
         Row(
           children: [
-            Text(locale.lblQualification, style: boldTextStyle(color: context.primaryColor, size: 18)).expand(),
+            Text(locale.lblQualification,
+                    style: boldTextStyle(color: context.primaryColor, size: 18))
+                .expand(),
             TextButton(
               onPressed: () async {
                 showModalBottomSheet(
                   context: context,
                   isScrollControlled: true,
-                  shape: RoundedRectangleBorder(borderRadius: radiusOnly(topLeft: defaultRadius, topRight: defaultRadius)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: radiusOnly(
+                          topLeft: defaultRadius, topRight: defaultRadius)),
                   builder: (context) {
                     return Padding(
                       padding: MediaQuery.of(context).viewInsets,
@@ -56,7 +60,8 @@ class _QualificationWidgetState extends State<QualificationWidget> {
                   },
                 );
               },
-              child: Text(locale.lblAddNewQualification, style: secondaryTextStyle()),
+              child: Text(locale.lblAddNewQualification,
+                  style: secondaryTextStyle()),
             )
           ],
         ),
@@ -67,7 +72,8 @@ class _QualificationWidgetState extends State<QualificationWidget> {
             shrinkWrap: true,
             itemCount: widget.qualificationList.validate().length,
             itemBuilder: (context, index) {
-              Qualification element = widget.qualificationList.validate()[index];
+              Qualification element =
+                  widget.qualificationList.validate()[index];
 
               return QualificationItemWidget(
                 data: element,
@@ -75,7 +81,8 @@ class _QualificationWidgetState extends State<QualificationWidget> {
                   await showModalBottomSheet(
                     context: context,
                     isScrollControlled: true,
-                    constraints: BoxConstraints(maxHeight: context.height() / 2),
+                    constraints:
+                        BoxConstraints(maxHeight: context.height() / 2),
                     builder: (context) {
                       return Padding(
                         padding: MediaQuery.of(context).viewInsets,

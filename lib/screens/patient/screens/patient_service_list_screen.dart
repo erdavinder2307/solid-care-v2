@@ -2,27 +2,28 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:kivicare_flutter/components/empty_error_state_component.dart';
-import 'package:kivicare_flutter/model/service_model.dart';
-import 'package:kivicare_flutter/screens/patient/screens/view_service_detail_screen.dart';
-import 'package:kivicare_flutter/screens/shimmer/screen/patient_service_list_shimmer_screen.dart';
-import 'package:kivicare_flutter/utils/common.dart';
-import 'package:kivicare_flutter/utils/extensions/string_extensions.dart';
-import 'package:kivicare_flutter/utils/images.dart';
+import 'package:solidcare/components/empty_error_state_component.dart';
+import 'package:solidcare/model/service_model.dart';
+import 'package:solidcare/screens/patient/screens/view_service_detail_screen.dart';
+import 'package:solidcare/screens/shimmer/screen/patient_service_list_shimmer_screen.dart';
+import 'package:solidcare/utils/common.dart';
+import 'package:solidcare/utils/extensions/string_extensions.dart';
+import 'package:solidcare/utils/images.dart';
 import 'package:nb_utils/nb_utils.dart';
 
-import 'package:kivicare_flutter/components/loader_widget.dart';
-import 'package:kivicare_flutter/components/no_data_found_widget.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/network/service_repository.dart';
-import 'package:kivicare_flutter/utils/app_common.dart';
-import 'package:kivicare_flutter/screens/patient/components/category_widget.dart';
+import 'package:solidcare/components/loader_widget.dart';
+import 'package:solidcare/components/no_data_found_widget.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/network/service_repository.dart';
+import 'package:solidcare/utils/app_common.dart';
+import 'package:solidcare/screens/patient/components/category_widget.dart';
 
 class PatientServiceListScreen extends StatefulWidget {
   const PatientServiceListScreen({Key? key}) : super(key: key);
 
   @override
-  State<PatientServiceListScreen> createState() => _PatientServiceListScreenState();
+  State<PatientServiceListScreen> createState() =>
+      _PatientServiceListScreenState();
 }
 
 class _PatientServiceListScreenState extends State<PatientServiceListScreen> {
@@ -90,7 +91,9 @@ class _PatientServiceListScreenState extends State<PatientServiceListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBarWidget(locale.lblServices, textColor: Colors.white, systemUiOverlayStyle: defaultSystemUiOverlayStyle(context)),
+      appBar: appBarWidget(locale.lblServices,
+          textColor: Colors.white,
+          systemUiOverlayStyle: defaultSystemUiOverlayStyle(context)),
       body: Observer(builder: (context) {
         return Stack(
           fit: StackFit.expand,
@@ -134,7 +137,8 @@ class _PatientServiceListScreenState extends State<PatientServiceListScreen> {
               loadingWidget: PatientServiceListShimmerScreen(),
               errorBuilder: (error) {
                 return NoDataWidget(
-                  imageWidget: Image.asset(ic_somethingWentWrong, height: 180, width: 180),
+                  imageWidget: Image.asset(ic_somethingWentWrong,
+                      height: 180, width: 180),
                   title: error.toString(),
                 ).center();
               },
@@ -161,26 +165,44 @@ class _PatientServiceListScreenState extends State<PatientServiceListScreen> {
                       init(showLoader: false);
                     }
                   },
-                  children: List.generate(groupServicesByCategory(snap).keys.length, (index) {
-                    String title = groupServicesByCategory(snap).keys.toList()[index].toString();
+                  children: List.generate(
+                      groupServicesByCategory(snap).keys.length, (index) {
+                    String title = groupServicesByCategory(snap)
+                        .keys
+                        .toList()[index]
+                        .toString();
                     return SettingSection(
-                      title: Text(title.removeAllWhiteSpace().replaceAll('_', ' ').capitalizeEachWord(), style: boldTextStyle()),
+                      title: Text(
+                          title
+                              .removeAllWhiteSpace()
+                              .replaceAll('_', ' ')
+                              .capitalizeEachWord(),
+                          style: boldTextStyle()),
                       headingDecoration: BoxDecoration(),
                       headerPadding: EdgeInsets.all(4),
                       divider: 16.height,
                       items: [
                         AnimatedWrap(
-                          itemCount: groupServicesByCategory(snap).values.toList()[index].length,
+                          itemCount: groupServicesByCategory(snap)
+                              .values
+                              .toList()[index]
+                              .length,
                           spacing: 16,
                           runSpacing: 16,
                           itemBuilder: (context, i) {
-                            ServiceData serviceData = groupServicesByCategory(snap).values.toList()[index][i];
+                            ServiceData serviceData =
+                                groupServicesByCategory(snap)
+                                    .values
+                                    .toList()[index][i];
 
                             return GestureDetector(
                               onTap: () {
-                                ViewServiceDetailScreen(serviceData: serviceData).launch(context);
+                                ViewServiceDetailScreen(
+                                        serviceData: serviceData)
+                                    .launch(context);
                               },
-                              child: CategoryWidget(data: serviceData, hideMoreButton: false),
+                              child: CategoryWidget(
+                                  data: serviceData, hideMoreButton: false),
                             );
                           },
                         ).paddingBottom(24),
@@ -189,7 +211,10 @@ class _PatientServiceListScreenState extends State<PatientServiceListScreen> {
                   }),
                 ).visible(snap.isNotEmpty,
                     defaultWidget: SingleChildScrollView(
-                      child: NoDataFoundWidget(text: searchCont.text.isEmpty ? locale.lblNoServicesFound : locale.lblCantFindServiceYouSearchedFor),
+                      child: NoDataFoundWidget(
+                          text: searchCont.text.isEmpty
+                              ? locale.lblNoServicesFound
+                              : locale.lblCantFindServiceYouSearchedFor),
                     ).center().visible(snap.isEmpty && !appStore.isLoading));
               },
             ).paddingTop(90),
@@ -201,7 +226,8 @@ class _PatientServiceListScreenState extends State<PatientServiceListScreen> {
   }
 }
 
-List<ServiceData> getRemovedDuplicateServiceList(List<ServiceData> serviceList) {
+List<ServiceData> getRemovedDuplicateServiceList(
+    List<ServiceData> serviceList) {
   Map<int, bool> uniqueIds = {};
   List<ServiceData> filteredList = [];
 
@@ -216,6 +242,7 @@ List<ServiceData> getRemovedDuplicateServiceList(List<ServiceData> serviceList) 
   return filteredList;
 }
 
-Map<String, List<ServiceData>> groupServicesByCategory(List<ServiceData> services) {
+Map<String, List<ServiceData>> groupServicesByCategory(
+    List<ServiceData> services) {
   return groupBy(services, (ServiceData e) => e.type.validate());
 }

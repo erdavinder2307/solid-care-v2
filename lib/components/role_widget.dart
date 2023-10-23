@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kivicare_flutter/utils/common.dart';
+import 'package:solidcare/utils/common.dart';
 
 class RoleWidget extends StatelessWidget {
   final Widget child;
@@ -7,7 +7,11 @@ class RoleWidget extends StatelessWidget {
   final bool isShowDoctor;
   final bool isShowReceptionist;
 
-  RoleWidget({required this.child, this.isShowPatient = false, this.isShowDoctor = false, this.isShowReceptionist = false});
+  RoleWidget(
+      {required this.child,
+      this.isShowPatient = false,
+      this.isShowDoctor = false,
+      this.isShowReceptionist = false});
 
   @override
   Widget build(BuildContext context) {

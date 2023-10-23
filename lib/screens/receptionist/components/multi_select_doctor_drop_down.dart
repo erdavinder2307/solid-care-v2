@@ -2,17 +2,17 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:kivicare_flutter/components/loader_widget.dart';
-import 'package:kivicare_flutter/components/no_data_found_widget.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/model/user_model.dart';
-import 'package:kivicare_flutter/network/doctor_list_repository.dart';
-import 'package:kivicare_flutter/screens/receptionist/screens/doctor/component/doctor_list_component.dart';
-import 'package:kivicare_flutter/screens/shimmer/components/doctor_shimmer_component.dart';
-import 'package:kivicare_flutter/utils/app_common.dart';
-import 'package:kivicare_flutter/utils/common.dart';
-import 'package:kivicare_flutter/utils/extensions/string_extensions.dart';
-import 'package:kivicare_flutter/utils/images.dart';
+import 'package:solidcare/components/loader_widget.dart';
+import 'package:solidcare/components/no_data_found_widget.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/model/user_model.dart';
+import 'package:solidcare/network/doctor_list_repository.dart';
+import 'package:solidcare/screens/receptionist/screens/doctor/component/doctor_list_component.dart';
+import 'package:solidcare/screens/shimmer/components/doctor_shimmer_component.dart';
+import 'package:solidcare/utils/app_common.dart';
+import 'package:solidcare/utils/common.dart';
+import 'package:solidcare/utils/extensions/string_extensions.dart';
+import 'package:solidcare/utils/images.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class MultiSelectDoctorDropDown extends StatefulWidget {
@@ -22,10 +22,15 @@ class MultiSelectDoctorDropDown extends StatefulWidget {
 
   final Function(List<UserModel> selectedDoctor)? onSubmit;
 
-  MultiSelectDoctorDropDown({this.clinicId, this.refreshMappingTableIdsList, this.selectedDoctorsId, this.onSubmit});
+  MultiSelectDoctorDropDown(
+      {this.clinicId,
+      this.refreshMappingTableIdsList,
+      this.selectedDoctorsId,
+      this.onSubmit});
 
   @override
-  _MultiSelectDoctorDropDownState createState() => _MultiSelectDoctorDropDownState();
+  _MultiSelectDoctorDropDownState createState() =>
+      _MultiSelectDoctorDropDownState();
 }
 
 class _MultiSelectDoctorDropDownState extends State<MultiSelectDoctorDropDown> {
@@ -97,7 +102,9 @@ class _MultiSelectDoctorDropDownState extends State<MultiSelectDoctorDropDown> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBarWidget(locale.lblSelectDoctor, textColor: Colors.white, systemUiOverlayStyle: defaultSystemUiOverlayStyle(context)),
+      appBar: appBarWidget(locale.lblSelectDoctor,
+          textColor: Colors.white,
+          systemUiOverlayStyle: defaultSystemUiOverlayStyle(context)),
       body: Observer(builder: (context) {
         return Stack(
           children: [
@@ -148,8 +155,10 @@ class _MultiSelectDoctorDropDownState extends State<MultiSelectDoctorDropDown> {
               ),
               onSuccess: (snap) {
                 snap.forEach((element) {
-                  element.firstName = element.displayName.validate().split(' ').first;
-                  element.lastName = element.displayName.validate().split(' ').last;
+                  element.firstName =
+                      element.displayName.validate().split(' ').first;
+                  element.lastName =
+                      element.displayName.validate().split(' ').last;
                   element.doctorId = element.iD.toString();
                   element.userId = element.iD;
                 });
@@ -164,7 +173,12 @@ class _MultiSelectDoctorDropDownState extends State<MultiSelectDoctorDropDown> {
                 }
 
                 if (snap.isEmpty && !appStore.isLoading) {
-                  return SingleChildScrollView(child: NoDataFoundWidget(text: searchCont.text.isEmpty ? locale.lblNoDataFound : locale.lblCantFindDoctorYouSearchedFor)).center();
+                  return SingleChildScrollView(
+                          child: NoDataFoundWidget(
+                              text: searchCont.text.isEmpty
+                                  ? locale.lblNoDataFound
+                                  : locale.lblCantFindDoctorYouSearchedFor))
+                      .center();
                 }
 
                 return AnimatedListView(
@@ -188,7 +202,8 @@ class _MultiSelectDoctorDropDownState extends State<MultiSelectDoctorDropDown> {
                         userData.isCheck = !userData.isCheck;
                         setState(() {});
                         if (userData.isCheck == false) {
-                          widget.refreshMappingTableIdsList?.call(userData.doctorId.toInt());
+                          widget.refreshMappingTableIdsList
+                              ?.call(userData.doctorId.toInt());
                         }
                       },
                       child: DoctorListComponent(
@@ -207,7 +222,8 @@ class _MultiSelectDoctorDropDownState extends State<MultiSelectDoctorDropDown> {
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.done),
         onPressed: () async {
-          widget.onSubmit!.call(doctorList.where((element) => element.isCheck == true).toList());
+          widget.onSubmit!.call(
+              doctorList.where((element) => element.isCheck == true).toList());
 
           finish(context);
         },

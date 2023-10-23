@@ -2,31 +2,33 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:kivicare_flutter/components/empty_error_state_component.dart';
-import 'package:kivicare_flutter/components/internet_connectivity_widget.dart';
-import 'package:kivicare_flutter/components/loader_widget.dart';
-import 'package:kivicare_flutter/components/no_data_found_widget.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/model/user_model.dart';
-import 'package:kivicare_flutter/network/encounter_repository.dart';
-import 'package:kivicare_flutter/network/patient_list_repository.dart';
-import 'package:kivicare_flutter/screens/doctor/components/patient_list_component.dart';
-import 'package:kivicare_flutter/screens/receptionist/screens/patient/add_patient_screen.dart';
-import 'package:kivicare_flutter/screens/shimmer/screen/patient_fragment_shimmer.dart';
-import 'package:kivicare_flutter/utils/app_common.dart';
-import 'package:kivicare_flutter/utils/cached_value.dart';
-import 'package:kivicare_flutter/utils/colors.dart';
-import 'package:kivicare_flutter/utils/common.dart';
-import 'package:kivicare_flutter/utils/extensions/string_extensions.dart';
-import 'package:kivicare_flutter/utils/images.dart';
+import 'package:solidcare/components/empty_error_state_component.dart';
+import 'package:solidcare/components/internet_connectivity_widget.dart';
+import 'package:solidcare/components/loader_widget.dart';
+import 'package:solidcare/components/no_data_found_widget.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/model/user_model.dart';
+import 'package:solidcare/network/encounter_repository.dart';
+import 'package:solidcare/network/patient_list_repository.dart';
+import 'package:solidcare/screens/doctor/components/patient_list_component.dart';
+import 'package:solidcare/screens/receptionist/screens/patient/add_patient_screen.dart';
+import 'package:solidcare/screens/shimmer/screen/patient_fragment_shimmer.dart';
+import 'package:solidcare/utils/app_common.dart';
+import 'package:solidcare/utils/cached_value.dart';
+import 'package:solidcare/utils/colors.dart';
+import 'package:solidcare/utils/common.dart';
+import 'package:solidcare/utils/extensions/string_extensions.dart';
+import 'package:solidcare/utils/images.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class PatientListFragment extends StatefulWidget {
   @override
-  State<PatientListFragment> createState() => _PatientListFragmentBodyComponentState();
+  State<PatientListFragment> createState() =>
+      _PatientListFragmentBodyComponentState();
 }
 
-class _PatientListFragmentBodyComponentState extends State<PatientListFragment> {
+class _PatientListFragmentBodyComponentState
+    extends State<PatientListFragment> {
   TextEditingController searchCont = TextEditingController();
 
   List<UserModel> patientList = [];
@@ -177,12 +179,16 @@ class _PatientListFragmentBodyComponentState extends State<PatientListFragment> 
                     },
                   ),
                   8.height,
-                  Text(locale.lblSwipeMassage, style: secondaryTextStyle(size: 10, color: appSecondaryColor)),
+                  Text(locale.lblSwipeMassage,
+                      style: secondaryTextStyle(
+                          size: 10, color: appSecondaryColor)),
                 ],
               ).paddingSymmetric(horizontal: 16, vertical: isDoctor() ? 8 : 0),
               SnapHelperWidget<List<UserModel>>(
                 future: future,
-                initialData: isReceptionist() ? cachedClinicPatient : cachedDoctorPatient,
+                initialData: isReceptionist()
+                    ? cachedClinicPatient
+                    : cachedDoctorPatient,
                 loadingWidget: PatientFragmentShimmer(),
                 errorBuilder: (error) {
                   return NoDataWidget(
@@ -198,7 +204,10 @@ class _PatientListFragmentBodyComponentState extends State<PatientListFragment> 
                 onSuccess: (snap) {
                   if (snap.isEmpty && !appStore.isLoading) {
                     return SingleChildScrollView(
-                      child: NoDataFoundWidget(text: (searchCont.text.isNotEmpty) ? locale.lblCantFindPatientYouSearchedFor : locale.lblNoPatientFound),
+                      child: NoDataFoundWidget(
+                          text: (searchCont.text.isNotEmpty)
+                              ? locale.lblCantFindPatientYouSearchedFor
+                              : locale.lblNoPatientFound),
                     ).center();
                   }
                   return AnimatedScrollView(
@@ -235,7 +244,9 @@ class _PatientListFragmentBodyComponentState extends State<PatientListFragment> 
                         },
                       ).onTap(
                         () async {
-                          await AddPatientScreen(userId: snap[index].iD).launch(context).then((value) {
+                          await AddPatientScreen(userId: snap[index].iD)
+                              .launch(context)
+                              .then((value) {
                             if (value ?? false) {
                               init(showLoader: true);
                             }

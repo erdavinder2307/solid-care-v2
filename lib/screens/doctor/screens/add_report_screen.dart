@@ -4,15 +4,15 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:intl/intl.dart';
-import 'package:kivicare_flutter/components/body_widget.dart';
-import 'package:kivicare_flutter/components/loader_widget.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/model/report_model.dart';
-import 'package:kivicare_flutter/network/report_repository.dart';
-import 'package:kivicare_flutter/utils/app_common.dart';
-import 'package:kivicare_flutter/utils/common.dart';
-import 'package:kivicare_flutter/utils/constants.dart';
-import 'package:kivicare_flutter/utils/extensions/date_extensions.dart';
+import 'package:solidcare/components/body_widget.dart';
+import 'package:solidcare/components/loader_widget.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/model/report_model.dart';
+import 'package:solidcare/network/report_repository.dart';
+import 'package:solidcare/utils/app_common.dart';
+import 'package:solidcare/utils/common.dart';
+import 'package:solidcare/utils/constants.dart';
+import 'package:solidcare/utils/extensions/date_extensions.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:open_file/open_file.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -60,7 +60,8 @@ class _AddReportScreenState extends State<AddReportScreen> {
     if (isUpdate) {
       nameCont.text = widget.reportData!.name.validate();
       if (widget.reportData!.date.validate().isNotEmpty) {
-        current = DateFormat(SAVE_DATE_FORMAT).parse(widget.reportData!.reportDate.validate());
+        current = DateFormat(SAVE_DATE_FORMAT)
+            .parse(widget.reportData!.reportDate.validate());
         dateCont.text = current.getFormattedDate(SAVE_DATE_FORMAT);
       }
     }
@@ -93,7 +94,8 @@ class _AddReportScreenState extends State<AddReportScreen> {
         "date": "${current.getFormattedDate(SAVE_DATE_FORMAT)}",
       };
       if (isUpdate) {
-        req.putIfAbsent('id', () => widget.reportData!.id.validate().toString());
+        req.putIfAbsent(
+            'id', () => widget.reportData!.id.validate().toString());
       }
 
       if (!isUpdate && file == null) {
@@ -101,7 +103,8 @@ class _AddReportScreenState extends State<AddReportScreen> {
         return;
       }
 
-      await addReportDataAPI(req, file: file != null ? File(file!.path) : null).then((value) {
+      await addReportDataAPI(req, file: file != null ? File(file!.path) : null)
+          .then((value) {
         if (isUpdate)
           toast(locale.lblReportUpdatedSuccessfully);
         else
@@ -127,20 +130,30 @@ class _AddReportScreenState extends State<AddReportScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBarWidget(locale.lblAddReportScreen, textColor: Colors.white, systemUiOverlayStyle: defaultSystemUiOverlayStyle(context)),
+      appBar: appBarWidget(locale.lblAddReportScreen,
+          textColor: Colors.white,
+          systemUiOverlayStyle: defaultSystemUiOverlayStyle(context)),
       body: Stack(
         children: [
           SingleChildScrollView(
             padding: EdgeInsets.all(16),
             child: Form(
               key: formKey,
-              autovalidateMode: isFirstTime ? AutovalidateMode.disabled : AutovalidateMode.onUserInteraction,
+              autovalidateMode: isFirstTime
+                  ? AutovalidateMode.disabled
+                  : AutovalidateMode.onUserInteraction,
               child: Column(
                 children: [
-                  AppTextField(controller: nameCont, textFieldType: TextFieldType.NAME, decoration: inputDecoration(context: context, labelText: locale.lblName)),
+                  AppTextField(
+                      controller: nameCont,
+                      textFieldType: TextFieldType.NAME,
+                      decoration: inputDecoration(
+                          context: context, labelText: locale.lblName)),
                   16.height,
                   AppTextField(
-                    keyboardAppearance: appStore.isDarkModeOn ? Brightness.dark : Brightness.light,
+                    keyboardAppearance: appStore.isDarkModeOn
+                        ? Brightness.dark
+                        : Brightness.light,
                     selectionControls: EmptyTextSelectionControls(),
                     onTap: () async {
                       datePickerComponent(
@@ -152,7 +165,8 @@ class _AddReportScreenState extends State<AddReportScreen> {
                         onDateSelected: (selectedDate) {
                           if (selectedDate != null) {
                             current = selectedDate;
-                            dateCont.text = selectedDate.getFormattedDate(SAVE_DATE_FORMAT);
+                            dateCont.text =
+                                selectedDate.getFormattedDate(SAVE_DATE_FORMAT);
                             setState(() {});
                           }
                         },
@@ -188,19 +202,32 @@ class _AddReportScreenState extends State<AddReportScreen> {
                         Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            if (isUpdate && file == null && widget.reportData!.uploadReport.validateURL())
+                            if (isUpdate &&
+                                file == null &&
+                                widget.reportData!.uploadReport.validateURL())
                               TextButton(
                                 onPressed: () {
-                                  commonLaunchUrl(widget.reportData!.uploadReport.validate(), launchMode: LaunchMode.externalApplication);
+                                  commonLaunchUrl(
+                                      widget.reportData!.uploadReport
+                                          .validate(),
+                                      launchMode:
+                                          LaunchMode.externalApplication);
                                 },
                                 style: ButtonStyle(
                                   visualDensity: VisualDensity.compact,
                                   padding: MaterialStateProperty.all(
-                                    EdgeInsets.only(top: 0, right: 8, left: 8, bottom: 0),
+                                    EdgeInsets.only(
+                                        top: 0, right: 8, left: 8, bottom: 0),
                                   ),
-                                  shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: radius(), side: BorderSide(color: context.scaffoldBackgroundColor))),
+                                  shape: MaterialStateProperty.all(
+                                      RoundedRectangleBorder(
+                                          borderRadius: radius(),
+                                          side: BorderSide(
+                                              color: context
+                                                  .scaffoldBackgroundColor))),
                                 ),
-                                child: Text('${locale.lblViewFile}', style: primaryTextStyle(size: 10)),
+                                child: Text('${locale.lblViewFile}',
+                                    style: primaryTextStyle(size: 10)),
                               ),
                             IconButton(
                               icon: Icon(Icons.upload_file),
@@ -227,7 +254,8 @@ class _AddReportScreenState extends State<AddReportScreen> {
             ),
           ),
           Observer(
-            builder: (context) => LoaderWidget().visible(appStore.isLoading).center(),
+            builder: (context) =>
+                LoaderWidget().visible(appStore.isLoading).center(),
           )
         ],
       ),

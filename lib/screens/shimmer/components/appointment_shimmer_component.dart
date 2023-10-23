@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:kivicare_flutter/screens/shimmer/components/shimmer_component.dart';
-import 'package:kivicare_flutter/utils/colors.dart';
+import 'package:solidcare/screens/shimmer/components/shimmer_component.dart';
+import 'package:solidcare/utils/colors.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class AppointmentShimmerComponent extends StatelessWidget {
@@ -76,7 +76,13 @@ class AppointmentShimmerComponent extends StatelessWidget {
                       color: primaryColor.withOpacity(0.2),
                       boxShadow: [],
                       border: Border.all(color: primaryColor.withOpacity(0.2)),
-                      borderRadius: index == 1 ? radius(0) : radiusOnly(bottomLeft: index == 0 ? defaultRadius : 0, topLeft: index == 0 ? defaultRadius : 0, topRight: index == 2 ? defaultRadius : 0, bottomRight: index == 2 ? defaultRadius : 0),
+                      borderRadius: index == 1
+                          ? radius(0)
+                          : radiusOnly(
+                              bottomLeft: index == 0 ? defaultRadius : 0,
+                              topLeft: index == 0 ? defaultRadius : 0,
+                              topRight: index == 2 ? defaultRadius : 0,
+                              bottomRight: index == 2 ? defaultRadius : 0),
                     ),
                   ),
                 ),

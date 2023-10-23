@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/model/dashboard_model.dart';
-import 'package:kivicare_flutter/screens/doctor/components/weekly_chart_component.dart';
-import 'package:kivicare_flutter/screens/doctor/screens/show_appointment_chart_screen.dart';
-import 'package:kivicare_flutter/utils/colors.dart';
-import 'package:kivicare_flutter/utils/constants.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/model/dashboard_model.dart';
+import 'package:solidcare/screens/doctor/components/weekly_chart_component.dart';
+import 'package:solidcare/screens/doctor/screens/show_appointment_chart_screen.dart';
+import 'package:solidcare/utils/colors.dart';
+import 'package:solidcare/utils/constants.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class DashboardFragmentChartComponent extends StatelessWidget {
@@ -20,8 +20,13 @@ class DashboardFragmentChartComponent extends StatelessWidget {
         16.height,
         Row(
           children: [
-            Text(locale.lblWeeklyAppointments, style: boldTextStyle(size: titleTextSize)).paddingOnly(left: 10).expand(),
-            Text(locale.lblMore, style: secondaryTextStyle(color: appSecondaryColor)).onTap(
+            Text(locale.lblWeeklyAppointments,
+                    style: boldTextStyle(size: titleTextSize))
+                .paddingOnly(left: 10)
+                .expand(),
+            Text(locale.lblMore,
+                    style: secondaryTextStyle(color: appSecondaryColor))
+                .onTap(
               () {
                 ShowAppointmentChartScreen().launch(context);
               },
@@ -36,8 +41,14 @@ class DashboardFragmentChartComponent extends StatelessWidget {
           height: 220,
           margin: EdgeInsets.all(8),
           padding: EdgeInsets.only(left: 16, right: 16, top: 24),
-          decoration: boxDecorationDefault(borderRadius: radius(), color: context.cardColor),
-          child: WeeklyChartComponent(weeklyAppointment: data.weeklyAppointment.validate().isNotEmpty ? data.weeklyAppointment.validate() : emptyGraphList).withWidth(
+          decoration: boxDecorationDefault(
+              borderRadius: radius(), color: context.cardColor),
+          child: WeeklyChartComponent(
+                  weeklyAppointment:
+                      data.weeklyAppointment.validate().isNotEmpty
+                          ? data.weeklyAppointment.validate()
+                          : emptyGraphList)
+              .withWidth(
             context.width(),
           ),
         )

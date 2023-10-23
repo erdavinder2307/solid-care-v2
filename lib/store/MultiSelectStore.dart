@@ -1,5 +1,5 @@
-import 'package:kivicare_flutter/model/service_model.dart';
-import 'package:kivicare_flutter/model/static_data_model.dart';
+import 'package:solidcare/model/service_model.dart';
+import 'package:solidcare/model/static_data_model.dart';
 import 'package:mobx/mobx.dart';
 
 part 'MultiSelectStore.g.dart';
@@ -9,7 +9,8 @@ class MultiSelectStore = MultiSelectStoreBase with _$MultiSelectStore;
 abstract class MultiSelectStoreBase with Store {
   @observable
   ObservableList<ServiceData> selectedService = ObservableList<ServiceData>();
-  ObservableList<StaticData?> selectedStaticData = ObservableList<StaticData?>();
+  ObservableList<StaticData?> selectedStaticData =
+      ObservableList<StaticData?>();
 
   @action
   void addList(List<ServiceData> data, {bool isClear = true}) {

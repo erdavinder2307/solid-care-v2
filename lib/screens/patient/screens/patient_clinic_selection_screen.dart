@@ -1,27 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:kivicare_flutter/components/empty_error_state_component.dart';
-import 'package:kivicare_flutter/components/internet_connectivity_widget.dart';
-import 'package:kivicare_flutter/components/loader_widget.dart';
-import 'package:kivicare_flutter/screens/patient/components/clinic_component.dart';
-import 'package:kivicare_flutter/screens/shimmer/screen/switch_clinic_shimmer_screen.dart';
-import 'package:kivicare_flutter/utils/colors.dart';
-import 'package:kivicare_flutter/utils/images.dart';
+import 'package:solidcare/components/empty_error_state_component.dart';
+import 'package:solidcare/components/internet_connectivity_widget.dart';
+import 'package:solidcare/components/loader_widget.dart';
+import 'package:solidcare/screens/patient/components/clinic_component.dart';
+import 'package:solidcare/screens/shimmer/screen/switch_clinic_shimmer_screen.dart';
+import 'package:solidcare/utils/colors.dart';
+import 'package:solidcare/utils/images.dart';
 import 'package:nb_utils/nb_utils.dart';
 
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/model/clinic_list_model.dart';
-import 'package:kivicare_flutter/network/clinic_repository.dart';
-import 'package:kivicare_flutter/utils/app_common.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/model/clinic_list_model.dart';
+import 'package:solidcare/network/clinic_repository.dart';
+import 'package:solidcare/utils/app_common.dart';
 
 class PatientClinicSelectionScreen extends StatefulWidget {
   final VoidCallback? callback;
   PatientClinicSelectionScreen({this.callback});
   @override
-  _PatientClinicSelectionScreenState createState() => _PatientClinicSelectionScreenState();
+  _PatientClinicSelectionScreenState createState() =>
+      _PatientClinicSelectionScreenState();
 }
 
-class _PatientClinicSelectionScreenState extends State<PatientClinicSelectionScreen> {
+class _PatientClinicSelectionScreenState
+    extends State<PatientClinicSelectionScreen> {
   Future<List<Clinic>>? future;
 
   List<Clinic> clinicList = [];
@@ -45,7 +47,8 @@ class _PatientClinicSelectionScreenState extends State<PatientClinicSelectionScr
       clinicList: clinicList,
       lastPageCallback: (p0) => isLastPage = p0,
     ).then((value) {
-      selectedIndex = value.indexWhere((element) => element.id.validate() == userStore.userClinicId);
+      selectedIndex = value.indexWhere(
+          (element) => element.id.validate() == userStore.userClinicId);
       return value;
     }).catchError((e) {
       appStore.setLoading(false);
@@ -78,10 +81,14 @@ class _PatientClinicSelectionScreenState extends State<PatientClinicSelectionScr
           if (value['status'] == true) {
             widget.callback?.call();
             userStore.setClinicId(selectedClinicId.toString());
-            getSelectedClinicAPI(clinicId: userStore.userClinicId.validate()).then((value) {
-              userStore.setUserClinicImage(value.profileImage.validate(), initialize: true);
-              userStore.setUserClinicName(value.name.validate(), initialize: true);
-              userStore.setUserClinicStatus(value.status.validate(), initialize: true);
+            getSelectedClinicAPI(clinicId: userStore.userClinicId.validate())
+                .then((value) {
+              userStore.setUserClinicImage(value.profileImage.validate(),
+                  initialize: true);
+              userStore.setUserClinicName(value.name.validate(),
+                  initialize: true);
+              userStore.setUserClinicStatus(value.status.validate(),
+                  initialize: true);
               String clinicAddress = '';
 
               if (value.city.validate().isNotEmpty) {
@@ -126,7 +133,8 @@ class _PatientClinicSelectionScreenState extends State<PatientClinicSelectionScr
             future: future,
             errorBuilder: (error) {
               return NoDataWidget(
-                imageWidget: Image.asset(ic_somethingWentWrong, height: 180, width: 180),
+                imageWidget:
+                    Image.asset(ic_somethingWentWrong, height: 180, width: 180),
                 title: error.toString(),
               );
             },
@@ -146,7 +154,8 @@ class _PatientClinicSelectionScreenState extends State<PatientClinicSelectionScr
                         clinicData: snap[index],
                         isCheck: selectedIndex == index,
                         onTap: (isCheck) async {
-                          await switchFavouriteClinic(snap[index].id.validate().toInt(), index);
+                          await switchFavouriteClinic(
+                              snap[index].id.validate().toInt(), index);
                         },
                       );
                     },
@@ -155,7 +164,9 @@ class _PatientClinicSelectionScreenState extends State<PatientClinicSelectionScr
               );
             },
           ),
-          Observer(builder: (context) => LoaderWidget().visible(appStore.isLoading)).center()
+          Observer(
+              builder: (context) =>
+                  LoaderWidget().visible(appStore.isLoading)).center()
         ],
       ),
     );

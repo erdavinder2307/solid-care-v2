@@ -1,7 +1,7 @@
-import 'package:kivicare_flutter/model/prescription_model.dart';
-import 'package:kivicare_flutter/model/prescription_module.dart';
-import 'package:kivicare_flutter/model/report_model.dart';
-import 'package:kivicare_flutter/model/upcoming_appointment_model.dart';
+import 'package:solidcare/model/prescription_model.dart';
+import 'package:solidcare/model/prescription_module.dart';
+import 'package:solidcare/model/report_model.dart';
+import 'package:solidcare/model/upcoming_appointment_model.dart';
 
 import 'encounter_module.dart';
 import 'encounter_type_model.dart';
@@ -87,9 +87,21 @@ class EncounterModel {
       description: json['description'],
       doctorId: json['doctor_id'],
       doctorName: json['doctor_name'],
-      encounterModules: json['enocunter_modules'] != null ? (json['enocunter_modules'] as List).map((i) => EncounterModule.fromJson(i)).toList() : null,
-      moduleConfig: json['module_config'] != null ? (json['module_config'] as List).map((i) => ModuleConfig.fromJson(i)).toList() : null,
-      prescriptionModule: json['prescription_module'] != null ? (json['prescription_module'] as List).map((i) => PrescriptionModule.fromJson(i)).toList() : null,
+      encounterModules: json['enocunter_modules'] != null
+          ? (json['enocunter_modules'] as List)
+              .map((i) => EncounterModule.fromJson(i))
+              .toList()
+          : null,
+      moduleConfig: json['module_config'] != null
+          ? (json['module_config'] as List)
+              .map((i) => ModuleConfig.fromJson(i))
+              .toList()
+          : null,
+      prescriptionModule: json['prescription_module'] != null
+          ? (json['prescription_module'] as List)
+              .map((i) => PrescriptionModule.fromJson(i))
+              .toList()
+          : null,
       encounterDate: json['encounter_date'],
       encounterId: json['id'],
       patientEmail: json['patient_email'],
@@ -99,17 +111,42 @@ class EncounterModel {
       billId: json['bill_id'],
       discount: json['discount'],
       isBilling: json['is_billing'],
-      prescription: json['prescription'] != null ? (json['prescription'] as List).map((presriptionData) => PrescriptionData.fromJson(presriptionData)).toList() : null,
+      prescription: json['prescription'] != null
+          ? (json['prescription'] as List)
+              .map((presriptionData) =>
+                  PrescriptionData.fromJson(presriptionData))
+              .toList()
+          : null,
       paymentStatus: json['payment_status'],
-      reportData: json['report'] != null ? (json['report'] as List).map((reportData) => ReportData.fromJson(reportData)).toList() : null,
+      reportData: json['report'] != null
+          ? (json['report'] as List)
+              .map((reportData) => ReportData.fromJson(reportData))
+              .toList()
+          : null,
 
       // New
-      problem: json['problem'] != null ? (json['problem'] as List).map((i) => EncounterType.fromJson(i)).toList() : null,
-      observation: json['observation'] != null ? (json['observation'] as List).map((i) => EncounterType.fromJson(i)).toList() : null,
-      note: json['note'] != null ? (json['note'] as List).map((i) => EncounterType.fromJson(i)).toList() : null,
+      problem: json['problem'] != null
+          ? (json['problem'] as List)
+              .map((i) => EncounterType.fromJson(i))
+              .toList()
+          : null,
+      observation: json['observation'] != null
+          ? (json['observation'] as List)
+              .map((i) => EncounterType.fromJson(i))
+              .toList()
+          : null,
+      note: json['note'] != null
+          ? (json['note'] as List)
+              .map((i) => EncounterType.fromJson(i))
+              .toList()
+          : null,
 
       //New
-      upcomingAppointmentData: json['data'] != null ? (json['data'] as List).map((i) => UpcomingAppointmentModel.fromJson(i)).toList() : null,
+      upcomingAppointmentData: json['data'] != null
+          ? (json['data'] as List)
+              .map((i) => UpcomingAppointmentModel.fromJson(i))
+              .toList()
+          : null,
       total: json['total'],
     );
   }
@@ -137,13 +174,16 @@ class EncounterModel {
       data['custom_fields'] = this.custom_fields!.map((v) => v.toJson()).toList();
     }*/
     if (this.encounterModules != null) {
-      data['enocunter_modules'] = this.encounterModules!.map((v) => v.toJson()).toList();
+      data['enocunter_modules'] =
+          this.encounterModules!.map((v) => v.toJson()).toList();
     }
     if (this.moduleConfig != null) {
-      data['module_config'] = this.moduleConfig!.map((v) => v.toJson()).toList();
+      data['module_config'] =
+          this.moduleConfig!.map((v) => v.toJson()).toList();
     }
     if (this.prescriptionModule != null) {
-      data['prescription_module'] = this.prescriptionModule!.map((v) => v.toJson()).toList();
+      data['prescription_module'] =
+          this.prescriptionModule!.map((v) => v.toJson()).toList();
     }
 
     if (this.prescription != null) {
@@ -165,7 +205,8 @@ class EncounterModel {
     //New
     data['total'] = this.total;
     if (this.upcomingAppointmentData != null) {
-      data['data'] = this.upcomingAppointmentData!.map((v) => v.toJson()).toList();
+      data['data'] =
+          this.upcomingAppointmentData!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -179,7 +220,13 @@ class CustomField {
   String? moduleType;
   Object? status;
 
-  CustomField({this.createdAt, this.fields, this.id, this.moduleId, this.moduleType, this.status});
+  CustomField(
+      {this.createdAt,
+      this.fields,
+      this.id,
+      this.moduleId,
+      this.moduleType,
+      this.status});
 
   factory CustomField.fromJson(Map<String, dynamic> json) {
     return CustomField(
@@ -215,7 +262,16 @@ class Fields {
   String? type;
   String? value;
 
-  Fields({this.isRequired, this.label, this.name, this.options, this.placeholder, this.priority, this.status, this.type, this.value});
+  Fields(
+      {this.isRequired,
+      this.label,
+      this.name,
+      this.options,
+      this.placeholder,
+      this.priority,
+      this.status,
+      this.type,
+      this.value});
 
   factory Fields.fromJson(Map<String, dynamic> json) {
     return Fields(

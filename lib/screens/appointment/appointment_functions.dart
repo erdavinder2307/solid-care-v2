@@ -1,25 +1,31 @@
 import 'package:flutter/cupertino.dart';
-import 'package:kivicare_flutter/components/step_progress_indicator.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/model/upcoming_appointment_model.dart';
-import 'package:kivicare_flutter/screens/appointment/screen/step1_clinic_selection_screen.dart';
-import 'package:kivicare_flutter/screens/appointment/screen/step2_doctor_selection_screen.dart';
-import 'package:kivicare_flutter/screens/appointment/screen/step3_final_selection_screen.dart';
-import 'package:kivicare_flutter/utils/common.dart';
-import 'package:kivicare_flutter/utils/constants.dart';
+import 'package:solidcare/components/step_progress_indicator.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/model/upcoming_appointment_model.dart';
+import 'package:solidcare/screens/appointment/screen/step1_clinic_selection_screen.dart';
+import 'package:solidcare/screens/appointment/screen/step2_doctor_selection_screen.dart';
+import 'package:solidcare/screens/appointment/screen/step3_final_selection_screen.dart';
+import 'package:solidcare/utils/common.dart';
+import 'package:solidcare/utils/constants.dart';
 import 'package:nb_utils/nb_utils.dart';
 
-Widget stepCountWidget({String? name, int? totalCount, int? currentCount, double percentage = 0.33}) {
+Widget stepCountWidget(
+    {String? name,
+    int? totalCount,
+    int? currentCount,
+    double percentage = 0.33}) {
   return Row(
     children: [
       Text(name.validate(), style: boldTextStyle(size: titleTextSize)).expand(),
       16.width,
-      StepProgressIndicator(stepTxt: "$currentCount/$totalCount", percentage: percentage),
+      StepProgressIndicator(
+          stepTxt: "$currentCount/$totalCount", percentage: percentage),
     ],
   );
 }
 
-Future<void> appointmentWidgetNavigation(BuildContext context, {UpcomingAppointmentModel? data}) async {
+Future<void> appointmentWidgetNavigation(BuildContext context,
+    {UpcomingAppointmentModel? data}) async {
   if (data == null) {
     if (isDoctor()) {
       if (isProEnabled()) {
@@ -46,7 +52,8 @@ Future<void> appointmentWidgetNavigation(BuildContext context, {UpcomingAppointm
   }
 }
 
-Future<void> doctorNavigation(BuildContext context, {int? clinicId, int? doctorId}) async {
+Future<void> doctorNavigation(BuildContext context,
+    {int? clinicId, int? doctorId}) async {
   Step3FinalSelectionScreen(
     clinicId: clinicId,
     doctorId: doctorId,

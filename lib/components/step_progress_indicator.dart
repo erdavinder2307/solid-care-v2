@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kivicare_flutter/utils/colors.dart';
+import 'package:solidcare/utils/colors.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
@@ -7,7 +7,8 @@ class StepProgressIndicator extends StatelessWidget {
   final String? stepTxt;
   final double? percentage;
 
-  StepProgressIndicator({Key? key, this.stepTxt, this.percentage}) : super(key: key);
+  StepProgressIndicator({Key? key, this.stepTxt, this.percentage})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {

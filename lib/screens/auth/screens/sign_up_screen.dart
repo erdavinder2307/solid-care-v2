@@ -2,20 +2,20 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:kivicare_flutter/components/body_widget.dart';
-import 'package:kivicare_flutter/components/gender_selection_component.dart';
-import 'package:kivicare_flutter/components/loader_widget.dart';
-import 'package:kivicare_flutter/config.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/model/gender_model.dart';
-import 'package:kivicare_flutter/network/patient_list_repository.dart';
-import 'package:kivicare_flutter/screens/auth/components/login_register_widget.dart';
-import 'package:kivicare_flutter/utils/colors.dart';
-import 'package:kivicare_flutter/utils/common.dart';
-import 'package:kivicare_flutter/utils/constants.dart';
-import 'package:kivicare_flutter/utils/extensions/date_extensions.dart';
-import 'package:kivicare_flutter/utils/extensions/string_extensions.dart';
-import 'package:kivicare_flutter/utils/images.dart';
+import 'package:solidcare/components/body_widget.dart';
+import 'package:solidcare/components/gender_selection_component.dart';
+import 'package:solidcare/components/loader_widget.dart';
+import 'package:solidcare/config.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/model/gender_model.dart';
+import 'package:solidcare/network/patient_list_repository.dart';
+import 'package:solidcare/screens/auth/components/login_register_widget.dart';
+import 'package:solidcare/utils/colors.dart';
+import 'package:solidcare/utils/common.dart';
+import 'package:solidcare/utils/constants.dart';
+import 'package:solidcare/utils/extensions/date_extensions.dart';
+import 'package:solidcare/utils/extensions/string_extensions.dart';
+import 'package:solidcare/utils/images.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -26,7 +26,16 @@ class SignUpScreen extends StatefulWidget {
 class _SignUpScreenState extends State<SignUpScreen> {
   GlobalKey<FormState> formKey = GlobalKey();
 
-  List<String> bloodGroupList = ['A+', 'B+', 'AB+', 'O+', 'A-', 'B-', 'AB-', 'O-'];
+  List<String> bloodGroupList = [
+    'A+',
+    'B+',
+    'AB+',
+    'O+',
+    'A-',
+    'B-',
+    'AB-',
+    'O-'
+  ];
   List<GenderModel> genderList = [];
 
   TextEditingController emailCont = TextEditingController();
@@ -60,8 +69,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   void init() async {
     setStatusBarColor(
-      appStore.isDarkModeOn ? context.scaffoldBackgroundColor : appPrimaryColor.withOpacity(0.02),
-      statusBarIconBrightness: appStore.isDarkModeOn ? Brightness.light : Brightness.dark,
+      appStore.isDarkModeOn
+          ? context.scaffoldBackgroundColor
+          : appPrimaryColor.withOpacity(0.02),
+      statusBarIconBrightness:
+          appStore.isDarkModeOn ? Brightness.light : Brightness.dark,
     );
   }
 
@@ -129,13 +141,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       () {
                         if (DateTime.now().year - birthDate.year < 18) {
                           toast(
-                            locale.lblMinimumAgeRequired + locale.lblCurrentAgeIs + ' ${DateTime.now().year - birthDate.year}',
+                            locale.lblMinimumAgeRequired +
+                                locale.lblCurrentAgeIs +
+                                ' ${DateTime.now().year - birthDate.year}',
                             bgColor: errorBackGroundColor,
                             textColor: errorTextColor,
                           );
                         } else {
                           finish(context);
-                          dOBCont.text = birthDate.getFormattedDate(SAVE_DATE_FORMAT).toString();
+                          dOBCont.text = birthDate
+                              .getFormattedDate(SAVE_DATE_FORMAT)
+                              .toString();
                         }
                       },
                       splashColor: Colors.transparent,
@@ -148,7 +164,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 height: e.height() / 2 - 240,
                 child: CupertinoTheme(
                   data: CupertinoThemeData(
-                    textTheme: CupertinoTextThemeData(dateTimePickerTextStyle: primaryTextStyle(size: 20)),
+                    textTheme: CupertinoTextThemeData(
+                        dateTimePickerTextStyle: primaryTextStyle(size: 20)),
                   ),
                   child: CupertinoDatePicker(
                     minimumDate: DateTime(1900, 1, 1),
@@ -180,7 +197,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
       body: SafeArea(
         child: Form(
           key: formKey,
-          autovalidateMode: isFirstTime ? AutovalidateMode.disabled : AutovalidateMode.onUserInteraction,
+          autovalidateMode: isFirstTime
+              ? AutovalidateMode.disabled
+              : AutovalidateMode.onUserInteraction,
           child: Stack(
             children: [
               SingleChildScrollView(
@@ -193,12 +212,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     16.height,
                     RichTextWidget(
                       list: [
-                        TextSpan(text: APP_FIRST_NAME, style: boldTextStyle(size: 32, letterSpacing: 1)),
-                        TextSpan(text: APP_SECOND_NAME, style: primaryTextStyle(size: 32, letterSpacing: 1)),
+                        TextSpan(
+                            text: APP_FIRST_NAME,
+                            style: boldTextStyle(size: 32, letterSpacing: 1)),
+                        TextSpan(
+                            text: APP_SECOND_NAME,
+                            style:
+                                primaryTextStyle(size: 32, letterSpacing: 1)),
                       ],
                     ).center(),
                     32.height,
-                    Text(locale.lblSignUpAsPatient, style: secondaryTextStyle(size: 14)),
+                    Text(locale.lblSignUpAsPatient,
+                        style: secondaryTextStyle(size: 14)),
                     24.height,
                     AppTextField(
                       textStyle: primaryTextStyle(),
@@ -207,7 +232,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       focus: firstNameFocus,
                       errorThisFieldRequired: locale.lblFirstNameIsRequired,
                       nextFocus: lastNameFocus,
-                      decoration: inputDecoration(context: context, labelText: locale.lblFirstName, suffixIcon: ic_user.iconImage(size: 10, color: context.iconColor).paddingAll(14)),
+                      decoration: inputDecoration(
+                          context: context,
+                          labelText: locale.lblFirstName,
+                          suffixIcon: ic_user
+                              .iconImage(size: 10, color: context.iconColor)
+                              .paddingAll(14)),
                     ),
                     16.height,
                     AppTextField(
@@ -217,7 +247,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       focus: lastNameFocus,
                       nextFocus: emailFocus,
                       errorThisFieldRequired: locale.lblLastNameIsRequired,
-                      decoration: inputDecoration(context: context, labelText: locale.lblLastName, suffixIcon: ic_user.iconImage(size: 10, color: context.iconColor).paddingAll(14)),
+                      decoration: inputDecoration(
+                          context: context,
+                          labelText: locale.lblLastName,
+                          suffixIcon: ic_user
+                              .iconImage(size: 10, color: context.iconColor)
+                              .paddingAll(14)),
                     ),
                     16.height,
                     AppTextField(
@@ -226,7 +261,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       textFieldType: TextFieldType.EMAIL,
                       focus: emailFocus,
                       nextFocus: contactNumberFocus,
-                      decoration: inputDecoration(context: context, labelText: locale.lblEmail, suffixIcon: ic_message.iconImage(size: 10, color: context.iconColor).paddingAll(14)),
+                      decoration: inputDecoration(
+                          context: context,
+                          labelText: locale.lblEmail,
+                          suffixIcon: ic_message
+                              .iconImage(size: 10, color: context.iconColor)
+                              .paddingAll(14)),
                     ),
                     16.height,
                     AppTextField(
@@ -237,7 +277,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       textFieldType: TextFieldType.PHONE,
                       inputFormatters: [LengthLimitingTextInputFormatter(10)],
                       isValidationRequired: true,
-                      decoration: inputDecoration(context: context, labelText: locale.lblContactNumber, suffixIcon: ic_phone.iconImage(size: 10, color: context.iconColor).paddingAll(14)),
+                      decoration: inputDecoration(
+                          context: context,
+                          labelText: locale.lblContactNumber,
+                          suffixIcon: ic_phone
+                              .iconImage(size: 10, color: context.iconColor)
+                              .paddingAll(14)),
                     ),
                     16.height,
                     AppTextField(
@@ -252,7 +297,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         birthDate = DateTime.now();
                         dateBottomSheet(context);
                       },
-                      decoration: inputDecoration(context: context, labelText: locale.lblDOB, suffixIcon: ic_calendar.iconImage(size: 10, color: context.iconColor).paddingAll(14)),
+                      decoration: inputDecoration(
+                          context: context,
+                          labelText: locale.lblDOB,
+                          suffixIcon: ic_calendar
+                              .iconImage(size: 10, color: context.iconColor)
+                              .paddingAll(14)),
                     ),
                     16.height,
                     DropdownButtonFormField(
@@ -262,11 +312,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       focusColor: primaryColor,
                       dropdownColor: context.cardColor,
                       focusNode: bloodGroupFocus,
-                      decoration: inputDecoration(context: context, labelText: locale.lblSelectBloodGroup, suffixIcon: ic_arrow_down.iconImage(size: 10, color: context.iconColor).paddingAll(14)),
+                      decoration: inputDecoration(
+                          context: context,
+                          labelText: locale.lblSelectBloodGroup,
+                          suffixIcon: ic_arrow_down
+                              .iconImage(size: 10, color: context.iconColor)
+                              .paddingAll(14)),
                       onChanged: (dynamic value) {
                         bloodGroup = value;
                       },
-                      items: bloodGroupList.map((bloodGroup) => DropdownMenuItem(value: bloodGroup, child: Text("$bloodGroup", style: primaryTextStyle()))).toList(),
+                      items: bloodGroupList
+                          .map((bloodGroup) => DropdownMenuItem(
+                              value: bloodGroup,
+                              child: Text("$bloodGroup",
+                                  style: primaryTextStyle())))
+                          .toList(),
                     ),
                     16.height,
                     GenderSelectionComponent(
@@ -278,10 +338,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     60.height,
                     AppButton(
                       width: context.width(),
-                      shapeBorder: RoundedRectangleBorder(borderRadius: radius()),
+                      shapeBorder:
+                          RoundedRectangleBorder(borderRadius: radius()),
                       color: primaryColor,
                       padding: EdgeInsets.all(16),
-                      child: Text(locale.lblSubmit, style: boldTextStyle(color: textPrimaryDarkColor)),
+                      child: Text(locale.lblSubmit,
+                          style: boldTextStyle(color: textPrimaryDarkColor)),
                       onTap: signUp,
                     ),
                     24.height,
@@ -306,7 +368,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   },
                 ),
               ),
-              Observer(builder: (context) => LoaderWidget().visible(appStore.isLoading).center())
+              Observer(
+                  builder: (context) =>
+                      LoaderWidget().visible(appStore.isLoading).center())
             ],
           ),
         ),

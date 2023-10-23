@@ -1,28 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:kivicare_flutter/components/app_common_dialog.dart';
-import 'package:kivicare_flutter/components/app_logo.dart';
-import 'package:kivicare_flutter/components/body_widget.dart';
-import 'package:kivicare_flutter/components/loader_widget.dart';
-import 'package:kivicare_flutter/config.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/model/demo_login_model.dart';
+import 'package:solidcare/components/app_common_dialog.dart';
+import 'package:solidcare/components/app_logo.dart';
+import 'package:solidcare/components/body_widget.dart';
+import 'package:solidcare/components/loader_widget.dart';
+import 'package:solidcare/config.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/model/demo_login_model.dart';
 
-import 'package:kivicare_flutter/network/auth_repository.dart';
-import 'package:kivicare_flutter/screens/auth/components/login_register_widget.dart';
-import 'package:kivicare_flutter/screens/auth/screens/sign_up_screen.dart';
-import 'package:kivicare_flutter/screens/demo_scanners/qr_info_screen.dart';
-import 'package:kivicare_flutter/screens/demo_scanners/scanner_screen.dart';
-import 'package:kivicare_flutter/screens/doctor/doctor_dashboard_screen.dart';
-import 'package:kivicare_flutter/screens/patient/p_dashboard_screen.dart';
-import 'package:kivicare_flutter/screens/receptionist/r_dashboard_screen.dart';
-import 'package:kivicare_flutter/utils/app_widgets.dart';
-import 'package:kivicare_flutter/utils/colors.dart';
-import 'package:kivicare_flutter/utils/common.dart';
-import 'package:kivicare_flutter/utils/constants.dart';
-import 'package:kivicare_flutter/utils/extensions/string_extensions.dart';
-import 'package:kivicare_flutter/utils/images.dart';
-import 'package:kivicare_flutter/utils/one_signal_notifications.dart';
+import 'package:solidcare/network/auth_repository.dart';
+import 'package:solidcare/screens/auth/components/login_register_widget.dart';
+import 'package:solidcare/screens/auth/screens/sign_up_screen.dart';
+import 'package:solidcare/screens/demo_scanners/qr_info_screen.dart';
+import 'package:solidcare/screens/demo_scanners/scanner_screen.dart';
+import 'package:solidcare/screens/doctor/doctor_dashboard_screen.dart';
+import 'package:solidcare/screens/patient/p_dashboard_screen.dart';
+import 'package:solidcare/screens/receptionist/r_dashboard_screen.dart';
+import 'package:solidcare/utils/app_widgets.dart';
+import 'package:solidcare/utils/colors.dart';
+import 'package:solidcare/utils/common.dart';
+import 'package:solidcare/utils/constants.dart';
+import 'package:solidcare/utils/extensions/string_extensions.dart';
+import 'package:solidcare/utils/images.dart';
+import 'package:solidcare/utils/one_signal_notifications.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 import '../components/forgot_password_dailog_component.dart';
@@ -96,10 +96,12 @@ class _SignInScreenState extends State<SignInScreen> {
         } else if (userStore.userRole!.toLowerCase() == UserRolePatient) {
           toast(locale.lblLoginSuccessfullyAsAPatient + '!! 🎉');
           patientStore.setBottomNavIndex(0);
-          PatientDashBoardScreen().launch(context, isNewTask: true, pageRouteAnimation: PageRouteAnimation.Slide);
+          PatientDashBoardScreen().launch(context,
+              isNewTask: true, pageRouteAnimation: PageRouteAnimation.Slide);
         } else if (userStore.userRole!.toLowerCase() == UserRoleReceptionist) {
           toast(locale.lblLoginSuccessfullyAsAReceptionist + '!! 🎉');
-          RDashBoardScreen().launch(context, isNewTask: true, pageRouteAnimation: PageRouteAnimation.Slide);
+          RDashBoardScreen().launch(context,
+              isNewTask: true, pageRouteAnimation: PageRouteAnimation.Slide);
         } else {
           toast(locale.lblWrongUser);
         }
@@ -124,7 +126,8 @@ class _SignInScreenState extends State<SignInScreen> {
       builder: (context) {
         return AppCommonDialog(
           title: locale.lblForgotPassword,
-          child: ForgotPasswordDialogComponent().cornerRadiusWithClipRRect(defaultRadius),
+          child: ForgotPasswordDialogComponent()
+              .cornerRadiusWithClipRRect(defaultRadius),
         );
       },
     );
@@ -215,14 +218,19 @@ class _SignInScreenState extends State<SignInScreen> {
                 children: [
                   Icon(Icons.qr_code_scanner_sharp, color: primaryColor),
                   16.width,
-                  Text(locale.lblScanToTest, style: primaryTextStyle(color: primaryColor)),
+                  Text(locale.lblScanToTest,
+                      style: primaryTextStyle(color: primaryColor)),
                 ],
               ).onTap(
                 () {
                   ScannerScreen().launch(context).then((value) {
                     setStatusBarColor(
-                      appStore.isDarkModeOn ? context.scaffoldBackgroundColor : appPrimaryColor.withOpacity(0.02),
-                      statusBarIconBrightness: appStore.isDarkModeOn ? Brightness.light : Brightness.dark,
+                      appStore.isDarkModeOn
+                          ? context.scaffoldBackgroundColor
+                          : appPrimaryColor.withOpacity(0.02),
+                      statusBarIconBrightness: appStore.isDarkModeOn
+                          ? Brightness.light
+                          : Brightness.dark,
                     );
                     if (selectedIndex == null) {
                       selectedIndex = 0;
@@ -252,12 +260,17 @@ class _SignInScreenState extends State<SignInScreen> {
                 onPressed: () {
                   QrInfoScreen().launch(context).then((value) {
                     setStatusBarColor(
-                      appStore.isDarkModeOn ? context.scaffoldBackgroundColor : appPrimaryColor.withOpacity(0.02),
-                      statusBarIconBrightness: appStore.isDarkModeOn ? Brightness.light : Brightness.dark,
+                      appStore.isDarkModeOn
+                          ? context.scaffoldBackgroundColor
+                          : appPrimaryColor.withOpacity(0.02),
+                      statusBarIconBrightness: appStore.isDarkModeOn
+                          ? Brightness.light
+                          : Brightness.dark,
                     );
                   });
                 },
-                child: Text(locale.lblHowToGenerateQRCode, style: secondaryTextStyle()),
+                child: Text(locale.lblHowToGenerateQRCode,
+                    style: secondaryTextStyle()),
               ),
               32.height,
             ],
@@ -275,7 +288,9 @@ class _SignInScreenState extends State<SignInScreen> {
         children: [
           Form(
             key: formKey,
-            autovalidateMode: isFirstTime ? AutovalidateMode.disabled : AutovalidateMode.onUserInteraction,
+            autovalidateMode: isFirstTime
+                ? AutovalidateMode.disabled
+                : AutovalidateMode.onUserInteraction,
             child: SingleChildScrollView(
               padding: EdgeInsets.all(16),
               child: Column(
@@ -285,7 +300,8 @@ class _SignInScreenState extends State<SignInScreen> {
                 children: [
                   36.height,
                   AppLogo(),
-                  Text(locale.lblSignInToContinue, style: secondaryTextStyle()).center(),
+                  Text(locale.lblSignInToContinue, style: secondaryTextStyle())
+                      .center(),
                   60.height,
                   AppTextField(
                     controller: emailCont,
@@ -293,7 +309,12 @@ class _SignInScreenState extends State<SignInScreen> {
                     nextFocus: passwordFocus,
                     textStyle: primaryTextStyle(),
                     textFieldType: TextFieldType.EMAIL,
-                    decoration: inputDecoration(context: context, labelText: locale.lblEmail, suffixIcon: ic_user.iconImage(size: 18, color: context.iconColor).paddingAll(14)),
+                    decoration: inputDecoration(
+                        context: context,
+                        labelText: locale.lblEmail,
+                        suffixIcon: ic_user
+                            .iconImage(size: 18, color: context.iconColor)
+                            .paddingAll(14)),
                   ),
                   24.height,
                   AppTextField(
@@ -301,9 +322,14 @@ class _SignInScreenState extends State<SignInScreen> {
                     focus: passwordFocus,
                     textStyle: primaryTextStyle(),
                     textFieldType: TextFieldType.PASSWORD,
-                    suffixPasswordVisibleWidget: ic_showPassword.iconImage(size: 10, color: context.iconColor).paddingAll(14),
-                    suffixPasswordInvisibleWidget: ic_hidePassword.iconImage(size: 10, color: context.iconColor).paddingAll(14),
-                    decoration: inputDecoration(context: context, labelText: locale.lblPassword),
+                    suffixPasswordVisibleWidget: ic_showPassword
+                        .iconImage(size: 10, color: context.iconColor)
+                        .paddingAll(14),
+                    suffixPasswordInvisibleWidget: ic_hidePassword
+                        .iconImage(size: 10, color: context.iconColor)
+                        .paddingAll(14),
+                    decoration: inputDecoration(
+                        context: context, labelText: locale.lblPassword),
                   ),
                   4.height,
                   Row(
@@ -318,7 +344,8 @@ class _SignInScreenState extends State<SignInScreen> {
                             height: 16,
                             child: Checkbox(
                               activeColor: appSecondaryColor,
-                              shape: RoundedRectangleBorder(borderRadius: radius(4)),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: radius(4)),
                               value: isRemember,
                               onChanged: (value) async {
                                 isRemember = value.validate();
@@ -332,7 +359,8 @@ class _SignInScreenState extends State<SignInScreen> {
                               isRemember = !isRemember;
                               setState(() {});
                             },
-                            child: Text(locale.lblRememberMe, style: secondaryTextStyle()),
+                            child: Text(locale.lblRememberMe,
+                                style: secondaryTextStyle()),
                           ),
                         ],
                       ),
@@ -344,7 +372,9 @@ class _SignInScreenState extends State<SignInScreen> {
                         },
                         child: Text(
                           locale.lblForgotPassword,
-                          style: secondaryTextStyle(color: appSecondaryColor, fontStyle: FontStyle.italic),
+                          style: secondaryTextStyle(
+                              color: appSecondaryColor,
+                              fontStyle: FontStyle.italic),
                         ),
                       ),
                     ],
@@ -358,7 +388,8 @@ class _SignInScreenState extends State<SignInScreen> {
                     },
                     color: primaryColor,
                     padding: EdgeInsets.all(16),
-                    child: Text(locale.lblSignIn, style: boldTextStyle(color: textPrimaryDarkColor)),
+                    child: Text(locale.lblSignIn,
+                        style: boldTextStyle(color: textPrimaryDarkColor)),
                   ),
                   40.height,
                   LoginRegisterWidget(
@@ -373,7 +404,9 @@ class _SignInScreenState extends State<SignInScreen> {
               ),
             ),
           ),
-          Observer(builder: (context) => LoaderWidget().visible(appStore.isLoading).center())
+          Observer(
+              builder: (context) =>
+                  LoaderWidget().visible(appStore.isLoading).center())
         ],
       ),
     );

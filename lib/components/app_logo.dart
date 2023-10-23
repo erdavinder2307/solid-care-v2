@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:kivicare_flutter/config.dart';
+import 'package:solidcare/config.dart';
 import 'package:nb_utils/nb_utils.dart';
 
-import 'package:kivicare_flutter/utils/images.dart';
+import 'package:solidcare/utils/images.dart';
 
 class AppLogo extends StatelessWidget {
   final double? size;
@@ -18,8 +18,12 @@ class AppLogo extends StatelessWidget {
         26.height,
         RichTextWidget(
           list: [
-            TextSpan(text: APP_FIRST_NAME, style: boldTextStyle(size: 32, letterSpacing: 2)),
-            TextSpan(text: APP_SECOND_NAME, style: primaryTextStyle(size: 32, letterSpacing: 2)),
+            TextSpan(
+                text: APP_FIRST_NAME,
+                style: boldTextStyle(size: 32, letterSpacing: 2)),
+            TextSpan(
+                text: APP_SECOND_NAME,
+                style: primaryTextStyle(size: 32, letterSpacing: 2)),
           ],
         ).center(),
         8.height,

@@ -1,5 +1,5 @@
-import 'package:kivicare_flutter/model/rating_model.dart';
-import 'package:kivicare_flutter/model/user_model.dart';
+import 'package:solidcare/model/rating_model.dart';
+import 'package:solidcare/model/user_model.dart';
 
 class DoctorListModel {
   List<UserModel>? doctorList;
@@ -9,7 +9,9 @@ class DoctorListModel {
 
   factory DoctorListModel.fromJson(Map<String, dynamic> json) {
     return DoctorListModel(
-      doctorList: json['data'] != null ? (json['data'] as List).map((i) => UserModel.fromJson(i)).toList() : null,
+      doctorList: json['data'] != null
+          ? (json['data'] as List).map((i) => UserModel.fromJson(i)).toList()
+          : null,
       total: json['total'],
     );
   }
@@ -63,12 +65,18 @@ class DoctorData {
     return DoctorData(
       available: json['available'],
       avgRating: json['avgRating'],
-      clinicId: json['clinic_id'] != null ? new List<String>.from(json['clinic_id']) : null,
+      clinicId: json['clinic_id'] != null
+          ? new List<String>.from(json['clinic_id'])
+          : null,
       clinicName: json['clinic_name'],
       displayName: json['display_name'],
       gender: json['gender'],
       iD: json['ID'],
-      ratingList: json['reviews'] != null ? (json['reviews'] as List).map((i) => RatingData.fromJson(i)).toList() : null,
+      ratingList: json['reviews'] != null
+          ? (json['reviews'] as List)
+              .map((i) => RatingData.fromJson(i))
+              .toList()
+          : null,
       mobileNumber: json['mobile_number'],
       noOfExperience: json['no_of_experience'].toString(),
       profileImage: json['profile_image'],

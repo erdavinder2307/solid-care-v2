@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/utils/colors.dart';
-import 'package:kivicare_flutter/utils/constants.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/utils/colors.dart';
+import 'package:solidcare/utils/constants.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 extension intExt on int? {

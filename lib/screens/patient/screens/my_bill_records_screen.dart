@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:kivicare_flutter/components/empty_error_state_component.dart';
-import 'package:kivicare_flutter/components/internet_connectivity_widget.dart';
-import 'package:kivicare_flutter/components/loader_widget.dart';
-import 'package:kivicare_flutter/components/no_data_found_widget.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/model/bill_list_model.dart';
-import 'package:kivicare_flutter/network/bill_repository.dart';
-import 'package:kivicare_flutter/screens/patient/components/bill_component.dart';
-import 'package:kivicare_flutter/screens/shimmer/screen/bill_records_shimmer_screen.dart';
-import 'package:kivicare_flutter/utils/app_common.dart';
-import 'package:kivicare_flutter/utils/colors.dart';
-import 'package:kivicare_flutter/utils/images.dart';
+import 'package:solidcare/components/empty_error_state_component.dart';
+import 'package:solidcare/components/internet_connectivity_widget.dart';
+import 'package:solidcare/components/loader_widget.dart';
+import 'package:solidcare/components/no_data_found_widget.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/model/bill_list_model.dart';
+import 'package:solidcare/network/bill_repository.dart';
+import 'package:solidcare/screens/patient/components/bill_component.dart';
+import 'package:solidcare/screens/shimmer/screen/bill_records_shimmer_screen.dart';
+import 'package:solidcare/utils/app_common.dart';
+import 'package:solidcare/utils/colors.dart';
+import 'package:solidcare/utils/images.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class MyBillRecordsScreen extends StatefulWidget {
@@ -84,12 +84,15 @@ class _MyBillRecordsScreenState extends State<MyBillRecordsScreen> {
               loadingWidget: BillRecordsShimmerScreen(),
               errorBuilder: (error) {
                 return NoDataWidget(
-                  imageWidget: Image.asset(ic_somethingWentWrong, height: 180, width: 180),
+                  imageWidget: Image.asset(ic_somethingWentWrong,
+                      height: 180, width: 180),
                   title: error.toString(),
                 ).center();
               },
               onSuccess: (snap) {
-                if (snap.isEmpty) return EmptyStateWidget(emptyWidgetTitle: locale.lblNoBillsFound);
+                if (snap.isEmpty)
+                  return EmptyStateWidget(
+                      emptyWidgetTitle: locale.lblNoBillsFound);
                 return AnimatedScrollView(
                   onSwipeRefresh: () async {
                     setState(() {
@@ -112,7 +115,9 @@ class _MyBillRecordsScreenState extends State<MyBillRecordsScreen> {
                   physics: AlwaysScrollableScrollPhysics(),
                   slideConfiguration: SlideConfiguration(verticalOffset: 400),
                   children: [
-                    Text('${locale.lblNote} :  ${locale.lblSwipeMassage}', style: secondaryTextStyle(size: 10, color: appSecondaryColor)),
+                    Text('${locale.lblNote} :  ${locale.lblSwipeMassage}',
+                        style: secondaryTextStyle(
+                            size: 10, color: appSecondaryColor)),
                     8.height,
                     ...snap
                         .map((billData) => BillComponent(
@@ -127,7 +132,8 @@ class _MyBillRecordsScreenState extends State<MyBillRecordsScreen> {
               },
             ),
             Observer(
-              builder: (context) => LoaderWidget().visible(appStore.isLoading).center(),
+              builder: (context) =>
+                  LoaderWidget().visible(appStore.isLoading).center(),
             )
           ],
         ),

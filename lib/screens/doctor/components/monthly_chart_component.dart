@@ -1,7 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:kivicare_flutter/model/upcoming_appointment_model.dart';
-import 'package:kivicare_flutter/utils/colors.dart';
+import 'package:solidcare/model/upcoming_appointment_model.dart';
+import 'package:solidcare/utils/colors.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class MonthlyChartComponent extends StatefulWidget {
@@ -101,7 +101,8 @@ class MonthlyChartComponentState extends State<MonthlyChartComponent> {
                   weekDay = 'W5';
                   break;
               }
-              return BarTooltipItem(weekDay + '\n' + (rod.toY - 1).toString(), TextStyle(color: primaryColor));
+              return BarTooltipItem(weekDay + '\n' + (rod.toY - 1).toString(),
+                  TextStyle(color: primaryColor));
             }),
       ),
       titlesData: FlTitlesData(
@@ -133,15 +134,20 @@ class MonthlyChartComponentState extends State<MonthlyChartComponent> {
     Widget text;
     switch (value.toInt()) {
       case 0:
-        return text = Text('W1', style: secondaryTextStyle(size: 12, color: secondaryTxtColor));
+        return text = Text('W1',
+            style: secondaryTextStyle(size: 12, color: secondaryTxtColor));
       case 1:
-        return text = Text('W2', style: secondaryTextStyle(size: 12, color: secondaryTxtColor));
+        return text = Text('W2',
+            style: secondaryTextStyle(size: 12, color: secondaryTxtColor));
       case 2:
-        return text = Text('W3', style: secondaryTextStyle(size: 12, color: secondaryTxtColor));
+        return text = Text('W3',
+            style: secondaryTextStyle(size: 12, color: secondaryTxtColor));
       case 3:
-        return text = Text('W4', style: secondaryTextStyle(size: 12, color: secondaryTxtColor));
+        return text = Text('W4',
+            style: secondaryTextStyle(size: 12, color: secondaryTxtColor));
       case 4:
-        return text = Text('W5', style: secondaryTextStyle(size: 12, color: secondaryTxtColor));
+        return text = Text('W5',
+            style: secondaryTextStyle(size: 12, color: secondaryTxtColor));
       default:
         text = Text('', style: boldTextStyle(size: 14));
         break;
@@ -156,7 +162,8 @@ class MonthlyChartComponentState extends State<MonthlyChartComponent> {
         return text = Text('M', style: boldTextStyle(size: 14));
 
       default:
-        text = Text('${(value % 100).toInt()}', style: secondaryTextStyle(size: 12));
+        text = Text('${(value % 100).toInt()}',
+            style: secondaryTextStyle(size: 12));
         break;
     }
     return Padding(padding: EdgeInsets.only(top: 16), child: text);

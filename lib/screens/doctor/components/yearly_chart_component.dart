@@ -1,8 +1,8 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/model/upcoming_appointment_model.dart';
-import 'package:kivicare_flutter/utils/colors.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/model/upcoming_appointment_model.dart';
+import 'package:solidcare/utils/colors.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class YearlyChartComponent extends StatefulWidget {
@@ -123,7 +123,8 @@ class YearlyChartComponentState extends State<YearlyChartComponent> {
                   weekDay = locale.lblDec;
                   break;
               }
-              return BarTooltipItem(weekDay + '\n' + (rod.toY - 1).toString(), TextStyle(color: primaryColor));
+              return BarTooltipItem(weekDay + '\n' + (rod.toY - 1).toString(),
+                  TextStyle(color: primaryColor));
             }),
       ),
       titlesData: FlTitlesData(
@@ -155,29 +156,41 @@ class YearlyChartComponentState extends State<YearlyChartComponent> {
     Widget text;
     switch (value.toInt()) {
       case 0:
-        return text = Text(locale.lblJan, style: secondaryTextStyle(size: 10, color: secondaryTxtColor));
+        return text = Text(locale.lblJan,
+            style: secondaryTextStyle(size: 10, color: secondaryTxtColor));
       case 1:
-        return text = Text(locale.lblFeb, style: secondaryTextStyle(size: 10, color: secondaryTxtColor));
+        return text = Text(locale.lblFeb,
+            style: secondaryTextStyle(size: 10, color: secondaryTxtColor));
       case 2:
-        return text = Text(locale.lblMar, style: secondaryTextStyle(size: 10, color: secondaryTxtColor));
+        return text = Text(locale.lblMar,
+            style: secondaryTextStyle(size: 10, color: secondaryTxtColor));
       case 3:
-        return text = Text(locale.lblApr, style: secondaryTextStyle(size: 10, color: secondaryTxtColor));
+        return text = Text(locale.lblApr,
+            style: secondaryTextStyle(size: 10, color: secondaryTxtColor));
       case 4:
-        return text = Text(locale.lblMay, style: secondaryTextStyle(size: 10, color: secondaryTxtColor));
+        return text = Text(locale.lblMay,
+            style: secondaryTextStyle(size: 10, color: secondaryTxtColor));
       case 5:
-        return text = Text(locale.lblJun, style: secondaryTextStyle(size: 10, color: secondaryTxtColor));
+        return text = Text(locale.lblJun,
+            style: secondaryTextStyle(size: 10, color: secondaryTxtColor));
       case 6:
-        return text = Text(locale.lblJul, style: secondaryTextStyle(size: 10, color: secondaryTxtColor));
+        return text = Text(locale.lblJul,
+            style: secondaryTextStyle(size: 10, color: secondaryTxtColor));
       case 7:
-        return text = Text(locale.lblAug, style: secondaryTextStyle(size: 10, color: secondaryTxtColor));
+        return text = Text(locale.lblAug,
+            style: secondaryTextStyle(size: 10, color: secondaryTxtColor));
       case 8:
-        return text = Text(locale.lblSep, style: secondaryTextStyle(size: 10, color: secondaryTxtColor));
+        return text = Text(locale.lblSep,
+            style: secondaryTextStyle(size: 10, color: secondaryTxtColor));
       case 9:
-        return text = Text(locale.lblOct, style: secondaryTextStyle(size: 10, color: secondaryTxtColor));
+        return text = Text(locale.lblOct,
+            style: secondaryTextStyle(size: 10, color: secondaryTxtColor));
       case 10:
-        return text = Text(locale.lblNov, style: secondaryTextStyle(size: 10, color: secondaryTxtColor));
+        return text = Text(locale.lblNov,
+            style: secondaryTextStyle(size: 10, color: secondaryTxtColor));
       case 11:
-        return text = Text(locale.lblDec, style: secondaryTextStyle(size: 10, color: secondaryTxtColor));
+        return text = Text(locale.lblDec,
+            style: secondaryTextStyle(size: 10, color: secondaryTxtColor));
 
       default:
         text = Text('', style: boldTextStyle(size: 14));
@@ -193,7 +206,8 @@ class YearlyChartComponentState extends State<YearlyChartComponent> {
         return text = Text('M', style: boldTextStyle(size: 14));
 
       default:
-        text = Text('${(value % 1000).toInt()}', style: secondaryTextStyle(size: 8));
+        text = Text('${(value % 1000).toInt()}',
+            style: secondaryTextStyle(size: 8));
         break;
     }
     return Padding(padding: EdgeInsets.only(top: 16), child: text);

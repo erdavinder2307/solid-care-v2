@@ -2,13 +2,13 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:kivicare_flutter/components/loader_widget.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/model/rating_model.dart';
-import 'package:kivicare_flutter/network/review_repository.dart';
-import 'package:kivicare_flutter/utils/colors.dart';
-import 'package:kivicare_flutter/utils/common.dart';
-import 'package:kivicare_flutter/utils/extensions/int_extensions.dart';
+import 'package:solidcare/components/loader_widget.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/model/rating_model.dart';
+import 'package:solidcare/network/review_repository.dart';
+import 'package:solidcare/utils/colors.dart';
+import 'package:solidcare/utils/common.dart';
+import 'package:solidcare/utils/extensions/int_extensions.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class AddReviewDialog extends StatefulWidget {
@@ -105,7 +105,9 @@ class _AddReviewDialogState extends State<AddReviewDialog> {
                 ),
                 child: Row(
                   children: [
-                    Text(locale.lblYourReviews, style: boldTextStyle(color: Colors.white)).expand(),
+                    Text(locale.lblYourReviews,
+                            style: boldTextStyle(color: Colors.white))
+                        .expand(),
                     IconButton(
                       icon: Icon(Icons.clear, color: Colors.white, size: 16),
                       onPressed: () {
@@ -129,7 +131,8 @@ class _AddReviewDialogState extends State<AddReviewDialog> {
                             selectedRating = rating;
                             setState(() {});
                           },
-                          activeColor: selectedRating.toInt().getRatingBarColor(),
+                          activeColor:
+                              selectedRating.toInt().getRatingBarColor(),
                           inActiveColor: ratingBarColor,
                           rating: selectedRating,
                           size: 18,
@@ -154,7 +157,8 @@ class _AddReviewDialogState extends State<AddReviewDialog> {
                     children: [
                       AppButton(
                         text: isUpdate ? locale.lblDelete : locale.lblCancel,
-                        textColor: isUpdate ? Colors.red : textPrimaryColorGlobal,
+                        textColor:
+                            isUpdate ? Colors.red : textPrimaryColorGlobal,
                         color: context.cardColor,
                         onTap: () {
                           if (isUpdate) {
@@ -168,7 +172,11 @@ class _AddReviewDialogState extends State<AddReviewDialog> {
                               onAccept: (c) async {
                                 appStore.setLoading(true);
 
-                                await deleteReviewAPI(id: widget.customerReview!.id.validate().toInt()).then((value) {
+                                await deleteReviewAPI(
+                                        id: widget.customerReview!.id
+                                            .validate()
+                                            .toInt())
+                                    .then((value) {
                                   appStore.setLoading(false);
                                   toast(value.message);
                                   LiveStream().emit("REVIEW_UPDATE");
@@ -206,7 +214,10 @@ class _AddReviewDialogState extends State<AddReviewDialog> {
             ],
           ),
         ),
-        Observer(builder: (context) => LoaderWidget().visible(appStore.isLoading).withSize(height: 80, width: 80))
+        Observer(
+            builder: (context) => LoaderWidget()
+                .visible(appStore.isLoading)
+                .withSize(height: 80, width: 80))
       ],
     );
   }

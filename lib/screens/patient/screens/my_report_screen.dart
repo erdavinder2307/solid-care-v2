@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:kivicare_flutter/components/empty_error_state_component.dart';
-import 'package:kivicare_flutter/components/internet_connectivity_widget.dart';
+import 'package:solidcare/components/empty_error_state_component.dart';
+import 'package:solidcare/components/internet_connectivity_widget.dart';
 // ignore: unused_import
-import 'package:kivicare_flutter/components/loader_widget.dart';
-import 'package:kivicare_flutter/components/no_data_found_widget.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/model/report_model.dart';
-import 'package:kivicare_flutter/network/report_repository.dart';
-import 'package:kivicare_flutter/screens/encounter/component/report_component.dart';
-import 'package:kivicare_flutter/screens/shimmer/screen/report_shimmer_screen.dart';
-import 'package:kivicare_flutter/utils/app_common.dart';
-import 'package:kivicare_flutter/utils/colors.dart';
+import 'package:solidcare/components/loader_widget.dart';
+import 'package:solidcare/components/no_data_found_widget.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/model/report_model.dart';
+import 'package:solidcare/network/report_repository.dart';
+import 'package:solidcare/screens/encounter/component/report_component.dart';
+import 'package:solidcare/screens/shimmer/screen/report_shimmer_screen.dart';
+import 'package:solidcare/utils/app_common.dart';
+import 'package:solidcare/utils/colors.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class MyReportsScreen extends StatefulWidget {
@@ -79,7 +79,11 @@ class _MyReportsScreenState extends State<MyReportsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBarWidget(locale.lblMyReports, textColor: Colors.white, systemUiOverlayStyle: defaultSystemUiOverlayStyle(context), elevation: 0, color: appPrimaryColor),
+      appBar: appBarWidget(locale.lblMyReports,
+          textColor: Colors.white,
+          systemUiOverlayStyle: defaultSystemUiOverlayStyle(context),
+          elevation: 0,
+          color: appPrimaryColor),
       body: InternetConnectivityWidget(
         child: SnapHelperWidget<List<ReportData>>(
           future: future,
@@ -87,7 +91,8 @@ class _MyReportsScreenState extends State<MyReportsScreen> {
           errorWidget: ErrorStateWidget().center(),
           onSuccess: (snap) {
             return AnimatedScrollView(
-              padding: EdgeInsets.only(bottom: 60, top: 16, left: 16, right: 16),
+              padding:
+                  EdgeInsets.only(bottom: 60, top: 16, left: 16, right: 16),
               children: snap
                   .map((reportData) => ReportComponent(
                         reportData: reportData,
@@ -95,7 +100,9 @@ class _MyReportsScreenState extends State<MyReportsScreen> {
                       ))
                   .toList(),
             ).visible(snap.isNotEmpty,
-                defaultWidget: snap.isEmpty && !appStore.isLoading ? NoDataFoundWidget(text: locale.lblNoReportsFound).center() : ReportShimmerScreen().visible(appStore.isLoading));
+                defaultWidget: snap.isEmpty && !appStore.isLoading
+                    ? NoDataFoundWidget(text: locale.lblNoReportsFound).center()
+                    : ReportShimmerScreen().visible(appStore.isLoading));
           },
         ),
         retryCallback: () {

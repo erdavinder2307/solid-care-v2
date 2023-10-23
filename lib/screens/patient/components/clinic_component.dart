@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:kivicare_flutter/components/cached_image_widget.dart';
-import 'package:kivicare_flutter/model/clinic_list_model.dart';
-import 'package:kivicare_flutter/utils/extensions/string_extensions.dart';
-import 'package:kivicare_flutter/utils/images.dart';
+import 'package:solidcare/components/cached_image_widget.dart';
+import 'package:solidcare/model/clinic_list_model.dart';
+import 'package:solidcare/utils/extensions/string_extensions.dart';
+import 'package:solidcare/utils/images.dart';
 import 'package:nb_utils/nb_utils.dart';
 
-import 'package:kivicare_flutter/components/status_widget.dart';
+import 'package:solidcare/components/status_widget.dart';
 
 class ClinicComponent extends StatelessWidget {
   final Clinic clinicData;
@@ -68,10 +68,16 @@ class ClinicComponent extends StatelessWidget {
           right: 12,
           child: Container(
             padding: EdgeInsets.zero,
-            decoration: boxDecorationDefault(shape: BoxShape.circle, color: isCheck ? Colors.green : context.cardColor, border: Border.all(width: 2, color: Colors.green)),
+            decoration: boxDecorationDefault(
+                shape: BoxShape.circle,
+                color: isCheck ? Colors.green : context.cardColor,
+                border: Border.all(width: 2, color: Colors.green)),
             child: isCheck
                 ? Icon(Icons.check, color: Colors.white, size: 16)
-                : Container(padding: EdgeInsets.all(isCheck ? 0 : 8), decoration: boxDecorationDefault(shape: BoxShape.circle, color: context.cardColor)),
+                : Container(
+                    padding: EdgeInsets.all(isCheck ? 0 : 8),
+                    decoration: boxDecorationDefault(
+                        shape: BoxShape.circle, color: context.cardColor)),
           ).onTap(
             () {
               onTap!.call(!isCheck);

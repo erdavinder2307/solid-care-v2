@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/utils/colors.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/utils/colors.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:scan/scan.dart';
 
@@ -68,9 +68,13 @@ class _ScannerScreenState extends State<ScannerScreen> {
 
                   userStore.setFirstName(username);
                   appStore.setBaseUrl("$url/wp-json/", initialize: true);
-                  appStore.setDemoDoctor("doctor_$username@kivicare.com", initialize: true);
-                  appStore.setDemoReceptionist("receptionist_$username@kivicare.com", initialize: true);
-                  appStore.setDemoPatient("patient_$username@kivicare.com", initialize: true);
+                  appStore.setDemoDoctor("doctor_$username@kivicare.com",
+                      initialize: true);
+                  appStore.setDemoReceptionist(
+                      "receptionist_$username@kivicare.com",
+                      initialize: true);
+                  appStore.setDemoPatient("patient_$username@kivicare.com",
+                      initialize: true);
                 }
                 finish(context, true);
               }
@@ -80,7 +84,9 @@ class _ScannerScreenState extends State<ScannerScreen> {
             top: context.height() * 0.28,
             left: 0,
             right: 0,
-            child: Text(locale.lblQrScanner, style: boldTextStyle(color: white, size: 24), textAlign: TextAlign.center),
+            child: Text(locale.lblQrScanner,
+                style: boldTextStyle(color: white, size: 24),
+                textAlign: TextAlign.center),
           ),
           Positioned(
             top: 32,

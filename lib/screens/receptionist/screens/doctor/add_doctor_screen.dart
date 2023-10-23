@@ -5,32 +5,33 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:intl/intl.dart';
-import 'package:kivicare_flutter/components/body_widget.dart';
-import 'package:kivicare_flutter/components/gender_selection_component.dart';
-import 'package:kivicare_flutter/components/internet_connectivity_widget.dart';
-import 'package:kivicare_flutter/components/no_data_found_widget.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/model/qualification_model.dart';
-import 'package:kivicare_flutter/model/static_data_model.dart';
-import 'package:kivicare_flutter/model/user_model.dart';
-import 'package:kivicare_flutter/network/auth_repository.dart';
-import 'package:kivicare_flutter/screens/auth/components/qualification_widget.dart';
-import 'package:kivicare_flutter/screens/doctor/screens/add_qualification_screen.dart';
-import 'package:kivicare_flutter/screens/receptionist/components/multi_select_specialization.dart';
-import 'package:kivicare_flutter/screens/receptionist/components/qualification_item_widget.dart';
-import 'package:kivicare_flutter/utils/app_common.dart';
-import 'package:kivicare_flutter/utils/colors.dart';
-import 'package:kivicare_flutter/utils/common.dart';
-import 'package:kivicare_flutter/utils/constants.dart';
-import 'package:kivicare_flutter/utils/extensions/date_extensions.dart';
-import 'package:kivicare_flutter/utils/extensions/string_extensions.dart';
+import 'package:solidcare/components/body_widget.dart';
+import 'package:solidcare/components/gender_selection_component.dart';
+import 'package:solidcare/components/internet_connectivity_widget.dart';
+import 'package:solidcare/components/no_data_found_widget.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/model/qualification_model.dart';
+import 'package:solidcare/model/static_data_model.dart';
+import 'package:solidcare/model/user_model.dart';
+import 'package:solidcare/network/auth_repository.dart';
+import 'package:solidcare/screens/auth/components/qualification_widget.dart';
+import 'package:solidcare/screens/doctor/screens/add_qualification_screen.dart';
+import 'package:solidcare/screens/receptionist/components/multi_select_specialization.dart';
+import 'package:solidcare/screens/receptionist/components/qualification_item_widget.dart';
+import 'package:solidcare/utils/app_common.dart';
+import 'package:solidcare/utils/colors.dart';
+import 'package:solidcare/utils/common.dart';
+import 'package:solidcare/utils/constants.dart';
+import 'package:solidcare/utils/extensions/date_extensions.dart';
+import 'package:solidcare/utils/extensions/string_extensions.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class AddDoctorScreen extends StatefulWidget {
   final UserModel? doctorData;
   final VoidCallback? refreshCall;
 
-  AddDoctorScreen({Key? key, this.refreshCall, this.doctorData}) : super(key: key);
+  AddDoctorScreen({Key? key, this.refreshCall, this.doctorData})
+      : super(key: key);
 
   @override
   State<AddDoctorScreen> createState() => _AddDoctorScreenState();
@@ -95,7 +96,8 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
       contactNumberCont.text = widget.doctorData!.mobileNumber.validate();
 
       if (widget.doctorData!.dob.validate().isNotEmpty) {
-        selectedDate = DateFormat(SAVE_DATE_FORMAT).parse(widget.doctorData!.dob.validate());
+        selectedDate = DateFormat(SAVE_DATE_FORMAT)
+            .parse(widget.doctorData!.dob.validate());
         dobCont.text = selectedDate.getFormattedDate(SAVE_DATE_FORMAT);
       }
       genderCont.text = widget.doctorData!.gender.validate();
@@ -104,12 +106,14 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
       cityCont.text = widget.doctorData!.city.validate();
       postalCodeCont.text = widget.doctorData!.postalCode.validate();
 
-      experienceCont.text = widget.doctorData!.noOfExperience.validate().toString();
+      experienceCont.text =
+          widget.doctorData!.noOfExperience.validate().toString();
       signatureCont.text = widget.doctorData!.signatureImg.validate();
       qualificationList = widget.doctorData!.qualifications.validate();
 
       widget.doctorData!.specialties.validate().forEach((e) {
-        multiSelectStore.selectedStaticData.add(StaticData(id: e.id, label: e.label));
+        multiSelectStore.selectedStaticData
+            .add(StaticData(id: e.id, label: e.label));
       });
       genderKey = UniqueKey();
       setState(() {});
@@ -145,10 +149,14 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
                     Text(locale.lblDone, style: boldTextStyle()).onTap(
                       () {
                         if (DateTime.now().year - selectedDate.year < 18) {
-                          toast(locale.lblMinimumAgeRequired + locale.lblCurrentAgeIs + ' ${DateTime.now().year - selectedDate.year}');
+                          toast(locale.lblMinimumAgeRequired +
+                              locale.lblCurrentAgeIs +
+                              ' ${DateTime.now().year - selectedDate.year}');
                         } else {
                           finish(context);
-                          dobCont.text = selectedDate.getFormattedDate(SAVE_DATE_FORMAT).toString();
+                          dobCont.text = selectedDate
+                              .getFormattedDate(SAVE_DATE_FORMAT)
+                              .toString();
                         }
                       },
                       splashColor: Colors.transparent,
@@ -160,7 +168,9 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
               Container(
                 height: 200,
                 child: CupertinoTheme(
-                  data: CupertinoThemeData(textTheme: CupertinoTextThemeData(dateTimePickerTextStyle: primaryTextStyle(size: 20))),
+                  data: CupertinoThemeData(
+                      textTheme: CupertinoTextThemeData(
+                          dateTimePickerTextStyle: primaryTextStyle(size: 20))),
                   child: CupertinoDatePicker(
                     minimumDate: DateTime(1900, 1, 1),
                     minuteInterval: 1,
@@ -190,7 +200,12 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
         children: [
           Row(
             children: [
-              Text(locale.lblQualification.getApostropheString(apostrophe: false), style: boldTextStyle(color: context.primaryColor, size: 18)).expand(),
+              Text(
+                      locale.lblQualification
+                          .getApostropheString(apostrophe: false),
+                      style:
+                          boldTextStyle(color: context.primaryColor, size: 18))
+                  .expand(),
               TextButton(
                 onPressed: () async {
                   qualification = await showModalBottomSheet(
@@ -204,7 +219,8 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
                   qualificationList.add(qualification);
                   setState(() {});
                 },
-                child: Text(locale.lblAddNewQualification, style: secondaryTextStyle()),
+                child: Text(locale.lblAddNewQualification,
+                    style: secondaryTextStyle()),
               )
             ],
           ),
@@ -222,7 +238,8 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
                     isScrollControlled: true,
                     builder: (context) => Padding(
                       padding: MediaQuery.of(context).viewInsets,
-                      child: AddQualificationScreen(qualification: qualificationList[index]),
+                      child: AddQualificationScreen(
+                          qualification: qualificationList[index]),
                     ),
                   );
                   qualificationList[index] = qualification;
@@ -231,7 +248,9 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
               ),
             )
           else
-            NoDataFoundWidget(iconSize: 100, text: locale.lblNoQualificationsFound).center(),
+            NoDataFoundWidget(
+                    iconSize: 100, text: locale.lblNoQualificationsFound)
+                .center(),
         ],
       ),
     );
@@ -302,10 +321,13 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
           child: Form(
             key: formKey,
             child: AnimatedScrollView(
-              padding: EdgeInsets.only(bottom: 80, left: 16, right: 16, top: 16),
+              padding:
+                  EdgeInsets.only(bottom: 80, left: 16, right: 16, top: 16),
               listAnimationType: ListAnimationType.None,
               children: [
-                Text(locale.lblBasicDetails, style: boldTextStyle(color: context.primaryColor, size: 18)),
+                Text(locale.lblBasicDetails,
+                    style:
+                        boldTextStyle(color: context.primaryColor, size: 18)),
                 Divider(color: viewLineColor, height: 24),
                 Wrap(
                   runSpacing: 16,
@@ -318,7 +340,8 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
                           nextFocus: lastNameFocus,
                           textInputAction: TextInputAction.next,
                           textFieldType: TextFieldType.NAME,
-                          decoration: inputDecoration(context: context, labelText: locale.lblFirstName),
+                          decoration: inputDecoration(
+                              context: context, labelText: locale.lblFirstName),
                         ).expand(),
                         10.width,
                         AppTextField(
@@ -327,7 +350,8 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
                           textInputAction: TextInputAction.next,
                           nextFocus: emailFocus,
                           textFieldType: TextFieldType.NAME,
-                          decoration: inputDecoration(context: context, labelText: locale.lblLastName),
+                          decoration: inputDecoration(
+                              context: context, labelText: locale.lblLastName),
                         ).expand(),
                       ],
                     ),
@@ -337,7 +361,8 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
                       textInputAction: TextInputAction.next,
                       nextFocus: contactNumberFocus,
                       textFieldType: TextFieldType.EMAIL,
-                      decoration: inputDecoration(context: context, labelText: locale.lblEmail),
+                      decoration: inputDecoration(
+                          context: context, labelText: locale.lblEmail),
                     ),
                     Row(
                       children: [
@@ -345,9 +370,13 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
                           controller: contactNumberCont,
                           focus: contactNumberFocus,
                           nextFocus: dobFocus,
-                          inputFormatters: [LengthLimitingTextInputFormatter(10)],
+                          inputFormatters: [
+                            LengthLimitingTextInputFormatter(10)
+                          ],
                           textFieldType: TextFieldType.PHONE,
-                          decoration: inputDecoration(context: context, labelText: locale.lblContactNumber),
+                          decoration: inputDecoration(
+                              context: context,
+                              labelText: locale.lblContactNumber),
                         ).expand(),
                         16.width,
                         AppTextField(
@@ -356,8 +385,11 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
                           nextFocus: addressFocus,
                           readOnly: true,
                           textFieldType: TextFieldType.OTHER,
-                          decoration: inputDecoration(context: context, labelText: locale.lblDOB),
-                          keyboardAppearance: appStore.isDarkModeOn ? Brightness.dark : Brightness.light,
+                          decoration: inputDecoration(
+                              context: context, labelText: locale.lblDOB),
+                          keyboardAppearance: appStore.isDarkModeOn
+                              ? Brightness.dark
+                              : Brightness.light,
                           selectionControls: EmptyTextSelectionControls(),
                           onTap: () {
                             if (dobCont.text.isNotEmpty) {
@@ -381,35 +413,53 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        MultiSelectSpecialization(selectedServicesId: multiSelectStore.selectedStaticData.validate().map((element) => element!.id.validate()).toList()).launch(context);
+                        MultiSelectSpecialization(
+                                selectedServicesId: multiSelectStore
+                                    .selectedStaticData
+                                    .validate()
+                                    .map((element) => element!.id.validate())
+                                    .toList())
+                            .launch(context);
                       },
                       child: Container(
                         padding: EdgeInsets.fromLTRB(10, 16, 16, 16),
                         width: context.width(),
-                        decoration: boxDecorationDefault(borderRadius: radius(), color: context.cardColor),
+                        decoration: boxDecorationDefault(
+                            borderRadius: radius(), color: context.cardColor),
                         child: Observer(
                           builder: (_) {
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(locale.lblSpecialization, style: secondaryTextStyle()),
-                                if (multiSelectStore.selectedStaticData.validate().isNotEmpty) 16.height,
+                                Text(locale.lblSpecialization,
+                                    style: secondaryTextStyle()),
+                                if (multiSelectStore.selectedStaticData
+                                    .validate()
+                                    .isNotEmpty)
+                                  16.height,
                                 Wrap(
                                   spacing: 8,
                                   runSpacing: 8,
                                   children: List.generate(
                                     multiSelectStore.selectedStaticData.length,
                                     (index) {
-                                      StaticData data = multiSelectStore.selectedStaticData[index]!;
+                                      StaticData data = multiSelectStore
+                                          .selectedStaticData[index]!;
                                       return Chip(
-                                        label: Text(data.label.validate(), style: primaryTextStyle()),
+                                        label: Text(data.label.validate(),
+                                            style: primaryTextStyle()),
                                         backgroundColor: context.cardColor,
                                         deleteIcon: Icon(Icons.clear, size: 18),
                                         deleteIconColor: Colors.red,
                                         onDeleted: () {
-                                          multiSelectStore.removeStaticItem(data);
+                                          multiSelectStore
+                                              .removeStaticItem(data);
                                         },
-                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(defaultRadius), side: BorderSide(color: viewLineColor)),
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(
+                                                defaultRadius),
+                                            side: BorderSide(
+                                                color: viewLineColor)),
                                       );
                                     },
                                   ),
@@ -427,11 +477,14 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
                       textInputAction: TextInputAction.next,
                       textFieldType: TextFieldType.OTHER,
                       keyboardType: TextInputType.number,
-                      decoration: inputDecoration(context: context, labelText: locale.lblExperience),
+                      decoration: inputDecoration(
+                          context: context, labelText: locale.lblExperience),
                     ),
                   ],
                 ).paddingBottom(24),
-                Text(locale.lblAddressDetail, style: boldTextStyle(color: context.primaryColor, size: 18)),
+                Text(locale.lblAddressDetail,
+                    style:
+                        boldTextStyle(color: context.primaryColor, size: 18)),
                 Divider(color: viewLineColor, height: 24),
                 Wrap(
                   runSpacing: 16,
@@ -445,7 +498,9 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
                       textFieldType: TextFieldType.MULTILINE,
                       minLines: 2,
                       maxLines: 4,
-                      decoration: inputDecoration(context: context, labelText: locale.lblAddress).copyWith(alignLabelWithHint: true),
+                      decoration: inputDecoration(
+                              context: context, labelText: locale.lblAddress)
+                          .copyWith(alignLabelWithHint: true),
                     ),
                     Row(
                       children: [
@@ -454,7 +509,8 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
                           focus: countryFocus,
                           nextFocus: cityFocus,
                           textFieldType: TextFieldType.OTHER,
-                          decoration: inputDecoration(context: context, labelText: locale.lblCountry),
+                          decoration: inputDecoration(
+                              context: context, labelText: locale.lblCountry),
                         ).expand(),
                         16.width,
                         AppTextField(
@@ -463,7 +519,8 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
                           textInputAction: TextInputAction.next,
                           nextFocus: postalCodeFocus,
                           textFieldType: TextFieldType.OTHER,
-                          decoration: inputDecoration(context: context, labelText: locale.lblCity),
+                          decoration: inputDecoration(
+                              context: context, labelText: locale.lblCity),
                         ).expand(),
                       ],
                     ),
@@ -473,9 +530,11 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
                       textInputAction: TextInputAction.done,
                       textFieldType: TextFieldType.OTHER,
                       inputFormatters: [
-                        FilteringTextInputFormatter.digitsOnly, // Only allows digits
+                        FilteringTextInputFormatter
+                            .digitsOnly, // Only allows digits
                       ],
-                      decoration: inputDecoration(context: context, labelText: locale.lblPostalCode),
+                      decoration: inputDecoration(
+                          context: context, labelText: locale.lblPostalCode),
                     ),
                   ],
                 ),
@@ -491,8 +550,13 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(locale.lblSignature, style: boldTextStyle(color: context.primaryColor, size: 18)),
-                      if (signatureCont.text.validate().isNotEmpty) Image.memory(getImageFromBase64(signatureCont.text.validate())!).cornerRadiusWithClipRRect(defaultRadius),
+                      Text(locale.lblSignature,
+                          style: boldTextStyle(
+                              color: context.primaryColor, size: 18)),
+                      if (signatureCont.text.validate().isNotEmpty)
+                        Image.memory(getImageFromBase64(
+                                signatureCont.text.validate())!)
+                            .cornerRadiusWithClipRRect(defaultRadius),
                     ],
                   ),
               ],
@@ -510,8 +574,11 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
               primaryColor: context.primaryColor,
               width: context.width() * 0.7,
               height: context.height() * 0.2,
-              dialogType: isUpdate ? DialogType.UPDATE : DialogType.CONFIRMATION,
-              title: isUpdate ? locale.lblDoYouWantToUpdateDoctorDetails : locale.lblDoYouWantToSaveNewDoctorDetails,
+              dialogType:
+                  isUpdate ? DialogType.UPDATE : DialogType.CONFIRMATION,
+              title: isUpdate
+                  ? locale.lblDoYouWantToUpdateDoctorDetails
+                  : locale.lblDoYouWantToSaveNewDoctorDetails,
               positiveText: locale.lblYes,
               negativeText: locale.lblCancel,
               onAccept: (p0) {

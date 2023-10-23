@@ -2,23 +2,23 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:intl/intl.dart';
-import 'package:kivicare_flutter/components/loader_widget.dart';
-import 'package:kivicare_flutter/components/role_widget.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/model/clinic_list_model.dart';
-import 'package:kivicare_flutter/model/doctor_session_model.dart';
-import 'package:kivicare_flutter/model/user_model.dart';
-import 'package:kivicare_flutter/model/week_days_model.dart';
-import 'package:kivicare_flutter/network/doctor_sessions_repository.dart';
-import 'package:kivicare_flutter/screens/appointment/screen/step1_clinic_selection_screen.dart';
-import 'package:kivicare_flutter/screens/appointment/screen/step2_doctor_selection_screen.dart';
-import 'package:kivicare_flutter/utils/app_common.dart';
-import 'package:kivicare_flutter/utils/common.dart';
-import 'package:kivicare_flutter/utils/constants.dart';
-import 'package:kivicare_flutter/utils/extensions/date_extensions.dart';
-import 'package:kivicare_flutter/utils/extensions/int_extensions.dart';
-import 'package:kivicare_flutter/utils/extensions/string_extensions.dart';
-import 'package:kivicare_flutter/utils/images.dart';
+import 'package:solidcare/components/loader_widget.dart';
+import 'package:solidcare/components/role_widget.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/model/clinic_list_model.dart';
+import 'package:solidcare/model/doctor_session_model.dart';
+import 'package:solidcare/model/user_model.dart';
+import 'package:solidcare/model/week_days_model.dart';
+import 'package:solidcare/network/doctor_sessions_repository.dart';
+import 'package:solidcare/screens/appointment/screen/step1_clinic_selection_screen.dart';
+import 'package:solidcare/screens/appointment/screen/step2_doctor_selection_screen.dart';
+import 'package:solidcare/utils/app_common.dart';
+import 'package:solidcare/utils/common.dart';
+import 'package:solidcare/utils/constants.dart';
+import 'package:solidcare/utils/extensions/date_extensions.dart';
+import 'package:solidcare/utils/extensions/int_extensions.dart';
+import 'package:solidcare/utils/extensions/string_extensions.dart';
+import 'package:solidcare/utils/images.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class AddSessionsScreen extends StatefulWidget {
@@ -73,29 +73,42 @@ class _AddSessionsScreenState extends State<AddSessionsScreen> {
     setState(() {});
 
     for (int i = 1; i <= 7; i++) {
-      weekDays.add(WeekDaysModel(name: i.getWeekDay(), value: i.getWeekDay().toLowerCase(), isSelected: false));
+      weekDays.add(WeekDaysModel(
+          name: i.getWeekDay(),
+          value: i.getWeekDay().toLowerCase(),
+          isSelected: false));
       setState(() {});
     }
 
     isUpdate = widget.sessionData != null;
     if (isUpdate) {
       sessionData = widget.sessionData;
-      doctorCont = UserModel(iD: sessionData!.doctorId.toInt(), displayName: sessionData!.doctors);
-      selectedClinic = Clinic(id: sessionData!.clinicId, name: sessionData!.clinicName);
+      doctorCont = UserModel(
+          iD: sessionData!.doctorId.toInt(), displayName: sessionData!.doctors);
+      selectedClinic =
+          Clinic(id: sessionData!.clinicId, name: sessionData!.clinicName);
 
       selectedClinicNameCont.text = widget.sessionData!.clinicName.validate();
       selectedDoctorCon.text = 'Dr. ' + widget.sessionData!.doctors.validate();
-      morningStartDateTime = DateFormat(ONLY_HOUR_MINUTE).parse(sessionData!.morningStart.validate());
-      morningEndDateTime = DateFormat(ONLY_HOUR_MINUTE).parse(sessionData!.morningEnd.validate());
-      eveningStartDateTime = DateFormat(ONLY_HOUR_MINUTE).parse(sessionData!.eveningStart.validate());
-      eveningEndDateTime = DateFormat(ONLY_HOUR_MINUTE).parse(sessionData!.eveningEnd.validate());
+      morningStartDateTime = DateFormat(ONLY_HOUR_MINUTE)
+          .parse(sessionData!.morningStart.validate());
+      morningEndDateTime = DateFormat(ONLY_HOUR_MINUTE)
+          .parse(sessionData!.morningEnd.validate());
+      eveningStartDateTime = DateFormat(ONLY_HOUR_MINUTE)
+          .parse(sessionData!.eveningStart.validate());
+      eveningEndDateTime = DateFormat(ONLY_HOUR_MINUTE)
+          .parse(sessionData!.eveningEnd.validate());
 
       timeSlotCont = sessionData!.timeSlot.toInt();
 
-      morningStartTimeCont.text = morningStartDateTime!.getFormattedDate(ONLY_HOUR_MINUTE);
-      morningEndTimeCont.text = morningEndDateTime!.getFormattedDate(ONLY_HOUR_MINUTE);
-      eveningStartTimeCont.text = eveningStartDateTime!.getFormattedDate(ONLY_HOUR_MINUTE);
-      eveningEndTimeCont.text = eveningEndDateTime!.getFormattedDate(ONLY_HOUR_MINUTE);
+      morningStartTimeCont.text =
+          morningStartDateTime!.getFormattedDate(ONLY_HOUR_MINUTE);
+      morningEndTimeCont.text =
+          morningEndDateTime!.getFormattedDate(ONLY_HOUR_MINUTE);
+      eveningStartTimeCont.text =
+          eveningStartDateTime!.getFormattedDate(ONLY_HOUR_MINUTE);
+      eveningEndTimeCont.text =
+          eveningEndDateTime!.getFormattedDate(ONLY_HOUR_MINUTE);
 
       weekDays.forEach((weekDays) {
         sessionData!.days!.forEach((element) {
@@ -114,20 +127,43 @@ class _AddSessionsScreenState extends State<AddSessionsScreen> {
 
     Map<String, dynamic> request = {
       "time_slot": timeSlotCont.validate(),
-      "day": weekDays.where((element) => element.isSelected == true).map((e) => e.name.validate().toLowerCase()).toList(),
+      "day": weekDays
+          .where((element) => element.isSelected == true)
+          .map((e) => e.name.validate().toLowerCase())
+          .toList(),
     };
     appStore.setLoading(true);
     if (morningStartTimeCont.text.isNotEmpty) {
-      request.putIfAbsent("s_one_start_time", () => {"HH": "${morningStartDateTime!.hour}", "mm": "${morningStartDateTime!.minute}"});
+      request.putIfAbsent(
+          "s_one_start_time",
+          () => {
+                "HH": "${morningStartDateTime!.hour}",
+                "mm": "${morningStartDateTime!.minute}"
+              });
     }
     if (morningEndTimeCont.text.isNotEmpty) {
-      request.putIfAbsent("s_one_end_time", () => {"HH": "${morningEndDateTime!.hour}", "mm": "${morningEndDateTime!.minute}"});
+      request.putIfAbsent(
+          "s_one_end_time",
+          () => {
+                "HH": "${morningEndDateTime!.hour}",
+                "mm": "${morningEndDateTime!.minute}"
+              });
     }
     if (eveningStartTimeCont.text.isNotEmpty) {
-      request.putIfAbsent("s_two_start_time", () => {"HH": "${eveningStartDateTime!.hour}", "mm": "${eveningStartDateTime!.minute}"});
+      request.putIfAbsent(
+          "s_two_start_time",
+          () => {
+                "HH": "${eveningStartDateTime!.hour}",
+                "mm": "${eveningStartDateTime!.minute}"
+              });
     }
     if (eveningEndTimeCont.text.isNotEmpty) {
-      request.putIfAbsent("s_two_end_time", () => {"HH": "${eveningEndDateTime!.hour}", "mm": "${eveningEndDateTime!.minute}"});
+      request.putIfAbsent(
+          "s_two_end_time",
+          () => {
+                "HH": "${eveningEndDateTime!.hour}",
+                "mm": "${eveningEndDateTime!.minute}"
+              });
     }
     if (isDoctor()) {
       if (isProEnabled()) {
@@ -171,16 +207,36 @@ class _AddSessionsScreenState extends State<AddSessionsScreen> {
     };
 
     if (morningStartTimeCont.text.isNotEmpty) {
-      request.putIfAbsent("s_one_start_time", () => {"HH": "${morningStartDateTime!.hour}", "mm": "${morningStartDateTime!.minute}"});
+      request.putIfAbsent(
+          "s_one_start_time",
+          () => {
+                "HH": "${morningStartDateTime!.hour}",
+                "mm": "${morningStartDateTime!.minute}"
+              });
     }
     if (morningEndTimeCont.text.isNotEmpty) {
-      request.putIfAbsent("s_one_end_time", () => {"HH": "${morningEndDateTime!.hour}", "mm": "${morningEndDateTime!.minute}"});
+      request.putIfAbsent(
+          "s_one_end_time",
+          () => {
+                "HH": "${morningEndDateTime!.hour}",
+                "mm": "${morningEndDateTime!.minute}"
+              });
     }
     if (eveningStartTimeCont.text.isNotEmpty) {
-      request.putIfAbsent("s_two_start_time", () => {"HH": "${eveningStartDateTime!.hour}", "mm": "${eveningStartDateTime!.minute}"});
+      request.putIfAbsent(
+          "s_two_start_time",
+          () => {
+                "HH": "${eveningStartDateTime!.hour}",
+                "mm": "${eveningStartDateTime!.minute}"
+              });
     }
     if (eveningEndTimeCont.text.isNotEmpty) {
-      request.putIfAbsent("s_two_end_time", () => {"HH": "${eveningEndDateTime!.hour}", "mm": "${eveningEndDateTime!.minute}"});
+      request.putIfAbsent(
+          "s_two_end_time",
+          () => {
+                "HH": "${eveningEndDateTime!.hour}",
+                "mm": "${eveningEndDateTime!.minute}"
+              });
     }
 
     if (isDoctor()) {
@@ -231,7 +287,8 @@ class _AddSessionsScreenState extends State<AddSessionsScreen> {
     if (mounted) super.setState(fn);
   }
 
-  Future<DateTime?> timeBottomSheet(context, {DateTime? initial, bool? aIsMorning, bool? aIsEvening}) async {
+  Future<DateTime?> timeBottomSheet(context,
+      {DateTime? initial, bool? aIsMorning, bool? aIsEvening}) async {
     DateTime? picked = initial;
     await showModalBottomSheet(
       context: context,
@@ -245,7 +302,8 @@ class _AddSessionsScreenState extends State<AddSessionsScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(locale.lblCancel, style: primaryTextStyle(size: 18)).onTap(
+                    Text(locale.lblCancel, style: primaryTextStyle(size: 18))
+                        .onTap(
                       () {
                         finish(e);
                         toast(locale.lblPleaseSelectTime);
@@ -253,14 +311,18 @@ class _AddSessionsScreenState extends State<AddSessionsScreen> {
                       splashColor: Colors.transparent,
                       highlightColor: Colors.transparent,
                     ),
-                    Text(locale.lblDone, style: primaryTextStyle(size: 18)).onTap(
+                    Text(locale.lblDone, style: primaryTextStyle(size: 18))
+                        .onTap(
                       () {
                         if ((picked!.minute % 5) == 0) {
                           if (aIsMorning ?? false) {
-                            if (picked!.getFormattedDate(ONLY_HOUR_MINUTE) == morningStartDateTime!.getFormattedDate(ONLY_HOUR_MINUTE)) {
+                            if (picked!.getFormattedDate(ONLY_HOUR_MINUTE) ==
+                                morningStartDateTime!
+                                    .getFormattedDate(ONLY_HOUR_MINUTE)) {
                               toast(locale.lblStartAndEndTimeNotSame);
                             } else {
-                              bool check = morningStartDateTime!.isBefore(picked!);
+                              bool check =
+                                  morningStartDateTime!.isBefore(picked!);
                               if (check) {
                                 finish(e, picked);
                               } else {
@@ -268,10 +330,13 @@ class _AddSessionsScreenState extends State<AddSessionsScreen> {
                               }
                             }
                           } else if (aIsEvening ?? false) {
-                            if (picked!.getFormattedDate(ONLY_HOUR_MINUTE) == eveningStartDateTime!.getFormattedDate(ONLY_HOUR_MINUTE)) {
+                            if (picked!.getFormattedDate(ONLY_HOUR_MINUTE) ==
+                                eveningStartDateTime!
+                                    .getFormattedDate(ONLY_HOUR_MINUTE)) {
                               toast(locale.lblStartAndEndTimeNotSame);
                             } else {
-                              bool check = eveningStartDateTime!.isBefore(picked!);
+                              bool check =
+                                  eveningStartDateTime!.isBefore(picked!);
                               if (check) {
                                 finish(e, picked);
                               } else {
@@ -295,7 +360,8 @@ class _AddSessionsScreenState extends State<AddSessionsScreen> {
                 height: 200,
                 child: CupertinoTheme(
                   data: CupertinoThemeData(
-                    textTheme: CupertinoTextThemeData(dateTimePickerTextStyle: primaryTextStyle(size: 20)),
+                    textTheme: CupertinoTextThemeData(
+                        dateTimePickerTextStyle: primaryTextStyle(size: 20)),
                   ),
                   child: CupertinoDatePicker(
                     backgroundColor: e.cardColor,
@@ -328,7 +394,9 @@ class _AddSessionsScreenState extends State<AddSessionsScreen> {
       children: [
         Form(
           key: formKey,
-          autovalidateMode: isFirstTime ? AutovalidateMode.disabled : AutovalidateMode.onUserInteraction,
+          autovalidateMode: isFirstTime
+              ? AutovalidateMode.disabled
+              : AutovalidateMode.onUserInteraction,
           child: AnimatedScrollView(
             padding: EdgeInsets.fromLTRB(16, 24, 16, 16),
             children: [
@@ -337,19 +405,28 @@ class _AddSessionsScreenState extends State<AddSessionsScreen> {
                   controller: selectedClinicNameCont,
                   textFieldType: TextFieldType.NAME,
                   readOnly: true,
-                  decoration: inputDecoration(context: context, labelText: isUpdate ? locale.lblClinicName : locale.lblSelectClinic),
+                  decoration: inputDecoration(
+                      context: context,
+                      labelText: isUpdate
+                          ? locale.lblClinicName
+                          : locale.lblSelectClinic),
                   onTap: () async {
                     await Step1ClinicSelectionScreen(
                       sessionOrEncounter: true,
-                      clinicId: isUpdate ? widget.sessionData!.clinicId.toInt() : null,
+                      clinicId: isUpdate
+                          ? widget.sessionData!.clinicId.toInt()
+                          : null,
                     ).launch(context).then((value) {
                       if (value != null)
                         selectedClinic = value!;
                       else {
-                        if (!isUpdate) toast('${locale.lblPlease} ${locale.lblSelectClinic}');
+                        if (!isUpdate)
+                          toast(
+                              '${locale.lblPlease} ${locale.lblSelectClinic}');
                       }
 
-                      selectedClinicNameCont.text = selectedClinic!.name.validate();
+                      selectedClinicNameCont.text =
+                          selectedClinic!.name.validate();
                       setState(() {});
                     });
                   },
@@ -360,16 +437,24 @@ class _AddSessionsScreenState extends State<AddSessionsScreen> {
                 child: AppTextField(
                   textFieldType: TextFieldType.NAME,
                   controller: selectedDoctorCon,
-                  decoration: inputDecoration(context: context, labelText: isUpdate ? locale.lblDoctorName : locale.lblSelectDoctor),
+                  decoration: inputDecoration(
+                      context: context,
+                      labelText: isUpdate
+                          ? locale.lblDoctorName
+                          : locale.lblSelectDoctor),
                   readOnly: true,
                   onTap: () {
                     if (!isUpdate) {
-                      Step2DoctorSelectionScreen(doctorId: doctorCont?.iD).launch(context).then((value) {
+                      Step2DoctorSelectionScreen(doctorId: doctorCont?.iD)
+                          .launch(context)
+                          .then((value) {
                         if (value != null) {
                           doctorCont = value;
-                          selectedDoctorCon.text = doctorCont!.displayName.validate();
+                          selectedDoctorCon.text =
+                              doctorCont!.displayName.validate();
                         } else {
-                          toast('${locale.lblPlease} ${locale.lblSelectDoctor}');
+                          toast(
+                              '${locale.lblPlease} ${locale.lblSelectDoctor}');
                         }
                         setState(() {});
                       }).catchError((e) {
@@ -388,9 +473,17 @@ class _AddSessionsScreenState extends State<AddSessionsScreen> {
                 dropdownColor: context.cardColor,
                 items: List.generate(
                   timeSlots.length,
-                  (index) => DropdownMenuItem(child: Text("${timeSlots[index]}", style: primaryTextStyle()), value: timeSlots[index]),
+                  (index) => DropdownMenuItem(
+                      child: Text("${timeSlots[index]}",
+                          style: primaryTextStyle()),
+                      value: timeSlots[index]),
                 ),
-                decoration: inputDecoration(context: context, labelText: locale.lblTimeSlotInMinute, suffixIcon: ic_arrow_down.iconImage(size: 10, color: context.iconColor).paddingAll(14)),
+                decoration: inputDecoration(
+                    context: context,
+                    labelText: locale.lblTimeSlotInMinute,
+                    suffixIcon: ic_arrow_down
+                        .iconImage(size: 10, color: context.iconColor)
+                        .paddingAll(14)),
                 onChanged: (dynamic e) {
                   timeSlotCont = e;
                   setState(() {});
@@ -411,9 +504,14 @@ class _AddSessionsScreenState extends State<AddSessionsScreen> {
                   return FilterChip(
                     backgroundColor: context.cardColor,
                     label: Text(data.name.validate()),
-                    labelStyle: primaryTextStyle(size: 14, color: data.isSelected.validate() ? Colors.white : textPrimaryColorGlobal),
+                    labelStyle: primaryTextStyle(
+                        size: 14,
+                        color: data.isSelected.validate()
+                            ? Colors.white
+                            : textPrimaryColorGlobal),
                     selected: data.isSelected!,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(defaultRadius)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(defaultRadius)),
                     clipBehavior: Clip.antiAliasWithSaveLayer,
                     selectedColor: context.primaryColor,
                     checkmarkColor: Colors.white,
@@ -431,15 +529,22 @@ class _AddSessionsScreenState extends State<AddSessionsScreen> {
                 children: [
                   AppTextField(
                     onTap: () async {
-                      DateTime? result = await timeBottomSheet(context, initial: morningStartDateTime);
+                      DateTime? result = await timeBottomSheet(context,
+                          initial: morningStartDateTime);
                       morningStartDateTime = result;
                       setState(() {});
-                      morningStartTimeCont.text = morningStartDateTime!.getFormattedDate('HH:mm');
+                      morningStartTimeCont.text =
+                          morningStartDateTime!.getFormattedDate('HH:mm');
                     },
                     controller: morningStartTimeCont,
                     textFieldType: TextFieldType.OTHER,
                     readOnly: true,
-                    decoration: inputDecoration(context: context, labelText: locale.lblStartTime, suffixIcon: ic_timer.iconImage(size: 10, color: context.iconColor).paddingAll(14)),
+                    decoration: inputDecoration(
+                        context: context,
+                        labelText: locale.lblStartTime,
+                        suffixIcon: ic_timer
+                            .iconImage(size: 10, color: context.iconColor)
+                            .paddingAll(14)),
                   ).expand(),
                   8.width,
                   AppTextField(
@@ -448,16 +553,23 @@ class _AddSessionsScreenState extends State<AddSessionsScreen> {
                     readOnly: true,
                     onTap: () async {
                       if (morningStartTimeCont.text.isNotEmpty) {
-                        DateTime? result = await timeBottomSheet(context, initial: morningEndDateTime, aIsMorning: true);
+                        DateTime? result = await timeBottomSheet(context,
+                            initial: morningEndDateTime, aIsMorning: true);
 
                         morningEndDateTime = result;
                         setState(() {});
-                        morningEndTimeCont.text = morningEndDateTime!.getFormattedDate('HH:mm');
+                        morningEndTimeCont.text =
+                            morningEndDateTime!.getFormattedDate('HH:mm');
                       } else {
                         toast(locale.lblSelectStartTimeFirst);
                       }
                     },
-                    decoration: inputDecoration(context: context, labelText: locale.lblEndTime, suffixIcon: ic_timer.iconImage(size: 10, color: context.iconColor).paddingAll(14)),
+                    decoration: inputDecoration(
+                        context: context,
+                        labelText: locale.lblEndTime,
+                        suffixIcon: ic_timer
+                            .iconImage(size: 10, color: context.iconColor)
+                            .paddingAll(14)),
                   ).expand()
                 ],
               ),
@@ -468,15 +580,22 @@ class _AddSessionsScreenState extends State<AddSessionsScreen> {
                 children: [
                   AppTextField(
                     onTap: () async {
-                      DateTime? result = await timeBottomSheet(context, initial: eveningStartDateTime);
+                      DateTime? result = await timeBottomSheet(context,
+                          initial: eveningStartDateTime);
                       eveningStartDateTime = result;
                       setState(() {});
-                      eveningStartTimeCont.text = eveningStartDateTime!.getFormattedDate('HH:mm');
+                      eveningStartTimeCont.text =
+                          eveningStartDateTime!.getFormattedDate('HH:mm');
                     },
                     controller: eveningStartTimeCont,
                     readOnly: true,
                     textFieldType: TextFieldType.OTHER,
-                    decoration: inputDecoration(context: context, labelText: locale.lblStartTime, suffixIcon: ic_timer.iconImage(size: 10, color: context.iconColor).paddingAll(14)),
+                    decoration: inputDecoration(
+                        context: context,
+                        labelText: locale.lblStartTime,
+                        suffixIcon: ic_timer
+                            .iconImage(size: 10, color: context.iconColor)
+                            .paddingAll(14)),
                   ).expand(),
                   8.width,
                   AppTextField(
@@ -485,22 +604,31 @@ class _AddSessionsScreenState extends State<AddSessionsScreen> {
                     readOnly: true,
                     onTap: () async {
                       if (eveningStartTimeCont.text.isNotEmpty) {
-                        DateTime? result = await timeBottomSheet(context, initial: eveningEndDateTime, aIsEvening: true);
+                        DateTime? result = await timeBottomSheet(context,
+                            initial: eveningEndDateTime, aIsEvening: true);
                         eveningEndDateTime = result;
                         setState(() {});
-                        eveningEndTimeCont.text = eveningEndDateTime!.getFormattedDate('HH:mm');
+                        eveningEndTimeCont.text =
+                            eveningEndDateTime!.getFormattedDate('HH:mm');
                       } else {
                         toast(locale.lblSelectStartTimeFirst);
                       }
                     },
-                    decoration: inputDecoration(context: context, labelText: locale.lblEndTime, suffixIcon: ic_timer.iconImage(size: 10, color: context.iconColor).paddingAll(14)),
+                    decoration: inputDecoration(
+                        context: context,
+                        labelText: locale.lblEndTime,
+                        suffixIcon: ic_timer
+                            .iconImage(size: 10, color: context.iconColor)
+                            .paddingAll(14)),
                   ).expand()
                 ],
               ),
             ],
           ),
         ),
-        Observer(builder: (context) => LoaderWidget().center().visible(appStore.isLoading))
+        Observer(
+            builder: (context) =>
+                LoaderWidget().center().visible(appStore.isLoading))
       ],
     );
   }
@@ -539,14 +667,20 @@ class _AddSessionsScreenState extends State<AddSessionsScreen> {
         onPressed: () {
           if (formKey.currentState!.validate()) {
             formKey.currentState!.save();
-            if (weekDays.where((element) => element.isSelected == true).map((e) => e.name.validate().toLowerCase()).isEmpty) {
+            if (weekDays
+                .where((element) => element.isSelected == true)
+                .map((e) => e.name.validate().toLowerCase())
+                .isEmpty) {
               return toast(locale.lblSelectWeekdays);
             }
             showConfirmDialogCustom(
               context,
-              dialogType: isUpdate ? DialogType.UPDATE : DialogType.CONFIRMATION,
+              dialogType:
+                  isUpdate ? DialogType.UPDATE : DialogType.CONFIRMATION,
               primaryColor: context.primaryColor,
-              title: isUpdate ? locale.lblDoYouWantToUpdateSession : locale.lblDoYouWantToAddSession,
+              title: isUpdate
+                  ? locale.lblDoYouWantToUpdateSession
+                  : locale.lblDoYouWantToAddSession,
               onAccept: (p0) {
                 isUpdate ? updateDetails() : addDetails();
               },

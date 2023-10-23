@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:kivicare_flutter/network/clinic_repository.dart';
+import 'package:solidcare/network/clinic_repository.dart';
 import 'package:nb_utils/nb_utils.dart';
 
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/model/clinic_list_model.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/model/clinic_list_model.dart';
 
 class SelectedClinicComponent extends StatefulWidget {
   final int clinicId;
@@ -11,7 +11,8 @@ class SelectedClinicComponent extends StatefulWidget {
   SelectedClinicComponent({required this.clinicId});
 
   @override
-  State<SelectedClinicComponent> createState() => _SelectedClinicComponentState();
+  State<SelectedClinicComponent> createState() =>
+      _SelectedClinicComponentState();
 }
 
 class _SelectedClinicComponentState extends State<SelectedClinicComponent> {
@@ -53,9 +54,11 @@ class _SelectedClinicComponentState extends State<SelectedClinicComponent> {
               8.height,
               snap.hasData
                   ? Marquee(
-                      child: Text("${snap.data!.name.validate()}", style: boldTextStyle(size: 18)),
+                      child: Text("${snap.data!.name.validate()}",
+                          style: boldTextStyle(size: 18)),
                     )
-                  : Text('${locale.lblLoading} ${locale.lblClinic}...', style: secondaryTextStyle()),
+                  : Text('${locale.lblLoading} ${locale.lblClinic}...',
+                      style: secondaryTextStyle()),
             ],
           ),
         );

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:kivicare_flutter/screens/shimmer/components/shimmer_component.dart';
-import 'package:kivicare_flutter/utils/colors.dart';
+import 'package:solidcare/screens/shimmer/components/shimmer_component.dart';
+import 'package:solidcare/utils/colors.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class ReportShimmerScreen extends StatelessWidget {
@@ -41,7 +41,8 @@ class ReportShimmerScreen extends StatelessWidget {
                   2,
                   (index) => ShimmerComponent(
                     child: Container(
-                      padding: EdgeInsets.symmetric(vertical: 6, horizontal: 60),
+                      padding:
+                          EdgeInsets.symmetric(vertical: 6, horizontal: 60),
                       decoration: boxDecorationDefault(
                         color: primaryColor.withOpacity(0.4),
                         boxShadow: [],

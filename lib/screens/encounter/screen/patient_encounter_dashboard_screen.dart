@@ -1,32 +1,36 @@
 import 'package:flutter/material.dart';
-import 'package:kivicare_flutter/components/empty_error_state_component.dart';
-import 'package:kivicare_flutter/components/internet_connectivity_widget.dart';
-import 'package:kivicare_flutter/components/loader_widget.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/model/encounter_model.dart';
-import 'package:kivicare_flutter/model/encounter_type_model.dart';
-import 'package:kivicare_flutter/model/prescription_model.dart';
+import 'package:solidcare/components/empty_error_state_component.dart';
+import 'package:solidcare/components/internet_connectivity_widget.dart';
+import 'package:solidcare/components/loader_widget.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/model/encounter_model.dart';
+import 'package:solidcare/model/encounter_type_model.dart';
+import 'package:solidcare/model/prescription_model.dart';
 import 'package:nb_utils/nb_utils.dart';
 
-import 'package:kivicare_flutter/components/status_widget.dart';
-import 'package:kivicare_flutter/network/dashboard_repository.dart';
-import 'package:kivicare_flutter/utils/app_common.dart';
-import 'package:kivicare_flutter/utils/colors.dart';
-import 'package:kivicare_flutter/screens/doctor/screens/bill_details_screen.dart';
-import 'package:kivicare_flutter/screens/patient/components/patient_report_component.dart';
+import 'package:solidcare/components/status_widget.dart';
+import 'package:solidcare/network/dashboard_repository.dart';
+import 'package:solidcare/utils/app_common.dart';
+import 'package:solidcare/utils/colors.dart';
+import 'package:solidcare/screens/doctor/screens/bill_details_screen.dart';
+import 'package:solidcare/screens/patient/components/patient_report_component.dart';
 
 class PatientEncounterDashboardScreen extends StatefulWidget {
   final String? id;
 
   final bool isPaymentDone;
 
-  PatientEncounterDashboardScreen({Key? key, this.id, this.isPaymentDone = false}) : super(key: key);
+  PatientEncounterDashboardScreen(
+      {Key? key, this.id, this.isPaymentDone = false})
+      : super(key: key);
 
   @override
-  State<PatientEncounterDashboardScreen> createState() => _PatientEncounterDashboardScreenState();
+  State<PatientEncounterDashboardScreen> createState() =>
+      _PatientEncounterDashboardScreenState();
 }
 
-class _PatientEncounterDashboardScreenState extends State<PatientEncounterDashboardScreen> {
+class _PatientEncounterDashboardScreenState
+    extends State<PatientEncounterDashboardScreen> {
   Future<EncounterModel>? future;
 
   @override
@@ -36,7 +40,8 @@ class _PatientEncounterDashboardScreenState extends State<PatientEncounterDashbo
   }
 
   void init() async {
-    future = getEncounterDetailsDashBoardAPI(encounterId: widget.id!.toInt()).then((value) {
+    future = getEncounterDetailsDashBoardAPI(encounterId: widget.id!.toInt())
+        .then((value) {
       appStore.setLoading(false);
       return value;
     }).catchError((e) {
@@ -68,8 +73,13 @@ class _PatientEncounterDashboardScreenState extends State<PatientEncounterDashbo
                 Text(locale.lblEmail, style: secondaryTextStyle(size: 12)),
                 Text(data.patientEmail.validate(), style: boldTextStyle()),
                 8.height,
-                Text(locale.lblEncounterDate, style: secondaryTextStyle(size: 12)),
-                Text(data.encounterDate != null ? data.encounterDate.validate() : '', style: boldTextStyle()),
+                Text(locale.lblEncounterDate,
+                    style: secondaryTextStyle(size: 12)),
+                Text(
+                    data.encounterDate != null
+                        ? data.encounterDate.validate()
+                        : '',
+                    style: boldTextStyle()),
               ],
             ),
           ).expand(),
@@ -87,8 +97,10 @@ class _PatientEncounterDashboardScreenState extends State<PatientEncounterDashbo
                 Text(locale.lblDoctorName, style: secondaryTextStyle(size: 12)),
                 Text(data.doctorName.validate(), style: boldTextStyle()),
                 8.height,
-                Text(locale.lblDescription, style: secondaryTextStyle(size: 12)),
-                Text(data.description.validate(value: " -- "), style: boldTextStyle()),
+                Text(locale.lblDescription,
+                    style: secondaryTextStyle(size: 12)),
+                Text(data.description.validate(value: " -- "),
+                    style: boldTextStyle()),
               ],
             ),
           ).expand(),
@@ -107,19 +119,22 @@ class _PatientEncounterDashboardScreenState extends State<PatientEncounterDashbo
           16.height,
           if (data.problem.validate().isNotEmpty)
             UL(
-              customSymbol: Icon(Icons.done_sharp, color: context.primaryColor, size: 16),
+              customSymbol:
+                  Icon(Icons.done_sharp, color: context.primaryColor, size: 16),
               symbolType: SymbolType.Custom,
               children: List.generate(
                 data.problem.validate().length,
                 (index) {
                   EncounterType encounterData = data.problem.validate()[index];
-                  return Text(encounterData.title.validate(), style: secondaryTextStyle());
+                  return Text(encounterData.title.validate(),
+                      style: secondaryTextStyle());
                 },
               ),
             )
           else
             NoDataWidget(
-              title: "${locale.lblNo} ${locale.lblProblems} ${locale.lblFound}!",
+              title:
+                  "${locale.lblNo} ${locale.lblProblems} ${locale.lblFound}!",
               titleTextStyle: secondaryTextStyle(color: Colors.red),
             ),
           32.height,
@@ -127,20 +142,24 @@ class _PatientEncounterDashboardScreenState extends State<PatientEncounterDashbo
           16.height,
           if (data.observation.validate().isNotEmpty)
             UL(
-              customSymbol: Icon(Icons.done_sharp, color: context.primaryColor, size: 16),
+              customSymbol:
+                  Icon(Icons.done_sharp, color: context.primaryColor, size: 16),
               symbolType: SymbolType.Custom,
               symbolCrossAxisAlignment: CrossAxisAlignment.start,
               children: List.generate(
                 data.observation.validate().length,
                 (index) {
-                  EncounterType encounterData = data.observation.validate()[index];
-                  return Text(encounterData.title.validate(), style: secondaryTextStyle());
+                  EncounterType encounterData =
+                      data.observation.validate()[index];
+                  return Text(encounterData.title.validate(),
+                      style: secondaryTextStyle());
                 },
               ),
             )
           else
             NoDataWidget(
-              title: "${locale.lblNo} ${locale.lblObservation} ${locale.lblFound}",
+              title:
+                  "${locale.lblNo} ${locale.lblObservation} ${locale.lblFound}",
               titleTextStyle: secondaryTextStyle(color: Colors.red),
             ),
           32.height,
@@ -148,13 +167,15 @@ class _PatientEncounterDashboardScreenState extends State<PatientEncounterDashbo
           16.height,
           if (data.note.validate().isNotEmpty)
             UL(
-              customSymbol: Icon(Icons.done_sharp, color: context.primaryColor, size: 16),
+              customSymbol:
+                  Icon(Icons.done_sharp, color: context.primaryColor, size: 16),
               symbolType: SymbolType.Custom,
               children: List.generate(
                 data.note.validate().length,
                 (index) {
                   EncounterType encounterData = data.note.validate()[index];
-                  return Text("${encounterData.title.validate()}", style: secondaryTextStyle());
+                  return Text("${encounterData.title.validate()}",
+                      style: secondaryTextStyle());
                 },
               ),
             )
@@ -169,31 +190,39 @@ class _PatientEncounterDashboardScreenState extends State<PatientEncounterDashbo
             16.height,
             if (data.prescription.validate().isEmpty)
               NoDataWidget(
-                title: "${locale.lblNo} ${locale.lblPrescription} ${locale.lblFound}!",
+                title:
+                    "${locale.lblNo} ${locale.lblPrescription} ${locale.lblFound}!",
                 titleTextStyle: secondaryTextStyle(color: Colors.red),
               )
             else
               UL(
-                customSymbol: Icon(Icons.done_sharp, color: context.primaryColor, size: 16),
+                customSymbol: Icon(Icons.done_sharp,
+                    color: context.primaryColor, size: 16),
                 symbolType: SymbolType.Numbered,
                 symbolCrossAxisAlignment: CrossAxisAlignment.start,
                 children: List.generate(
                   data.prescription!.validate().length,
                   (index) {
-                    PrescriptionData encounterData = data.prescription!.validate()[index];
+                    PrescriptionData encounterData =
+                        data.prescription!.validate()[index];
                     return Table(
                       children: [
                         TableRow(children: [
                           Text(locale.lblName, style: secondaryTextStyle()),
-                          Text(encounterData.name.validate(), style: primaryTextStyle()),
+                          Text(encounterData.name.validate(),
+                              style: primaryTextStyle()),
                         ]),
                         TableRow(children: [
-                          Text(locale.lblFrequency, style: secondaryTextStyle()),
-                          Text(encounterData.frequency.validate(), style: primaryTextStyle()),
+                          Text(locale.lblFrequency,
+                              style: secondaryTextStyle()),
+                          Text(encounterData.frequency.validate(),
+                              style: primaryTextStyle()),
                         ]),
                         TableRow(children: [
-                          Text(locale.lblInstruction, style: secondaryTextStyle()),
-                          Text(encounterData.instruction.validate(), style: primaryTextStyle()),
+                          Text(locale.lblInstruction,
+                              style: secondaryTextStyle()),
+                          Text(encounterData.instruction.validate(),
+                              style: primaryTextStyle()),
                         ])
                       ],
                     );
@@ -201,7 +230,8 @@ class _PatientEncounterDashboardScreenState extends State<PatientEncounterDashbo
                         child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(encounterData.instruction.validate(), style: secondaryTextStyle()),
+                        Text(encounterData.instruction.validate(),
+                            style: secondaryTextStyle()),
                       ],
                     ));
                   },
@@ -269,9 +299,13 @@ class _PatientEncounterDashboardScreenState extends State<PatientEncounterDashbo
           ? Container(
               padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
               decoration: boxDecorationDefault(color: appSecondaryColor),
-              child: Text(locale.lblBillDetails, style: primaryTextStyle(color: Colors.white)).onTap(
+              child: Text(locale.lblBillDetails,
+                      style: primaryTextStyle(color: Colors.white))
+                  .onTap(
                 () {
-                  if (widget.isPaymentDone) BillDetailsScreen(encounterId: widget.id.validate().toInt()).launch(context);
+                  if (widget.isPaymentDone)
+                    BillDetailsScreen(encounterId: widget.id.validate().toInt())
+                        .launch(context);
                 },
                 splashColor: Colors.transparent,
                 highlightColor: Colors.transparent,

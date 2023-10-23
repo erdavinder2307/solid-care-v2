@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/screens/shimmer/components/appointment_shimmer_component.dart';
-import 'package:kivicare_flutter/screens/shimmer/components/shimmer_component.dart';
-import 'package:kivicare_flutter/utils/colors.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/screens/shimmer/components/appointment_shimmer_component.dart';
+import 'package:solidcare/screens/shimmer/components/shimmer_component.dart';
+import 'package:solidcare/utils/colors.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class DoctorDashboardShimmerFragment extends StatelessWidget {
@@ -36,7 +36,8 @@ class DoctorDashboardShimmerFragment extends StatelessWidget {
                           24.height,
                           ShimmerComponent(
                             child: Container(
-                              padding: EdgeInsets.symmetric(horizontal: 40, vertical: 8),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 40, vertical: 8),
                               decoration: boxDecorationDefault(
                                 color: primaryColor.withOpacity(0.7),
                                 boxShadow: [],
@@ -47,7 +48,8 @@ class DoctorDashboardShimmerFragment extends StatelessWidget {
                           4.height,
                           ShimmerComponent(
                             child: Container(
-                              padding: EdgeInsets.symmetric(horizontal: 30, vertical: 4),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 30, vertical: 4),
                               decoration: boxDecorationDefault(
                                 color: primaryColor.withOpacity(0.7),
                                 boxShadow: [],
@@ -66,7 +68,10 @@ class DoctorDashboardShimmerFragment extends StatelessWidget {
                     child: ShimmerComponent(
                       child: Container(
                         padding: EdgeInsets.all(24),
-                        decoration: boxDecorationDefault(color: primaryColor.withOpacity(0.3), boxShadow: [], shape: BoxShape.circle),
+                        decoration: boxDecorationDefault(
+                            color: primaryColor.withOpacity(0.3),
+                            boxShadow: [],
+                            shape: BoxShape.circle),
                       ),
                     ),
                   )
@@ -123,7 +128,8 @@ class DoctorDashboardShimmerFragment extends StatelessWidget {
                       6,
                       (index) => ShimmerComponent(
                         child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 6, vertical: 80),
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 6, vertical: 80),
                           decoration: boxDecorationDefault(
                             color: primaryColor.withOpacity(0.25),
                             boxShadow: [],

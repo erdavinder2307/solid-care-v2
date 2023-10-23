@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:kivicare_flutter/components/app_setting_widget.dart';
-import 'package:kivicare_flutter/config.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/network/auth_repository.dart';
-import 'package:kivicare_flutter/screens/about_us_screen.dart';
-import 'package:kivicare_flutter/utils/app_common.dart';
-import 'package:kivicare_flutter/utils/colors.dart';
-import 'package:kivicare_flutter/utils/common.dart';
-import 'package:kivicare_flutter/utils/images.dart';
+import 'package:solidcare/components/app_setting_widget.dart';
+import 'package:solidcare/config.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/network/auth_repository.dart';
+import 'package:solidcare/screens/about_us_screen.dart';
+import 'package:solidcare/utils/app_common.dart';
+import 'package:solidcare/utils/colors.dart';
+import 'package:solidcare/utils/common.dart';
+import 'package:solidcare/utils/images.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -33,14 +33,18 @@ class SettingThirdPage extends StatelessWidget {
           name: locale.lblAboutUs,
           image: ic_aboutUs,
           widget: AboutUsScreen(),
-          subTitle: locale.lblAboutKiviCare,
+          subTitle: locale.lblAboutSolidCare,
         ),
         AppSettingWidget(
           name: locale.lblRateUs,
           image: ic_rateUs,
           subTitle: locale.lblRateUsSubTitle,
           onTap: () async {
-            commonLaunchUrl(playStoreBaseURL + await getPackageInfo().then((value) => value.packageName.validate()), launchMode: LaunchMode.externalApplication);
+            commonLaunchUrl(
+                playStoreBaseURL +
+                    await getPackageInfo()
+                        .then((value) => value.packageName.validate()),
+                launchMode: LaunchMode.externalApplication);
           },
         ),
         AppSettingWidget(
@@ -52,11 +56,12 @@ class SettingThirdPage extends StatelessWidget {
           },
         ),
         AppSettingWidget(
-          name: locale.lblShareKiviCare,
+          name: locale.lblShareSolidCare,
           image: ic_share,
           subTitle: locale.lblReachUsMore,
           onTap: () async {
-            Share.share('${locale.lblShare} $APP_NAME app\n\n$playStoreBaseURL${await getPackageInfo().then((value) => value.packageName.validate())}');
+            Share.share(
+                '${locale.lblShare} $APP_NAME app\n\n$playStoreBaseURL${await getPackageInfo().then((value) => value.packageName.validate())}');
           },
         ),
         AppSettingWidget(
@@ -81,7 +86,9 @@ class SettingThirdPage extends StatelessWidget {
                       left: 42,
                       bottom: 12,
                       right: 16,
-                      child: Text(locale.lblDeleteAccountNote, style: secondaryTextStyle(size: 10, color: appSecondaryColor)),
+                      child: Text(locale.lblDeleteAccountNote,
+                          style: secondaryTextStyle(
+                              size: 10, color: appSecondaryColor)),
                     )
                   ],
                 ),

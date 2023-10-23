@@ -1,4 +1,4 @@
-import 'package:kivicare_flutter/locale/base_language_key.dart';
+import 'package:solidcare/locale/base_language_key.dart';
 
 class LanguageHi extends BaseLanguage {
   @override
@@ -23,22 +23,26 @@ class LanguageHi extends BaseLanguage {
   String get lblNoProblemFound => "कोई समस्या नहीं मिली";
 
   @override
-  String get lblDoYouWantToUpdateEncounter => "क्या आप एनकाउंटर को अपडेट करना चाहते हैं?";
+  String get lblDoYouWantToUpdateEncounter =>
+      "क्या आप एनकाउंटर को अपडेट करना चाहते हैं?";
 
   @override
   String get lblDoYouWantToAddEncounter => "क्या आप मुठभेड़ जोड़ना चाहते हैं?";
 
   @override
-  String get lblDoYouWantToUpdateYourDetails => "क्या आप अपना विवरण अपडेट करना चाहते हैं?";
+  String get lblDoYouWantToUpdateYourDetails =>
+      "क्या आप अपना विवरण अपडेट करना चाहते हैं?";
 
   @override
   String get lblNoBillsFound => "कोई बिल नहीं मिला";
 
   @override
-  String get lblDoYouWantToDeleteProblem => "क्या आप समस्या को हटाना चाहते हैं?";
+  String get lblDoYouWantToDeleteProblem =>
+      "क्या आप समस्या को हटाना चाहते हैं?";
 
   @override
-  String get lblDoYouWantToDeleteObservation => "क्या आप अवलोकन को हटाना चाहते हैं?";
+  String get lblDoYouWantToDeleteObservation =>
+      "क्या आप अवलोकन को हटाना चाहते हैं?";
 
   @override
   String get lblDoYouWantToDeleteNote => "क्या आप नोट हटाना चाहते हैं?";
@@ -47,13 +51,16 @@ class LanguageHi extends BaseLanguage {
   String get lblDoYouWantToDeleteDoctor => "क्या आप डॉक्टर को हटाना चाहते हैं?";
 
   @override
-  String get lblLoginSuccessfullyAsAPatient => "एक मरीज के रूप में सफलतापूर्वक लॉग इन किया";
+  String get lblLoginSuccessfullyAsAPatient =>
+      "एक मरीज के रूप में सफलतापूर्वक लॉग इन किया";
 
   @override
-  String get lblLoginSuccessfullyAsAReceptionist => "एक रिसेप्शनिस्ट के रूप में सफलतापूर्वक लॉग इन किया";
+  String get lblLoginSuccessfullyAsAReceptionist =>
+      "एक रिसेप्शनिस्ट के रूप में सफलतापूर्वक लॉग इन किया";
 
   @override
-  String get lblLoginSuccessfullyAsADoctor => "एक डॉक्टर के रूप में सफलतापूर्वक लॉग इन किया";
+  String get lblLoginSuccessfullyAsADoctor =>
+      "एक डॉक्टर के रूप में सफलतापूर्वक लॉग इन किया";
 
   @override
   String get lblSelectEncounterDate => "मुठभेड़ की तारीख का चयन करें";
@@ -68,7 +75,8 @@ class LanguageHi extends BaseLanguage {
   String get lblDoYouWantToLogout => "क्या आप लॉगआउट करना चाहते हैं?";
 
   @override
-  String get lblDoYouWantToDeleteAccountPermanently => "क्या आप स्थायी रूप से खाता हटाना चाहते हैं?";
+  String get lblDoYouWantToDeleteAccountPermanently =>
+      "क्या आप स्थायी रूप से खाता हटाना चाहते हैं?";
 
   @override
   String get lblDoYouWantToDeleteSession => "क्या आप सत्र हटाना चाहते हैं?";
@@ -77,13 +85,16 @@ class LanguageHi extends BaseLanguage {
   String get lblDoYouWantToAddSession => "क्या आप सत्र जोड़ना चाहते हैं?";
 
   @override
-  String get lblDoYouWantToUpdateSession => "क्या आप सत्र अपडेट करना चाहते हैं?";
+  String get lblDoYouWantToUpdateSession =>
+      "क्या आप सत्र अपडेट करना चाहते हैं?";
 
   @override
-  String get lblDoYouWantToChangeThePassword => "क्या आप पासवर्ड बदलना चाहते हैं?";
+  String get lblDoYouWantToChangeThePassword =>
+      "क्या आप पासवर्ड बदलना चाहते हैं?";
 
   @override
-  String get lblDoYouWantToDeleteReview => "क्या आप अपनी समीक्षा को हटाना चाहते हैं?";
+  String get lblDoYouWantToDeleteReview =>
+      "क्या आप अपनी समीक्षा को हटाना चाहते हैं?";
 
   @override
   String get lblDoYouWantToDeleteHolidayOf => "क्या आप छुट्टी हटाना चाहते हैं?";
@@ -92,70 +103,88 @@ class LanguageHi extends BaseLanguage {
   String get lblDoYouWantToDeleteService => "क्या आप सेवा हटाना चाहते हैं?";
 
   @override
-  String get lblDoYouWantToUpdateService => "क्या आप सेवा अपडेट करना चाहते हैं?";
+  String get lblDoYouWantToUpdateService =>
+      "क्या आप सेवा अपडेट करना चाहते हैं?";
 
   @override
   String get lblDoYouWantToAddNewService => "क्या आप नई सेवा जोड़ना चाहते हैं?";
 
   @override
-  String get lblDoYouWantToUpdateAppointmentOf => "क्या आप नियुक्ति को अपडेट करना चाहते हैं?";
+  String get lblDoYouWantToUpdateAppointmentOf =>
+      "क्या आप नियुक्ति को अपडेट करना चाहते हैं?";
 
   @override
-  String get lblDoYouWantToAddNewAppointmentFor => "क्या आप नई नियुक्ति जोड़ना चाहते हैं?";
+  String get lblDoYouWantToAddNewAppointmentFor =>
+      "क्या आप नई नियुक्ति जोड़ना चाहते हैं?";
 
   @override
-  String get lblDoYouWantToDeleteAppointmentOf => "क्या आप नियुक्ति को हटाना चाहते हैं?";
+  String get lblDoYouWantToDeleteAppointmentOf =>
+      "क्या आप नियुक्ति को हटाना चाहते हैं?";
 
   @override
   String get lblDoYouWantToDeleteReport => "क्या आप रिपोर्ट हटाना चाहते हैं?";
 
   @override
-  String get lblDoYouWantToUpdateReport => "क्या आप रिपोर्ट अपडेट करना चाहते हैं?";
+  String get lblDoYouWantToUpdateReport =>
+      "क्या आप रिपोर्ट अपडेट करना चाहते हैं?";
 
   @override
   String get lblDoYouWantToAddReport => "क्या आप नई रिपोर्ट जोड़ना चाहते हैं?";
 
   @override
-  String get lblDoYouWantToDeletePrescription => "क्या आप पर्चे हटाना चाहते हैं?";
+  String get lblDoYouWantToDeletePrescription =>
+      "क्या आप पर्चे हटाना चाहते हैं?";
 
   @override
-  String get lblDoYouWantToUpdatePrescription => "क्या आप पर्चे को अपडेट करना चाहते हैं?";
+  String get lblDoYouWantToUpdatePrescription =>
+      "क्या आप पर्चे को अपडेट करना चाहते हैं?";
 
   @override
-  String get lblDoYouWantToAddPrescription => "क्या आप नए पर्चे जोड़ना चाहते हैं?";
+  String get lblDoYouWantToAddPrescription =>
+      "क्या आप नए पर्चे जोड़ना चाहते हैं?";
 
   @override
-  String get lblDoYouWantToSwitchYourClinicTo => "क्या आप अपने क्लिनिक को बदलना चाहते है?ं";
+  String get lblDoYouWantToSwitchYourClinicTo =>
+      "क्या आप अपने क्लिनिक को बदलना चाहते है?ं";
 
   @override
-  String get lblDoYouWantToUpdatePatientDetails => "क्या आप रोगी के विवरण को अपडेट करना चाहते हैं?";
+  String get lblDoYouWantToUpdatePatientDetails =>
+      "क्या आप रोगी के विवरण को अपडेट करना चाहते हैं?";
 
   @override
-  String get lblDoYouWantToSaveNewPatientDetails => "क्या आप नए Pateint का विवरण प्रस्तुत करना चाहते हैं?";
+  String get lblDoYouWantToSaveNewPatientDetails =>
+      "क्या आप नए Pateint का विवरण प्रस्तुत करना चाहते हैं?";
 
   @override
-  String get lblDoYouWantToUpdateDoctorDetails => "क्या आप डॉक्टर के विवरण को अपडेट करना चाहते हैं?";
+  String get lblDoYouWantToUpdateDoctorDetails =>
+      "क्या आप डॉक्टर के विवरण को अपडेट करना चाहते हैं?";
 
   @override
-  String get lblDoYouWantToSaveNewDoctorDetails => "क्या आप नए डॉक्टर का विवरण प्रस्तुत करना चाहते हैं?";
+  String get lblDoYouWantToSaveNewDoctorDetails =>
+      "क्या आप नए डॉक्टर का विवरण प्रस्तुत करना चाहते हैं?";
 
   @override
-  String get lblDoYouWantToDeleteEncounterDetailsOf => "क्या आप मुठभेड़ के विवरण को हटाना चाहते हैं";
+  String get lblDoYouWantToDeleteEncounterDetailsOf =>
+      "क्या आप मुठभेड़ के विवरण को हटाना चाहते हैं";
 
   @override
-  String get lblDoYouWantToCheckoutAppointment => "क्या आप नियुक्ति की जाँच करना चाहते हैं?";
+  String get lblDoYouWantToCheckoutAppointment =>
+      "क्या आप नियुक्ति की जाँच करना चाहते हैं?";
 
   @override
-  String get lblMultipleSelectionIsNotAvailableForThisService => "इस सेवा के लिए बहु-चयन विकल्प उपलब्ध नहीं है";
+  String get lblMultipleSelectionIsNotAvailableForThisService =>
+      "इस सेवा के लिए बहु-चयन विकल्प उपलब्ध नहीं है";
 
   @override
-  String get lblTermsConditionSubTitle => "महत्वपूर्ण जानकारी का इंतजार है: अंदर झांकें!";
+  String get lblTermsConditionSubTitle =>
+      "महत्वपूर्ण जानकारी का इंतजार है: अंदर झांकें!";
 
   @override
   String get lblYears => "साल";
 
   @override
-  String get lblDeleteAccountSubTitle => "हेल्थलाइन को डिस्कनेक्ट करें: पुष्टि करें?";
+  String get lblDeleteAccountSubTitle =>
+      "हेल्थलाइन को डिस्कनेक्ट करें: पुष्टि करें?";
 
   @override
   String get lblThemeSubTitle => "अपने अनुभव को रंग दें।";
@@ -167,7 +196,8 @@ class LanguageHi extends BaseLanguage {
   String get lblRateUsSubTitle => "इसे प्यार करना? हमें बताइए!";
 
   @override
-  String get lblChangePasswordSubtitle => "अपनी पहुंच को फिर से तैयार करें। सुरक्षित रहें!";
+  String get lblChangePasswordSubtitle =>
+      "अपनी पहुंच को फिर से तैयार करें। सुरक्षित रहें!";
 
   @override
   String get lblNoArticlesFound => "कोई लेख नहीं मिला";
@@ -194,13 +224,15 @@ class LanguageHi extends BaseLanguage {
   String get lblIncorrectPwd => "आपके द्वारा दर्ज किया गया पासवर्ड गलत है";
 
   @override
-  String get lblPleaseChoose => "कृपया स्थिति/एकाधिक चयन/टेलीमेड सेवा के लिए चुनें";
+  String get lblPleaseChoose =>
+      "कृपया स्थिति/एकाधिक चयन/टेलीमेड सेवा के लिए चुनें";
 
   @override
   String get lblPatientList => "रोगी की सूची";
 
   @override
-  String get lblBillSwipe => "मात्रा को संपादित करने या बिल से सेविस को हटाने के लिए छोड़ दें";
+  String get lblBillSwipe =>
+      "मात्रा को संपादित करने या बिल से सेविस को हटाने के लिए छोड़ दें";
 
   @override
   String get lblViewDoctorMsg => "डॉक्टर की प्रोफ़ाइल देखने के लिए टैप करें";
@@ -215,7 +247,8 @@ class LanguageHi extends BaseLanguage {
   String get lblEditHolidayRestriction => "आप इसे अभी संपादित नहीं कर सकते";
 
   @override
-  String get lblNoAppointmentForThisDay => "इस दिन कोई नियुक्ति अनुसूची नहीं है";
+  String get lblNoAppointmentForThisDay =>
+      "इस दिन कोई नियुक्ति अनुसूची नहीं है";
 
   @override
   String get lblDoctorsSelected => "चयनित डॉक्टर";
@@ -227,25 +260,31 @@ class LanguageHi extends BaseLanguage {
   String get lblPending => "पेंडिंग";
 
   @override
-  String get lblPleaseTryAgainAfterSometimes => "कृपया थोड़ी देर बाद पुनः प्रयास करे";
+  String get lblPleaseTryAgainAfterSometimes =>
+      "कृपया थोड़ी देर बाद पुनः प्रयास करे";
 
   @override
   String get lblTapToSelect => "चयन करने के लिए टैप करें";
 
   @override
-  String get lblDoctorTapMsg => "डॉक्टर का चयन करने और सेवा विवरण संपादित करने के लिए नाम टैप करें";
+  String get lblDoctorTapMsg =>
+      "डॉक्टर का चयन करने और सेवा विवरण संपादित करने के लिए नाम टैप करें";
 
   @override
-  String get lblCantFindClinicYouSearchedFor => 'आपने क्लिनिक नहीं खोजा है जिसे आपने खोजा था';
+  String get lblCantFindClinicYouSearchedFor =>
+      'आपने क्लिनिक नहीं खोजा है जिसे आपने खोजा था';
 
   @override
-  String get lblCantFindDoctorYouSearchedFor => 'आपने डॉक्टर को खोज नहीं सकते, जिसे आपने खोजा था';
+  String get lblCantFindDoctorYouSearchedFor =>
+      'आपने डॉक्टर को खोज नहीं सकते, जिसे आपने खोजा था';
 
   @override
-  String get lblCantFindPatientYouSearchedFor => 'आपने जो रोगी खोजा था, उसे नहीं मिल सकता';
+  String get lblCantFindPatientYouSearchedFor =>
+      'आपने जो रोगी खोजा था, उसे नहीं मिल सकता';
 
   @override
-  String get lblCantFindServiceYouSearchedFor => 'आपके द्वारा खोजी गई सेवा नहीं मिल सकती है';
+  String get lblCantFindServiceYouSearchedFor =>
+      'आपके द्वारा खोजी गई सेवा नहीं मिल सकती है';
 
   @override
   String get lblNoActiveClinicAvailable => 'सभी क्लीनिक बंद हैं';
@@ -272,7 +311,8 @@ class LanguageHi extends BaseLanguage {
   String get lblStayNotified => "अधिसूचित रहें";
 
   @override
-  String get lblNotificationSubTitle => "कभी भी एक बीट मिस न करें, सूचनाएं चालू रखें!";
+  String get lblNotificationSubTitle =>
+      "कभी भी एक बीट मिस न करें, सूचनाएं चालू रखें!";
 
   @override
   String get lblNotifications => "सूचनाएं";
@@ -293,7 +333,8 @@ class LanguageHi extends BaseLanguage {
   String get lblNoActivePatientAvailable => "कोई सक्रिय रोगी उपलब्ध नहीं है";
 
   @override
-  String get lblNoActiveServicesAvailable => "कोई सक्रिय सेवाएं उपलब्ध नहीं हैं";
+  String get lblNoActiveServicesAvailable =>
+      "कोई सक्रिय सेवाएं उपलब्ध नहीं हैं";
 
   @override
   String get lblNoActiveDoctorAvailable => "कोई सक्रिय डॉक्टर उपलब्ध नहीं है";
@@ -466,7 +507,8 @@ class LanguageHi extends BaseLanguage {
   @override
   String get lblCheckOut => 'चेक आउट';
   @override
-  String get lblAreDeleteAppointment => 'क्या आप सुनिश्चित हैं कि आप नियुक्ति को हटाना चाहते हैं?';
+  String get lblAreDeleteAppointment =>
+      'क्या आप सुनिश्चित हैं कि आप नियुक्ति को हटाना चाहते हैं?';
   @override
   String get lblYouCannotStart => 'आप शुरू नहीं कर सकते';
   @override
@@ -480,7 +522,8 @@ class LanguageHi extends BaseLanguage {
   @override
   String get lblName => 'नाम';
   @override
-  String get lblPrescriptionDurationIsRequired => 'पर्चे की अवधि की आवश्यकता है';
+  String get lblPrescriptionDurationIsRequired =>
+      'पर्चे की अवधि की आवश्यकता है';
   @override
   String get lblDurationInDays => 'अवधि (दिनों में)';
   @override
@@ -495,11 +538,13 @@ class LanguageHi extends BaseLanguage {
   @override
   String get lblThanksForBooking => 'बुकिंग के लिए धन्यवाद';
   @override
-  String get lblAppointmentConfirmation => 'हमने आपको आपकी नियुक्ति के लिए पुष्टि की है';
+  String get lblAppointmentConfirmation =>
+      'हमने आपको आपकी नियुक्ति के लिए पुष्टि की है';
   @override
   String get lblNoPatientFound => 'कोई रोगी नहीं मिला';
   @override
-  String get lblDeleteRecordConfirmation => 'क्या आप सुनिश्चित हैं कि आप सभी रिकॉर्ड को हटाना चाहते हैं';
+  String get lblDeleteRecordConfirmation =>
+      'क्या आप सुनिश्चित हैं कि आप सभी रिकॉर्ड को हटाना चाहते हैं';
   @override
   String get lblAllRecordsFor => 'के लिए सभी रिकॉर्ड';
   @override
@@ -539,7 +584,8 @@ class LanguageHi extends BaseLanguage {
   @override
   String get lbl2 => '2';
   @override
-  String get lblClickOnDevelopButton => 'नेविगेशन बार में दाईं ओर विकसित बटन पर क्लिक करें/होवर करें और बिल्ड ऐप पर क्लिक करें';
+  String get lblClickOnDevelopButton =>
+      'नेविगेशन बार में दाईं ओर विकसित बटन पर क्लिक करें/होवर करें और बिल्ड ऐप पर क्लिक करें';
   @override
   String get lblCreateApp => 'ऐप बनाएँ';
   @override
@@ -549,11 +595,13 @@ class LanguageHi extends BaseLanguage {
   @override
   String get lbl4 => '4';
   @override
-  String get lblMandatoryMessage => 'अनिवार्य जानकारी भरें और ऐप क्रेडेंशियल्स टैग में आप एपीआई की और एपीआई गुप्त देख सकते हैं।';
+  String get lblMandatoryMessage =>
+      'अनिवार्य जानकारी भरें और ऐप क्रेडेंशियल्स टैग में आप एपीआई की और एपीआई गुप्त देख सकते हैं।';
   @override
   String get lbl5 => '5';
   @override
-  String get lblCopyAndPasteAPIKey => 'API कुंजी और API गुप्त यहां कॉपी और पेस्ट करें और सेव बटन पर क्लिक करें और आप जाने के लिए तैयार हैं।';
+  String get lblCopyAndPasteAPIKey =>
+      'API कुंजी और API गुप्त यहां कॉपी और पेस्ट करें और सेव बटन पर क्लिक करें और आप जाने के लिए तैयार हैं।';
   @override
   String get lblEncounterClosed => 'मुठभेड़ बंद';
   @override
@@ -604,7 +652,8 @@ class LanguageHi extends BaseLanguage {
   @override
   String get lblNewPatientAddedSuccessfully => 'नए मरीज ने सफलतापूर्वक जोड़ा';
   @override
-  String get lblPatientDetailUpdatedSuccessfully => 'रोगी का विस्तार सफलतापूर्वक अपडेट किया गया';
+  String get lblPatientDetailUpdatedSuccessfully =>
+      'रोगी का विस्तार सफलतापूर्वक अपडेट किया गया';
   @override
   String get lblBasicInformation => 'मूल जानकारी';
   @override
@@ -638,11 +687,14 @@ class LanguageHi extends BaseLanguage {
   @override
   String get lblPleaseSelectTime => 'कृपया समय चुनें';
   @override
-  String get lblStartAndEndTimeNotSame => 'प्रारंभ और अंत समय समान नहीं हो सकता है';
+  String get lblStartAndEndTimeNotSame =>
+      'प्रारंभ और अंत समय समान नहीं हो सकता है';
   @override
-  String get lblTimeNotBeforeMorningStartTime => 'सुबह की शुरुआत समय से पहले समय नहीं हो सकता';
+  String get lblTimeNotBeforeMorningStartTime =>
+      'सुबह की शुरुआत समय से पहले समय नहीं हो सकता';
   @override
-  String get lblTimeNotBeforeEveningStartTime => 'शाम शुरू होने से पहले समय नहीं हो सकता';
+  String get lblTimeNotBeforeEveningStartTime =>
+      'शाम शुरू होने से पहले समय नहीं हो सकता';
   @override
   String get lblTimeShouldBeInMultiplyOf5 => 'समय 5 के गुणन में होना चाहिए';
   @override
@@ -720,7 +772,8 @@ class LanguageHi extends BaseLanguage {
   @override
   String get lblBillAddedSuccessfully => 'बिल सफलतापूर्वक जोड़ा गया';
   @override
-  String get lblAtLeastSelectOneBillItem => 'कम से कम बचाने के लिए एक बिल आइटम का चयन करें';
+  String get lblAtLeastSelectOneBillItem =>
+      'कम से कम बचाने के लिए एक बिल आइटम का चयन करें';
   @override
   String get lblGenerateInvoice => 'चालान उत्पन्न करें';
   @override
@@ -776,7 +829,7 @@ class LanguageHi extends BaseLanguage {
   @override
   String get lblClinicTAndC => 'क्लिनिक टी एंड सी';
   @override
-  String get lblAboutKiviCare => 'Kivicare के बारे में';
+  String get lblAboutSolidCare => 'Kivicare के बारे में';
   @override
   String get lblYourReviewCounts => 'आपकी समीक्षा मायने रखती है';
   @override
@@ -786,7 +839,7 @@ class LanguageHi extends BaseLanguage {
   @override
   String get lblSubmitYourQueriesHere => 'अपने प्रश्नों को यहां जमा करें';
   @override
-  String get lblShareKiviCare => 'शेयर किवीकेयर';
+  String get lblShareSolidCare => 'शेयर किवीकेयर';
   @override
   String get lblLogout => 'लॉग आउट';
   @override
@@ -806,7 +859,8 @@ class LanguageHi extends BaseLanguage {
   @override
   String get lblPurchase => 'खरीदना';
   @override
-  String get lblDemoUserPasswordNotChanged => 'डेमो उपयोगकर्ता पासवर्ड नहीं बदला जा सकता है';
+  String get lblDemoUserPasswordNotChanged =>
+      'डेमो उपयोगकर्ता पासवर्ड नहीं बदला जा सकता है';
   @override
   String get lblPasswordLengthMessage => 'पासवर्ड की लंबाई से अधिक होना चाहिए';
   @override
@@ -832,7 +886,8 @@ class LanguageHi extends BaseLanguage {
   @override
   String get lblBloodGroupIsRequired => 'रक्त समूह की आवश्यकता है';
   @override
-  String get lblAppointmentBookedSuccessfully => 'नियुक्ति सफलतापूर्वक बुक की गई, कृपया अपना ईमेल देखें।';
+  String get lblAppointmentBookedSuccessfully =>
+      'नियुक्ति सफलतापूर्वक बुक की गई, कृपया अपना ईमेल देखें।';
   @override
   String get lblSelectedSlots => 'चयनित स्लॉट';
   @override
@@ -846,7 +901,8 @@ class LanguageHi extends BaseLanguage {
   @override
   String get lblDoctorDetails => 'चिकित्सक विवरण';
   @override
-  String get lblAreYouWantToDeleteDoctor => 'क्या आप सुनिश्चित हैं कि आप डॉक्टर को हटाना चाहते हैं?';
+  String get lblAreYouWantToDeleteDoctor =>
+      'क्या आप सुनिश्चित हैं कि आप डॉक्टर को हटाना चाहते हैं?';
   @override
   String get lblDoctorDeleted => 'डॉक्टर हटाए गए';
   @override
@@ -872,9 +928,11 @@ class LanguageHi extends BaseLanguage {
   @override
   String get lblTopDoctors => 'शीर्ष डॉक्टर';
   @override
-  String get lblExpertsHealthTipsAndAdvice => 'विशेषज्ञ स्वास्थ्य युक्तियाँ और सलाह';
+  String get lblExpertsHealthTipsAndAdvice =>
+      'विशेषज्ञ स्वास्थ्य युक्तियाँ और सलाह';
   @override
-  String get lblArticlesByHighlyQualifiedDoctors => 'रोजमर्रा के स्वास्थ्य पर उच्च योग्य डॉक्टरों द्वारा लेख ।।';
+  String get lblArticlesByHighlyQualifiedDoctors =>
+      'रोजमर्रा के स्वास्थ्य पर उच्च योग्य डॉक्टरों द्वारा लेख ।।';
   @override
   String get lblChooseYourDoctor => 'अपने डॉक्टर को चुनें';
   @override
@@ -941,7 +999,8 @@ class LanguageHi extends BaseLanguage {
   @override
   String get lblAddedNewEncounter => 'नई मुठभेड़ जोड़ा गया';
   @override
-  String get lblCantEditDate => 'आप उस तारीख को संपादित नहीं कर सकते जो पहले से ही पारित है';
+  String get lblCantEditDate =>
+      'आप उस तारीख को संपादित नहीं कर सकते जो पहले से ही पारित है';
   @override
   String get lblNoTitle => 'कोई शीर्षक नहीं';
   @override
@@ -1009,17 +1068,22 @@ class LanguageHi extends BaseLanguage {
   @override
   String get lblTryIt => 'इसे अजमाएं';
   @override
-  String get lblYouAreJustOneStepAwayFromHavingAHandsOnBackendDemo => 'आप हाथों पर बैकएंड डेमो होने से सिर्फ एक कदम दूर हैं।';
+  String get lblYouAreJustOneStepAwayFromHavingAHandsOnBackendDemo =>
+      'आप हाथों पर बैकएंड डेमो होने से सिर्फ एक कदम दूर हैं।';
   @override
   String get lblChooseYourRole => 'अपनी भूमिका चुनें';
   @override
-  String get lblEnterYourEmailAddressAsWellAsTheTemporaryLink => 'अपना ईमेल पता के साथ -साथ अस्थायी लिंक भी दर्ज करें';
+  String get lblEnterYourEmailAddressAsWellAsTheTemporaryLink =>
+      'अपना ईमेल पता के साथ -साथ अस्थायी लिंक भी दर्ज करें';
   @override
-  String get lblClickOnThatAndScanItFromTheApp => 'उस पर क्लिक करें और इसे ऐप से स्कैन करें';
+  String get lblClickOnThatAndScanItFromTheApp =>
+      'उस पर क्लिक करें और इसे ऐप से स्कैन करें';
   @override
-  String get lblYouWillSeeAQRForAppOptionOnTheRightHandCorner => 'आप दाहिने हाथ के कोने पर ऐप विकल्प के लिए एक क्यूआर देखेंगे,';
+  String get lblYouWillSeeAQRForAppOptionOnTheRightHandCorner =>
+      'आप दाहिने हाथ के कोने पर ऐप विकल्प के लिए एक क्यूआर देखेंगे,';
   @override
-  String get lblEnjoyTheFlawlessKivicareSystemWithEase => 'आनंद लेना! सहजता के साथ निर्दोष kivicare प्रणाली।';
+  String get lblEnjoyTheFlawlessKivicareSystemWithEase =>
+      'आनंद लेना! सहजता के साथ निर्दोष kivicare प्रणाली।';
   @override
   String get lblCamera => 'कैमरा';
   @override
@@ -1031,7 +1095,8 @@ class LanguageHi extends BaseLanguage {
   @override
   String get lblNoConnection => 'कोई कनेक्शन नहीं';
   @override
-  String get lblYourInternetConnectionWasInterrupted => 'आपका इंटरनेट कनेक्शन बाधित था';
+  String get lblYourInternetConnectionWasInterrupted =>
+      'आपका इंटरनेट कनेक्शन बाधित था';
   @override
   String get lblPlease => 'कृपया';
   @override
@@ -1047,11 +1112,13 @@ class LanguageHi extends BaseLanguage {
   @override
   String get lblPleaseChooseAnotherDay => 'कृपया एक और दिन चुनें';
   @override
-  String get lblPleaseCloseTheEncounterToCheckoutPatient => 'कृपया रोगी को चेकआउट करने के लिए मुठभेड़ बंद करें';
+  String get lblPleaseCloseTheEncounterToCheckoutPatient =>
+      'कृपया रोगी को चेकआउट करने के लिए मुठभेड़ बंद करें';
   @override
   String get lblRemove => 'निकालना';
   @override
-  String get lblAResetPasswordLinkWillBeSentToTheAboveEnteredEmailAddress => 'एक रीसेट पासवर्ड लिंक उपरोक्त दर्ज किए गए ईमेल पते पर भेजा जाएगा';
+  String get lblAResetPasswordLinkWillBeSentToTheAboveEnteredEmailAddress =>
+      'एक रीसेट पासवर्ड लिंक उपरोक्त दर्ज किए गए ईमेल पते पर भेजा जाएगा';
 
   @override
   String get lblEnterYourEmailAddress => 'अपना ईमेल पता दर्ज करें';
@@ -1071,7 +1138,8 @@ class LanguageHi extends BaseLanguage {
   @override
   String get lblLoading => 'लोड हो रहा है';
   @override
-  String get lblAnErrorOccurredWhileCheckingInternetConnectivity => 'इंटरनेट कनेक्टिविटी की जाँच करते समय एक त्रुटि हुई';
+  String get lblAnErrorOccurredWhileCheckingInternetConnectivity =>
+      'इंटरनेट कनेक्टिविटी की जाँच करते समय एक त्रुटि हुई';
   @override
   String get lblBloodGroup => 'ब्लड ग्रुप';
   @override
@@ -1101,9 +1169,11 @@ class LanguageHi extends BaseLanguage {
   @override
   String get lblScanToTest => 'परीक्षण करने के लिए स्कैन करना';
   @override
-  String get lblPleaseSelectPaymentStatus => 'कृपया पहले भुगतान स्थिति का चयन करें';
+  String get lblPleaseSelectPaymentStatus =>
+      'कृपया पहले भुगतान स्थिति का चयन करें';
   @override
-  String get lblWhatYourCustomersSaysAboutYou => 'आपके ग्राहक आपके बारे में क्या कहते हैं';
+  String get lblWhatYourCustomersSaysAboutYou =>
+      'आपके ग्राहक आपके बारे में क्या कहते हैं';
   @override
   String get lblFriday => 'शुक्रवार';
   @override
@@ -1127,7 +1197,8 @@ class LanguageHi extends BaseLanguage {
   @override
   String get lblClose => 'बंद करना';
   @override
-  String get lblAllTheAppointmentOnSelectedDateWillBeCancelled => 'चयनित तिथि पर सभी नियुक्ति रद्द कर दी जाएगी।';
+  String get lblAllTheAppointmentOnSelectedDateWillBeCancelled =>
+      'चयनित तिथि पर सभी नियुक्ति रद्द कर दी जाएगी।';
   @override
   String get lblApr => 'अप्रैल';
   @override
@@ -1223,11 +1294,13 @@ class LanguageHi extends BaseLanguage {
   @override
   String get lblToWifi => 'वाईफाई को';
   @override
-  String get lblMultipleSelectionIsAvailableForThisService => 'इस सेवा के लिए बहु-चयन विकल्प उपलब्ध है';
+  String get lblMultipleSelectionIsAvailableForThisService =>
+      'इस सेवा के लिए बहु-चयन विकल्प उपलब्ध है';
   @override
   String get lblNote => 'टिप्पणी';
   @override
-  String get lblToCloseTheEncounterInvoicePaymentIsMandatory => 'मुठभेड़ को बंद करने के लिए, चालान भुगतान अनिवार्य है';
+  String get lblToCloseTheEncounterInvoicePaymentIsMandatory =>
+      'मुठभेड़ को बंद करने के लिए, चालान भुगतान अनिवार्य है';
   @override
   String get lblUpdate => 'अद्यतन';
   @override
@@ -1281,7 +1354,8 @@ class LanguageHi extends BaseLanguage {
   @override
   String get lblPayBill => 'वेतन बिल';
   @override
-  String get lblPleaseCheckYourEmailInboxToSetNewPassword => 'नया पासवर्ड सेट करने के लिए कृपया अपना ईमेल इनबॉक्स देखें';
+  String get lblPleaseCheckYourEmailInboxToSetNewPassword =>
+      'नया पासवर्ड सेट करने के लिए कृपया अपना ईमेल इनबॉक्स देखें';
   @override
   String get lblReview => 'समीक्षा';
   @override
@@ -1299,11 +1373,13 @@ class LanguageHi extends BaseLanguage {
   @override
   String get lblSpecialities => 'विशिष्टताओं';
   @override
-  String get lblKnowWhatYourPatientsSaysAboutYou => 'जानिए आपके मरीज आपके बारे में क्या कहते हैं';
+  String get lblKnowWhatYourPatientsSaysAboutYou =>
+      'जानिए आपके मरीज आपके बारे में क्या कहते हैं';
   @override
   String get lblSchedule => 'अनुसूची';
   @override
-  String get lblAllowMultiSelectionWhileBooking => 'बुकिंग करते समय बहु चयन की अनुमति दें?';
+  String get lblAllowMultiSelectionWhileBooking =>
+      'बुकिंग करते समय बहु चयन की अनुमति दें?';
   @override
   String get lblNo => 'नहीं';
   @override
@@ -1320,7 +1396,8 @@ class LanguageHi extends BaseLanguage {
   String get lblEnterYourReviews => 'अपनी समीक्षा दर्ज करें (वैकल्पिक)';
 
   @override
-  String get lblUnAuthorized => "डेमो उपयोगकर्ता को इस क्रिया के लिए नहीं दिया जा सकता है";
+  String get lblUnAuthorized =>
+      "डेमो उपयोगकर्ता को इस क्रिया के लिए नहीं दिया जा सकता है";
 
   @override
   String get lblIsThisATelemedService => 'क्या यह टेलीमेड सेवा है?';
@@ -1341,7 +1418,8 @@ class LanguageHi extends BaseLanguage {
   String get lblNoInternetMsg => 'आप इंटरनेट से जुड़े नहीं हैं';
 
   @override
-  String get lblDeleteAccountNote => "आपकी स्वास्थ्य सर्वोत्तम है - अपने खाते को बनाए रखें";
+  String get lblDeleteAccountNote =>
+      "आपकी स्वास्थ्य सर्वोत्तम है - अपने खाते को बनाए रखें";
 
   @override
   String get lblSomethingWentWrong => 'कुछ ग़लत हो गया!';

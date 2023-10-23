@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
-import 'package:kivicare_flutter/components/body_widget.dart';
-import 'package:kivicare_flutter/components/role_widget.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/model/holiday_model.dart';
-import 'package:kivicare_flutter/model/user_model.dart';
-import 'package:kivicare_flutter/network/holiday_repository.dart';
-import 'package:kivicare_flutter/screens/appointment/screen/step2_doctor_selection_screen.dart';
-import 'package:kivicare_flutter/utils/app_common.dart';
-import 'package:kivicare_flutter/utils/cached_value.dart';
-import 'package:kivicare_flutter/utils/colors.dart';
-import 'package:kivicare_flutter/utils/common.dart';
-import 'package:kivicare_flutter/utils/constants.dart';
-import 'package:kivicare_flutter/utils/extensions/date_extensions.dart';
-import 'package:kivicare_flutter/utils/extensions/string_extensions.dart';
-import 'package:kivicare_flutter/utils/images.dart';
+import 'package:solidcare/components/body_widget.dart';
+import 'package:solidcare/components/role_widget.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/model/holiday_model.dart';
+import 'package:solidcare/model/user_model.dart';
+import 'package:solidcare/network/holiday_repository.dart';
+import 'package:solidcare/screens/appointment/screen/step2_doctor_selection_screen.dart';
+import 'package:solidcare/utils/app_common.dart';
+import 'package:solidcare/utils/cached_value.dart';
+import 'package:solidcare/utils/colors.dart';
+import 'package:solidcare/utils/common.dart';
+import 'package:solidcare/utils/constants.dart';
+import 'package:solidcare/utils/extensions/date_extensions.dart';
+import 'package:solidcare/utils/extensions/string_extensions.dart';
+import 'package:solidcare/utils/images.dart';
 import 'package:moment_dart/moment_dart.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
@@ -35,7 +35,8 @@ class _AddHolidayScreenState extends State<AddHolidayScreen> {
   TextEditingController dateCont = TextEditingController();
   TextEditingController selectedDoctorCont = TextEditingController();
 
-  DateTimeRange? picked = DateTimeRange(start: DateTime.now(), end: DateTime.now());
+  DateTimeRange? picked =
+      DateTimeRange(start: DateTime.now(), end: DateTime.now());
 
   bool isUpdate = false;
   bool isFirstTime = true;
@@ -63,7 +64,8 @@ class _AddHolidayScreenState extends State<AddHolidayScreen> {
       if (!isDoctor()) {
         moduleCont = widget.holidayData!.moduleType;
       }
-      selectedDoctorCont.text = 'Dr. ' + widget.holidayData!.doctorName.validate();
+      selectedDoctorCont.text =
+          'Dr. ' + widget.holidayData!.doctorName.validate();
       if (cachedDoctorList != null && cachedDoctorList.validate().isNotEmpty) {
         cachedDoctorList.validate().forEach((element) {
           if (element.iD.toString() == widget.holidayData!.moduleId) {
@@ -71,9 +73,12 @@ class _AddHolidayScreenState extends State<AddHolidayScreen> {
           }
         });
       }
-      selectedStartDate = DateFormat(SAVE_DATE_FORMAT).parse(widget.holidayData!.holidayStartDate.validate());
-      selectedEndDate = DateFormat(SAVE_DATE_FORMAT).parse(widget.holidayData!.holidayEndDate.validate());
-      dateCont.text = "${DateFormat(SAVE_DATE_FORMAT).format(selectedStartDate)} - ${DateFormat(SAVE_DATE_FORMAT).format(selectedEndDate)}";
+      selectedStartDate = DateFormat(SAVE_DATE_FORMAT)
+          .parse(widget.holidayData!.holidayStartDate.validate());
+      selectedEndDate = DateFormat(SAVE_DATE_FORMAT)
+          .parse(widget.holidayData!.holidayEndDate.validate());
+      dateCont.text =
+          "${DateFormat(SAVE_DATE_FORMAT).format(selectedStartDate)} - ${DateFormat(SAVE_DATE_FORMAT).format(selectedEndDate)}";
       totalLeaveInDays = selectedEndDate.difference(selectedStartDate).inDays;
       setState(() {});
     }
@@ -88,7 +93,8 @@ class _AddHolidayScreenState extends State<AddHolidayScreen> {
         "start_date": selectedStartDate.getFormattedDate(SAVE_DATE_FORMAT),
         "end_date": selectedEndDate.getFormattedDate(SAVE_DATE_FORMAT),
         "module_type": DOCTOR,
-        "module_id": "${doctorCont == null ? getIntAsync(USER_ID) : doctorCont!.iD.validate()}",
+        "module_id":
+            "${doctorCont == null ? getIntAsync(USER_ID) : doctorCont!.iD.validate()}",
         "description": "",
       };
     } else {
@@ -121,7 +127,8 @@ class _AddHolidayScreenState extends State<AddHolidayScreen> {
         "start_date": selectedStartDate.getFormattedDate(SAVE_DATE_FORMAT),
         "end_date": selectedEndDate.getFormattedDate(SAVE_DATE_FORMAT),
         "module_type": DOCTOR,
-        "module_id": "${doctorCont == null ? getIntAsync(USER_ID) : doctorCont!.iD.validate()}",
+        "module_id":
+            "${doctorCont == null ? getIntAsync(USER_ID) : doctorCont!.iD.validate()}",
         "description": "",
       };
     } else {
@@ -190,7 +197,9 @@ class _AddHolidayScreenState extends State<AddHolidayScreen> {
                   seedColor: primaryColor,
                   brightness: Brightness.dark,
                 ))
-              : ThemeData.light().copyWith(colorScheme: ColorScheme.fromSeed(seedColor: primaryColor, brightness: Brightness.light)),
+              : ThemeData.light().copyWith(
+                  colorScheme: ColorScheme.fromSeed(
+                      seedColor: primaryColor, brightness: Brightness.light)),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -211,7 +220,8 @@ class _AddHolidayScreenState extends State<AddHolidayScreen> {
       throw e;
     });
     if (picked != null) {
-      dateCont.text = "${picked!.start.getFormattedDate(GLOBAL_FORMAT)} - ${picked!.end.getFormattedDate(GLOBAL_FORMAT)}";
+      dateCont.text =
+          "${picked!.start.getFormattedDate(GLOBAL_FORMAT)} - ${picked!.end.getFormattedDate(GLOBAL_FORMAT)}";
       totalLeaveInDays = (picked!.end.difference(picked!.start)).inDays;
       setState(() {});
     }
@@ -249,7 +259,9 @@ class _AddHolidayScreenState extends State<AddHolidayScreen> {
         visibleOn: appStore.isLoading,
         child: Form(
           key: formKey,
-          autovalidateMode: isFirstTime ? AutovalidateMode.disabled : AutovalidateMode.onUserInteraction,
+          autovalidateMode: isFirstTime
+              ? AutovalidateMode.disabled
+              : AutovalidateMode.onUserInteraction,
           child: AnimatedScrollView(
             listAnimationType: ListAnimationType.None,
             padding: EdgeInsets.fromLTRB(16, 20, 16, 16),
@@ -265,7 +277,8 @@ class _AddHolidayScreenState extends State<AddHolidayScreen> {
                   items: List.generate(
                     userRoles.length,
                     (index) => DropdownMenuItem<String>(
-                      child: Text(userRoles[index].capitalizeFirstLetter(), style: primaryTextStyle()),
+                      child: Text(userRoles[index].capitalizeFirstLetter(),
+                          style: primaryTextStyle()),
                       value: index == 0 ? DOCTOR : CLINIC,
                     ),
                   ),
@@ -273,7 +286,12 @@ class _AddHolidayScreenState extends State<AddHolidayScreen> {
                     moduleCont = value;
                     setState(() {});
                   },
-                  decoration: inputDecoration(context: context, labelText: locale.lblHolidayOf, suffixIcon: ic_arrow_down.iconImage(size: 10, color: context.iconColor).paddingAll(14)),
+                  decoration: inputDecoration(
+                      context: context,
+                      labelText: locale.lblHolidayOf,
+                      suffixIcon: ic_arrow_down
+                          .iconImage(size: 10, color: context.iconColor)
+                          .paddingAll(14)),
                   validator: (v) {
                     if (v == null) return locale.lblModuleIsRequired;
                     return null;
@@ -287,14 +305,22 @@ class _AddHolidayScreenState extends State<AddHolidayScreen> {
                   child: AppTextField(
                     textFieldType: TextFieldType.NAME,
                     controller: selectedDoctorCont,
-                    decoration: inputDecoration(context: context, labelText: isUpdate ? locale.lblDoctorName : locale.lblSelectDoctor),
+                    decoration: inputDecoration(
+                        context: context,
+                        labelText: isUpdate
+                            ? locale.lblDoctorName
+                            : locale.lblSelectDoctor),
                     readOnly: true,
                     onTap: () {
                       if (!isUpdate) {
-                        Step2DoctorSelectionScreen(doctorId: isUpdate ? doctorCont!.iD : null).launch(context).then((value) {
+                        Step2DoctorSelectionScreen(
+                                doctorId: isUpdate ? doctorCont!.iD : null)
+                            .launch(context)
+                            .then((value) {
                           if (value != null) {
                             doctorCont = value;
-                            selectedDoctorCont.text = doctorCont!.displayName.validate();
+                            selectedDoctorCont.text =
+                                doctorCont!.displayName.validate();
                           } else {
                             toast(locale.lblPleaseSelectDoctor);
                           }
@@ -313,19 +339,28 @@ class _AddHolidayScreenState extends State<AddHolidayScreen> {
                   setState(() {});
                 },
                 controller: dateCont,
-                keyboardAppearance: appStore.isDarkModeOn ? Brightness.dark : Brightness.light,
+                keyboardAppearance:
+                    appStore.isDarkModeOn ? Brightness.dark : Brightness.light,
                 selectionControls: EmptyTextSelectionControls(),
                 textFieldType: TextFieldType.NAME,
                 isValidationRequired: true,
-                suffix: Icon(Icons.date_range_outlined, color: appStore.isDarkModeOn ? context.iconColor : Colors.black),
-                decoration: inputDecoration(context: context, labelText: locale.lblScheduleDate),
+                suffix: Icon(Icons.date_range_outlined,
+                    color: appStore.isDarkModeOn
+                        ? context.iconColor
+                        : Colors.black),
+                decoration: inputDecoration(
+                    context: context, labelText: locale.lblScheduleDate),
                 readOnly: true,
               ),
               if (totalLeaveInDays != null) 12.height,
               if (totalLeaveInDays != null)
                 Align(
                   alignment: Alignment.centerRight,
-                  child: Text(locale.lblLeaveFor + ' $totalLeaveInDays ' + locale.lblDays, style: secondaryTextStyle(color: primaryColor)),
+                  child: Text(
+                      locale.lblLeaveFor +
+                          ' $totalLeaveInDays ' +
+                          locale.lblDays,
+                      style: secondaryTextStyle(color: primaryColor)),
                 ),
               if (showDates) 16.height,
               if (showDates)
@@ -339,7 +374,8 @@ class _AddHolidayScreenState extends State<AddHolidayScreen> {
                     selectedStartDate,
                     selectedEndDate,
                   ],
-                  initialSelectedRange: PickerDateRange(selectedStartDate, selectedEndDate),
+                  initialSelectedRange:
+                      PickerDateRange(selectedStartDate, selectedEndDate),
                   onSubmit: (selectedRange) {
                     showDates = !showDates;
                     setState(() {});
@@ -357,10 +393,14 @@ class _AddHolidayScreenState extends State<AddHolidayScreen> {
                     if (selectedRange.value is PickerDateRange) {
                       setState(() {
                         selectedStartDate = selectedRange.value.startDate;
-                        selectedEndDate = selectedRange.value.endDate ?? selectedRange.value.startDate;
-                        dateCont.text = "${DateFormat(SAVE_DATE_FORMAT).format(selectedStartDate)} - ${DateFormat(SAVE_DATE_FORMAT).format(selectedEndDate)}";
+                        selectedEndDate = selectedRange.value.endDate ??
+                            selectedRange.value.startDate;
+                        dateCont.text =
+                            "${DateFormat(SAVE_DATE_FORMAT).format(selectedStartDate)} - ${DateFormat(SAVE_DATE_FORMAT).format(selectedEndDate)}";
 
-                        totalLeaveInDays = (selectedEndDate.difference(selectedStartDate)).inDays;
+                        totalLeaveInDays =
+                            (selectedEndDate.difference(selectedStartDate))
+                                .inDays;
                       });
                     }
                   },
@@ -377,7 +417,8 @@ class _AddHolidayScreenState extends State<AddHolidayScreen> {
             formKey.currentState!.save();
             showConfirmDialogCustom(
               context,
-              dialogType: isUpdate ? DialogType.UPDATE : DialogType.CONFIRMATION,
+              dialogType:
+                  isUpdate ? DialogType.UPDATE : DialogType.CONFIRMATION,
               primaryColor: context.primaryColor,
               title: locale.lblAllTheAppointmentOnSelectedDateWillBeCancelled,
               onAccept: (p0) {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:kivicare_flutter/screens/shimmer/components/shimmer_component.dart';
-import 'package:kivicare_flutter/utils/colors.dart';
+import 'package:solidcare/screens/shimmer/components/shimmer_component.dart';
+import 'package:solidcare/utils/colors.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class PatientShimmerComponent extends StatelessWidget {
@@ -19,7 +19,11 @@ class PatientShimmerComponent extends StatelessWidget {
           ShimmerComponent(
             child: Container(
               padding: EdgeInsets.all(36),
-              decoration: boxDecorationDefault(color: primaryColor.withOpacity(0.3), boxShadow: [], borderRadius: radius(), shape: BoxShape.circle),
+              decoration: boxDecorationDefault(
+                  color: primaryColor.withOpacity(0.3),
+                  boxShadow: [],
+                  borderRadius: radius(),
+                  shape: BoxShape.circle),
             ),
           ),
           16.width,

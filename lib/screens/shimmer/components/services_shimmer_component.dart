@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:kivicare_flutter/screens/shimmer/components/shimmer_component.dart';
-import 'package:kivicare_flutter/utils/colors.dart';
+import 'package:solidcare/screens/shimmer/components/shimmer_component.dart';
+import 'package:solidcare/utils/colors.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class ServicesShimmerComponent extends StatelessWidget {
@@ -56,7 +56,8 @@ class ServicesShimmerComponent extends StatelessWidget {
               ShimmerComponent(
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 35, vertical: 10),
-                  decoration: boxDecorationDefault(boxShadow: [], color: primaryColor.withOpacity(0.3)),
+                  decoration: boxDecorationDefault(
+                      boxShadow: [], color: primaryColor.withOpacity(0.3)),
                 ),
               ).expand(),
               16.width,
@@ -89,20 +90,26 @@ class ServicesShimmerComponent extends StatelessWidget {
                 child: Container(
                   padding: EdgeInsets.all(16),
                   width: context.width() / 2 - 24,
-                  decoration: boxDecorationDefault(boxShadow: [], color: primaryColor.withOpacity(0.3)),
+                  decoration: boxDecorationDefault(
+                      boxShadow: [], color: primaryColor.withOpacity(0.3)),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
                         width: 80,
-                        padding: EdgeInsets.symmetric(vertical: 4, horizontal: 42),
-                        decoration: boxDecorationDefault(boxShadow: [], color: primaryColor.withOpacity(0.6)),
+                        padding:
+                            EdgeInsets.symmetric(vertical: 4, horizontal: 42),
+                        decoration: boxDecorationDefault(
+                            boxShadow: [],
+                            color: primaryColor.withOpacity(0.6)),
                       ),
                       8.height,
                       Container(
                         width: 80,
                         padding: EdgeInsets.symmetric(vertical: 4),
-                        decoration: boxDecorationDefault(boxShadow: [], color: primaryColor.withOpacity(0.6)),
+                        decoration: boxDecorationDefault(
+                            boxShadow: [],
+                            color: primaryColor.withOpacity(0.6)),
                       ),
                       8.height,
                       Row(
@@ -112,8 +119,13 @@ class ServicesShimmerComponent extends StatelessWidget {
                               2,
                               (index) => ShimmerComponent(
                                 child: Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                                  decoration: boxDecorationDefault(boxShadow: [], border: Border.all(color: primaryColor), color: primaryColor.withOpacity(0.6), shape: BoxShape.circle),
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 20, vertical: 20),
+                                  decoration: boxDecorationDefault(
+                                      boxShadow: [],
+                                      border: Border.all(color: primaryColor),
+                                      color: primaryColor.withOpacity(0.6),
+                                      shape: BoxShape.circle),
                                 ),
                               ).paddingLeft(index == 0 ? 0 : (index) * 22),
                             ),

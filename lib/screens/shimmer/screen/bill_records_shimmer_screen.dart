@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/screens/shimmer/components/shimmer_component.dart';
-import 'package:kivicare_flutter/utils/colors.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/screens/shimmer/components/shimmer_component.dart';
+import 'package:solidcare/utils/colors.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class BillRecordsShimmerScreen extends StatelessWidget {
@@ -27,7 +27,8 @@ class BillRecordsShimmerScreen extends StatelessWidget {
                 children: [
                   ShimmerComponent(
                     child: Container(
-                      padding: EdgeInsets.symmetric(vertical: 36, horizontal: 35),
+                      padding:
+                          EdgeInsets.symmetric(vertical: 36, horizontal: 35),
                       decoration: boxDecorationDefault(
                         color: primaryColor.withOpacity(0.3),
                         boxShadow: [],
@@ -81,7 +82,8 @@ class BillRecordsShimmerScreen extends StatelessWidget {
                       6.height,
                       ShimmerComponent(
                         child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 24, vertical: 8),
                           decoration: boxDecorationDefault(
                             color: Colors.white12,
                             boxShadow: [],

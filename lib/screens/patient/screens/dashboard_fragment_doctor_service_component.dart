@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:kivicare_flutter/components/no_data_found_widget.dart';
-import 'package:kivicare_flutter/components/view_all_widget.dart';
-import 'package:kivicare_flutter/model/service_model.dart';
-import 'package:kivicare_flutter/screens/patient/components/category_widget.dart';
-import 'package:kivicare_flutter/screens/patient/screens/patient_service_list_screen.dart';
+import 'package:solidcare/components/no_data_found_widget.dart';
+import 'package:solidcare/components/view_all_widget.dart';
+import 'package:solidcare/model/service_model.dart';
+import 'package:solidcare/screens/patient/components/category_widget.dart';
+import 'package:solidcare/screens/patient/screens/patient_service_list_screen.dart';
 
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/screens/patient/screens/view_service_detail_screen.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/screens/patient/screens/view_service_detail_screen.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class DashboardFragmentDoctorServiceComponent extends StatelessWidget {
@@ -15,7 +15,8 @@ class DashboardFragmentDoctorServiceComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (service.isEmpty) return NoDataFoundWidget(text: locale.lblNoServicesFound);
+    if (service.isEmpty)
+      return NoDataFoundWidget(text: locale.lblNoServicesFound);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -36,7 +37,8 @@ class DashboardFragmentDoctorServiceComponent extends StatelessWidget {
 
             return GestureDetector(
               onTap: () {
-                ViewServiceDetailScreen(serviceData: serviceData).launch(context);
+                ViewServiceDetailScreen(serviceData: serviceData)
+                    .launch(context);
               },
               child: CategoryWidget(data: serviceData),
             );

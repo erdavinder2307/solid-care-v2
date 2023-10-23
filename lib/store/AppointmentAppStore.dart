@@ -1,6 +1,6 @@
 import 'package:file_picker/file_picker.dart';
-import 'package:kivicare_flutter/model/doctor_list_model.dart';
-import 'package:kivicare_flutter/model/user_model.dart';
+import 'package:solidcare/model/doctor_list_model.dart';
+import 'package:solidcare/model/user_model.dart';
 import 'package:mobx/mobx.dart';
 
 import '../model/clinic_list_model.dart';
@@ -46,14 +46,16 @@ abstract class AppointmentAppStoreBase with Store {
 
   @observable
   ObservableList<PlatformFile> reportList = ObservableList<PlatformFile>();
-  ObservableList<AppointmentReport> reportListString = ObservableList<AppointmentReport>();
+  ObservableList<AppointmentReport> reportListString =
+      ObservableList<AppointmentReport>();
 
   void addReportData({required List<PlatformFile> data, bool isClear = true}) {
     if (isClear) reportList.clear();
     reportList.addAll(data);
   }
 
-  void addReportListString({required List<AppointmentReport> data, bool isClear = true}) {
+  void addReportListString(
+      {required List<AppointmentReport> data, bool isClear = true}) {
     if (isClear) reportListString.clear();
     reportListString.addAll(data);
   }
@@ -106,7 +108,8 @@ abstract class AppointmentAppStoreBase with Store {
   void setStatusSelected(int? aStatus) => mStatusSelected = aStatus;
 
   @action
-  void setSelectedAppointmentDate(DateTime aSelected) => selectedAppointmentDate = aSelected;
+  void setSelectedAppointmentDate(DateTime aSelected) =>
+      selectedAppointmentDate = aSelected;
 
   @action
   void setSelectedTime(String? aSelected) => mSelectedTime = aSelected;

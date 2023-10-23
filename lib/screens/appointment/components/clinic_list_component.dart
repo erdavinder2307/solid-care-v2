@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:kivicare_flutter/components/cached_image_widget.dart';
-import 'package:kivicare_flutter/components/status_widget.dart';
-import 'package:kivicare_flutter/model/clinic_list_model.dart';
-import 'package:kivicare_flutter/utils/constants.dart';
-import 'package:kivicare_flutter/utils/extensions/string_extensions.dart';
-import 'package:kivicare_flutter/utils/images.dart';
+import 'package:solidcare/components/cached_image_widget.dart';
+import 'package:solidcare/components/status_widget.dart';
+import 'package:solidcare/model/clinic_list_model.dart';
+import 'package:solidcare/utils/constants.dart';
+import 'package:solidcare/utils/extensions/string_extensions.dart';
+import 'package:solidcare/utils/images.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class ClinicListComponent extends StatelessWidget {
@@ -21,7 +21,12 @@ class ClinicListComponent extends StatelessWidget {
         Container(
           padding: EdgeInsets.only(left: 16, right: 16, top: 24, bottom: 16),
           margin: EdgeInsets.only(top: 8, bottom: 8),
-          decoration: boxDecorationDefault(color: context.cardColor, borderRadius: radius(), border: Border.all(color: isSelected ? context.primaryColor : context.cardColor)),
+          decoration: boxDecorationDefault(
+              color: context.cardColor,
+              borderRadius: radius(),
+              border: Border.all(
+                  color:
+                      isSelected ? context.primaryColor : context.cardColor)),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.start,
@@ -39,7 +44,8 @@ class ClinicListComponent extends StatelessWidget {
                 crossAxisAlignment: WrapCrossAlignment.start,
                 listAnimationType: ListAnimationType.None,
                 children: [
-                  Text("${data.name.validate()}", style: boldTextStyle(size: titleTextSize)),
+                  Text("${data.name.validate()}",
+                      style: boldTextStyle(size: titleTextSize)),
                   SettingItemWidget(
                     splashColor: Colors.transparent,
                     highlightColor: Colors.transparent,

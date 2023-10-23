@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:kivicare_flutter/components/no_data_found_widget.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/model/dashboard_model.dart';
-import 'package:kivicare_flutter/model/upcoming_appointment_model.dart';
-import 'package:kivicare_flutter/screens/appointment/components/appointment_widget.dart';
+import 'package:solidcare/components/no_data_found_widget.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/model/dashboard_model.dart';
+import 'package:solidcare/model/upcoming_appointment_model.dart';
+import 'package:solidcare/screens/appointment/components/appointment_widget.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class DashboardFragmentAppointmentComponent extends StatelessWidget {
@@ -26,7 +26,8 @@ class DashboardFragmentAppointmentComponent extends StatelessWidget {
               itemCount: data.upcomingAppointment.validate().length,
               physics: NeverScrollableScrollPhysics(),
               itemBuilder: (BuildContext context, int index) {
-                UpcomingAppointmentModel value = data.upcomingAppointment.validate()[index];
+                UpcomingAppointmentModel value =
+                    data.upcomingAppointment.validate()[index];
                 return AppointmentWidget(
                   upcomingData: value,
                   refreshCall: () {

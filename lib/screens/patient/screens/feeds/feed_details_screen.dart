@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/screens/patient/components/html_widget.dart';
-import 'package:kivicare_flutter/screens/patient/models/news_model.dart';
-import 'package:kivicare_flutter/utils/app_common.dart';
-import 'package:kivicare_flutter/utils/colors.dart';
-import 'package:kivicare_flutter/utils/common.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/screens/patient/components/html_widget.dart';
+import 'package:solidcare/screens/patient/models/news_model.dart';
+import 'package:solidcare/utils/app_common.dart';
+import 'package:solidcare/utils/colors.dart';
+import 'package:solidcare/utils/common.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class FeedDetailsScreen extends StatefulWidget {
@@ -65,20 +65,26 @@ class _FeedDetailsScreenState extends State<FeedDetailsScreen> {
             children: [
               Container(
                 padding: EdgeInsets.only(left: 8, right: 8, top: 4, bottom: 4),
-                child: Text(locale.lblNews, style: boldTextStyle(color: Colors.white, size: 10)),
-                decoration: boxDecorationRoundedWithShadow(defaultRadius.toInt(), backgroundColor: primaryColor),
+                child: Text(locale.lblNews,
+                    style: boldTextStyle(color: Colors.white, size: 10)),
+                decoration: boxDecorationRoundedWithShadow(
+                    defaultRadius.toInt(),
+                    backgroundColor: primaryColor),
               ),
               Row(
                 children: [
-                  Icon(Icons.access_time_rounded, color: textSecondaryColorGlobal, size: 10),
+                  Icon(Icons.access_time_rounded,
+                      color: textSecondaryColorGlobal, size: 10),
                   4.width,
-                  Text(widget.newsData!.readableDate.validate(), style: secondaryTextStyle()),
+                  Text(widget.newsData!.readableDate.validate(),
+                      style: secondaryTextStyle()),
                 ],
               ),
             ],
           ),
           8.height,
-          Text(parseHtmlString(widget.newsData!.postTitle.validate()), style: boldTextStyle(size: 26)),
+          Text(parseHtmlString(widget.newsData!.postTitle.validate()),
+              style: boldTextStyle(size: 26)),
           HtmlWidget(postContent: postContent.validate()),
         ],
       ),

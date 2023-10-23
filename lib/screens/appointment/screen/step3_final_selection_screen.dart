@@ -2,29 +2,29 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:intl/intl.dart';
-import 'package:kivicare_flutter/components/multi_select.dart';
-import 'package:kivicare_flutter/components/price_widget.dart';
-import 'package:kivicare_flutter/components/role_widget.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/model/service_model.dart';
-import 'package:kivicare_flutter/model/upcoming_appointment_model.dart';
-import 'package:kivicare_flutter/model/user_model.dart';
-import 'package:kivicare_flutter/screens/appointment/appointment_functions.dart';
-import 'package:kivicare_flutter/screens/appointment/components/appointment_date_component.dart';
-import 'package:kivicare_flutter/screens/appointment/components/appointment_slots.dart';
-import 'package:kivicare_flutter/screens/appointment/components/confirm_appointment_screen.dart';
-import 'package:kivicare_flutter/screens/appointment/components/file_upload_component.dart';
-import 'package:kivicare_flutter/screens/appointment/screen/patient_search_screen.dart';
-import 'package:kivicare_flutter/screens/doctor/screens/service/add_service_screen.dart';
-import 'package:kivicare_flutter/screens/patient/components/selected_clinic_widget.dart';
-import 'package:kivicare_flutter/screens/patient/components/selected_doctor_widget.dart';
-import 'package:kivicare_flutter/screens/receptionist/screens/patient/add_patient_screen.dart';
-import 'package:kivicare_flutter/utils/app_common.dart';
-import 'package:kivicare_flutter/utils/colors.dart';
-import 'package:kivicare_flutter/utils/common.dart';
-import 'package:kivicare_flutter/utils/constants.dart';
-import 'package:kivicare_flutter/utils/extensions/string_extensions.dart';
-import 'package:kivicare_flutter/utils/images.dart';
+import 'package:solidcare/components/multi_select.dart';
+import 'package:solidcare/components/price_widget.dart';
+import 'package:solidcare/components/role_widget.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/model/service_model.dart';
+import 'package:solidcare/model/upcoming_appointment_model.dart';
+import 'package:solidcare/model/user_model.dart';
+import 'package:solidcare/screens/appointment/appointment_functions.dart';
+import 'package:solidcare/screens/appointment/components/appointment_date_component.dart';
+import 'package:solidcare/screens/appointment/components/appointment_slots.dart';
+import 'package:solidcare/screens/appointment/components/confirm_appointment_screen.dart';
+import 'package:solidcare/screens/appointment/components/file_upload_component.dart';
+import 'package:solidcare/screens/appointment/screen/patient_search_screen.dart';
+import 'package:solidcare/screens/doctor/screens/service/add_service_screen.dart';
+import 'package:solidcare/screens/patient/components/selected_clinic_widget.dart';
+import 'package:solidcare/screens/patient/components/selected_doctor_widget.dart';
+import 'package:solidcare/screens/receptionist/screens/patient/add_patient_screen.dart';
+import 'package:solidcare/utils/app_common.dart';
+import 'package:solidcare/utils/colors.dart';
+import 'package:solidcare/utils/common.dart';
+import 'package:solidcare/utils/constants.dart';
+import 'package:solidcare/utils/extensions/string_extensions.dart';
+import 'package:solidcare/utils/images.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class Step3FinalSelectionScreen extends StatefulWidget {
@@ -39,7 +39,8 @@ class Step3FinalSelectionScreen extends StatefulWidget {
   });
 
   @override
-  State<Step3FinalSelectionScreen> createState() => _Step3FinalSelectionScreenState();
+  State<Step3FinalSelectionScreen> createState() =>
+      _Step3FinalSelectionScreenState();
 }
 
 class _Step3FinalSelectionScreenState extends State<Step3FinalSelectionScreen> {
@@ -72,8 +73,10 @@ class _Step3FinalSelectionScreenState extends State<Step3FinalSelectionScreen> {
     isUpdate = widget.data != null;
 
     if (isUpdate) {
-      appointmentAppStore.setSelectedPatient(widget.data!.patientName.validate());
-      appointmentAppStore.setSelectedPatientId(widget.data!.patientId.validate().toInt());
+      appointmentAppStore
+          .setSelectedPatient(widget.data!.patientName.validate());
+      appointmentAppStore
+          .setSelectedPatientId(widget.data!.patientId.validate().toInt());
       appointmentAppStore.setSelectedTime(widget.data!.getAppointmentTime);
 
       if (widget.data!.patientName.validate().isNotEmpty) {
@@ -83,17 +86,27 @@ class _Step3FinalSelectionScreenState extends State<Step3FinalSelectionScreen> {
       if (widget.data!.appointmentStartDate.validate().isNotEmpty) {}
       if (widget.data!.visitType.validate().isNotEmpty) {
         widget.data!.visitType.validate().forEach((element) {
-          multiSelectStore.selectedService.add(ServiceData(id: element.id, name: element.serviceName, serviceId: element.serviceId, charges: element.charges));
+          multiSelectStore.selectedService.add(ServiceData(
+              id: element.id,
+              name: element.serviceName,
+              serviceId: element.serviceId,
+              charges: element.charges));
         });
 
-        servicesCont.text = "${multiSelectStore.selectedService.length} " + locale.lblServicesSelected;
+        servicesCont.text = "${multiSelectStore.selectedService.length} " +
+            locale.lblServicesSelected;
       }
 
       descriptionCont.text = widget.data!.description.validate();
 
       if (widget.data!.appointmentReport.validate().isNotEmpty) {
-        appointmentAppStore.addReportListString(data: widget.data!.appointmentReport.validate());
-        appointmentAppStore.addReportData(data: widget.data!.appointmentReport.validate().map((e) => PlatformFile(name: e.url, size: 220)).toList());
+        appointmentAppStore.addReportListString(
+            data: widget.data!.appointmentReport.validate());
+        appointmentAppStore.addReportData(
+            data: widget.data!.appointmentReport
+                .validate()
+                .map((e) => PlatformFile(name: e.url, size: 220))
+                .toList());
       }
     }
     setState(() {});
@@ -101,11 +114,16 @@ class _Step3FinalSelectionScreenState extends State<Step3FinalSelectionScreen> {
 
   void selectServices() async {
     await MultiSelectWidget(
-      clinicId: isPatient() || isDoctor() ? appointmentAppStore.mClinicSelected?.id.toInt() : userStore.userClinicId.toInt(),
-      selectedServicesId: multiSelectStore.selectedService.map((element) => element.serviceId.validate()).toList(),
+      clinicId: isPatient() || isDoctor()
+          ? appointmentAppStore.mClinicSelected?.id.toInt()
+          : userStore.userClinicId.toInt(),
+      selectedServicesId: multiSelectStore.selectedService
+          .map((element) => element.serviceId.validate())
+          .toList(),
     ).launch(context, pageRouteAnimation: PageRouteAnimation.Fade);
     if (multiSelectStore.selectedService.length > 0)
-      servicesCont.text = '${multiSelectStore.selectedService.length} ${locale.lblServicesSelected}';
+      servicesCont.text =
+          '${multiSelectStore.selectedService.length} ${locale.lblServicesSelected}';
     else {
       servicesCont.text = locale.lblSelectServices;
     }
@@ -119,10 +137,14 @@ class _Step3FinalSelectionScreenState extends State<Step3FinalSelectionScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBarWidget(locale.lblConfirmAppointment, systemUiOverlayStyle: defaultSystemUiOverlayStyle(context), textColor: Colors.white),
+      appBar: appBarWidget(locale.lblConfirmAppointment,
+          systemUiOverlayStyle: defaultSystemUiOverlayStyle(context),
+          textColor: Colors.white),
       body: Form(
         key: formKey,
-        autovalidateMode: isFirstTime ? AutovalidateMode.disabled : AutovalidateMode.onUserInteraction,
+        autovalidateMode: isFirstTime
+            ? AutovalidateMode.disabled
+            : AutovalidateMode.onUserInteraction,
         child: AnimatedScrollView(
           padding: EdgeInsets.fromLTRB(16, 16, 16, 60),
           listAnimationType: ListAnimationType.None,
@@ -140,11 +162,15 @@ class _Step3FinalSelectionScreenState extends State<Step3FinalSelectionScreen> {
             16.height,
             Row(
               children: [
-                if (isProEnabled()) SelectedClinicComponent(clinicId: widget.clinicId.validate()).expand(),
+                if (isProEnabled())
+                  SelectedClinicComponent(clinicId: widget.clinicId.validate())
+                      .expand(),
                 if (isProEnabled()) 16.width,
                 SelectedDoctorWidget(
                   clinicId: widget.clinicId.validate(),
-                  doctorId: isUpdate ? widget.data!.doctorId.toInt() : widget.doctorId.validate(),
+                  doctorId: isUpdate
+                      ? widget.data!.doctorId.toInt()
+                      : widget.doctorId.validate(),
                 ).expand(),
               ],
             ),
@@ -161,21 +187,28 @@ class _Step3FinalSelectionScreenState extends State<Step3FinalSelectionScreen> {
                     textInputAction: TextInputAction.next,
                     nextFocus: serviceFocus,
                     validator: (patient) {
-                      if (patient!.trim().isEmpty) return locale.lblPatientNameIsRequired;
+                      if (patient!.trim().isEmpty)
+                        return locale.lblPatientNameIsRequired;
                       return null;
                     },
                     decoration: inputDecoration(
                       context: context,
                       labelText: locale.lblPatientName,
-                      suffixIcon: ic_user.iconImage(size: 10, color: context.iconColor).paddingAll(14),
+                      suffixIcon: ic_user
+                          .iconImage(size: 10, color: context.iconColor)
+                          .paddingAll(14),
                     ),
                     readOnly: true,
                     onTap: () async {
-                      PatientSearchScreen(selectedData: user).launch(context).then((value) {
+                      PatientSearchScreen(selectedData: user)
+                          .launch(context)
+                          .then((value) {
                         if (value != null) {
                           user = value as UserModel;
-                          appointmentAppStore.setSelectedPatientId(user!.iD.validate());
-                          appointmentAppStore.setSelectedPatient(user!.displayName);
+                          appointmentAppStore
+                              .setSelectedPatientId(user!.iD.validate());
+                          appointmentAppStore
+                              .setSelectedPatient(user!.displayName);
                           patientNameCont.text = user!.displayName.validate();
                         }
                       });
@@ -184,7 +217,11 @@ class _Step3FinalSelectionScreenState extends State<Step3FinalSelectionScreen> {
                   if (patientNameCont.text.isEmptyOrNull)
                     Align(
                       alignment: Alignment.centerRight,
-                      child: Text(locale.lblAddNewPatient, style: secondaryTextStyle(color: appPrimaryColor, size: 10)).paddingOnly(top: 10).onTap(
+                      child: Text(locale.lblAddNewPatient,
+                              style: secondaryTextStyle(
+                                  color: appPrimaryColor, size: 10))
+                          .paddingOnly(top: 10)
+                          .onTap(
                             () => AddPatientScreen().launch(context).then(
                               (value) {
                                 if (value ?? false) {
@@ -223,17 +260,32 @@ class _Step3FinalSelectionScreenState extends State<Step3FinalSelectionScreen> {
                       decoration: inputDecoration(
                         context: context,
                         labelText: locale.lblSelectServices,
-                        suffixIcon: Icon(Icons.arrow_drop_down, color: context.iconColor),
+                        suffixIcon: Icon(Icons.arrow_drop_down,
+                            color: context.iconColor),
                       ).copyWith(
                         border: multiSelectStore.selectedService.isNotEmpty
-                            ? OutlineInputBorder(borderSide: BorderSide.none, borderRadius: radiusOnly(topLeft: defaultRadius, topRight: defaultRadius))
+                            ? OutlineInputBorder(
+                                borderSide: BorderSide.none,
+                                borderRadius: radiusOnly(
+                                    topLeft: defaultRadius,
+                                    topRight: defaultRadius))
                             : null,
-                        enabledBorder: multiSelectStore.selectedService.isNotEmpty
-                            ? OutlineInputBorder(borderSide: BorderSide.none, borderRadius: radiusOnly(topLeft: defaultRadius, topRight: defaultRadius))
-                            : null,
-                        focusedBorder: multiSelectStore.selectedService.isNotEmpty
-                            ? OutlineInputBorder(borderSide: BorderSide.none, borderRadius: radiusOnly(topLeft: defaultRadius, topRight: defaultRadius))
-                            : null,
+                        enabledBorder:
+                            multiSelectStore.selectedService.isNotEmpty
+                                ? OutlineInputBorder(
+                                    borderSide: BorderSide.none,
+                                    borderRadius: radiusOnly(
+                                        topLeft: defaultRadius,
+                                        topRight: defaultRadius))
+                                : null,
+                        focusedBorder:
+                            multiSelectStore.selectedService.isNotEmpty
+                                ? OutlineInputBorder(
+                                    borderSide: BorderSide.none,
+                                    borderRadius: radiusOnly(
+                                        topLeft: defaultRadius,
+                                        topRight: defaultRadius))
+                                : null,
                       ),
                       readOnly: true,
                       onTap: () {
@@ -246,14 +298,30 @@ class _Step3FinalSelectionScreenState extends State<Step3FinalSelectionScreen> {
                     ),
                     if (multiSelectStore.selectedService.isNotEmpty)
                       Container(
-                        padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                        decoration: boxDecorationDefault(color: context.cardColor, borderRadius: radiusOnly(bottomLeft: defaultRadius, bottomRight: defaultRadius)),
+                        padding:
+                            EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                        decoration: boxDecorationDefault(
+                            color: context.cardColor,
+                            borderRadius: radiusOnly(
+                                bottomLeft: defaultRadius,
+                                bottomRight: defaultRadius)),
                         child: Column(
                           children: [
                             Row(
                               children: [
-                                Text(locale.lblService.getApostropheString(count: multiSelectStore.selectedService.length, apostrophe: false), style: boldTextStyle(size: 12)).expand(),
-                                Text(locale.lblCharges.getApostropheString(count: multiSelectStore.selectedService.length, apostrophe: false), style: boldTextStyle(size: 12)),
+                                Text(
+                                        locale.lblService.getApostropheString(
+                                            count: multiSelectStore
+                                                .selectedService.length,
+                                            apostrophe: false),
+                                        style: boldTextStyle(size: 12))
+                                    .expand(),
+                                Text(
+                                    locale.lblCharges.getApostropheString(
+                                        count: multiSelectStore
+                                            .selectedService.length,
+                                        apostrophe: false),
+                                    style: boldTextStyle(size: 12)),
                               ],
                             ),
                             Divider(),
@@ -261,11 +329,21 @@ class _Step3FinalSelectionScreenState extends State<Step3FinalSelectionScreen> {
                               children: List.generate(
                                 multiSelectStore.selectedService.length,
                                 (index) {
-                                  ServiceData data = multiSelectStore.selectedService[index];
+                                  ServiceData data =
+                                      multiSelectStore.selectedService[index];
                                   return Row(
                                     children: [
-                                      Marquee(child: Text(data.name.validate(), style: primaryTextStyle(size: 14))).expand(),
-                                      PriceWidget(price: data.charges.validate().toDouble().toStringAsFixed(1), textSize: 14),
+                                      Marquee(
+                                              child: Text(data.name.validate(),
+                                                  style: primaryTextStyle(
+                                                      size: 14)))
+                                          .expand(),
+                                      PriceWidget(
+                                          price: data.charges
+                                              .validate()
+                                              .toDouble()
+                                              .toStringAsFixed(1),
+                                          textSize: 14),
                                     ],
                                   ).paddingBottom(2);
                                 },
@@ -274,17 +352,29 @@ class _Step3FinalSelectionScreenState extends State<Step3FinalSelectionScreen> {
                             Divider(),
                             Row(
                               children: [
-                                Text(locale.lblTotal, style: boldTextStyle(size: 14)).expand(),
-                                PriceWidget(price: multiSelectStore.selectedService.sumByDouble((p0) => p0.charges.toDouble()).toString(), textSize: 14),
+                                Text(locale.lblTotal,
+                                        style: boldTextStyle(size: 14))
+                                    .expand(),
+                                PriceWidget(
+                                    price: multiSelectStore.selectedService
+                                        .sumByDouble(
+                                            (p0) => p0.charges.toDouble())
+                                        .toString(),
+                                    textSize: 14),
                               ],
                             ),
                           ],
                         ),
                       ),
-                    if ((multiSelectStore.selectedService.isEmpty) && (isDoctor() || isReceptionist()))
+                    if ((multiSelectStore.selectedService.isEmpty) &&
+                        (isDoctor() || isReceptionist()))
                       Align(
                         alignment: Alignment.centerRight,
-                        child: Text(locale.lblAddService, style: secondaryTextStyle(color: appPrimaryColor, size: 10)).paddingOnly(top: 10).onTap(
+                        child: Text(locale.lblAddService,
+                                style: secondaryTextStyle(
+                                    color: appPrimaryColor, size: 10))
+                            .paddingOnly(top: 10)
+                            .onTap(
                               () => AddServiceScreen().launch(context),
                               splashColor: Colors.transparent,
                               highlightColor: Colors.transparent,
@@ -295,13 +385,24 @@ class _Step3FinalSelectionScreenState extends State<Step3FinalSelectionScreen> {
               },
             ),
             16.height,
-            AppointmentDateComponent(initialDate: isUpdate ? DateFormat(SAVE_DATE_FORMAT).parse(widget.data!.appointmentGlobalStartDate.validate()) : DateTime.now()),
+            AppointmentDateComponent(
+                initialDate: isUpdate
+                    ? DateFormat(SAVE_DATE_FORMAT).parse(
+                        widget.data!.appointmentGlobalStartDate.validate())
+                    : DateTime.now()),
             16.height,
             AppointmentSlots(
-              date: isUpdate ? widget.data?.getAppointmentSaveDate : getAppointmentDate,
-              clinicId: isUpdate ? widget.data?.clinicId.validate() : widget.clinicId.validate().toString(),
-              doctorId: isUpdate ? widget.data?.doctorId.validate() : widget.doctorId.validate().toString(),
-              appointmentTime: isUpdate ? widget.data?.getAppointmentTime.validate() : '',
+              date: isUpdate
+                  ? widget.data?.getAppointmentSaveDate
+                  : getAppointmentDate,
+              clinicId: isUpdate
+                  ? widget.data?.clinicId.validate()
+                  : widget.clinicId.validate().toString(),
+              doctorId: isUpdate
+                  ? widget.data?.doctorId.validate()
+                  : widget.doctorId.validate().toString(),
+              appointmentTime:
+                  isUpdate ? widget.data?.getAppointmentTime.validate() : '',
             ),
             16.height,
             AppTextField(
@@ -312,7 +413,8 @@ class _Step3FinalSelectionScreenState extends State<Step3FinalSelectionScreen> {
               focus: descFocus,
               isValidationRequired: false,
               textFieldType: TextFieldType.MULTILINE,
-              decoration: inputDecoration(context: context, labelText: locale.lblDescription),
+              decoration: inputDecoration(
+                  context: context, labelText: locale.lblDescription),
             ),
             16.height,
             FileUploadComponent().paddingBottom(32),
@@ -330,7 +432,8 @@ class _Step3FinalSelectionScreenState extends State<Step3FinalSelectionScreen> {
               barrierDismissible: false,
               backgroundColor: context.cardColor,
               builder: (p0) {
-                return ConfirmAppointmentScreen(appointmentId: widget.data?.id.toInt() ?? null);
+                return ConfirmAppointmentScreen(
+                    appointmentId: widget.data?.id.toInt() ?? null);
               },
             );
             if (res ?? false) {}

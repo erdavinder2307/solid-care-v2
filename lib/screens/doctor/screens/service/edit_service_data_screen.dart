@@ -1,19 +1,19 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:kivicare_flutter/components/cached_image_widget.dart';
-import 'package:kivicare_flutter/components/custom_image_picker.dart';
-import 'package:kivicare_flutter/components/image_border_component.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/model/service_duration_model.dart';
-import 'package:kivicare_flutter/model/service_model.dart';
-import 'package:kivicare_flutter/model/user_model.dart';
-import 'package:kivicare_flutter/utils/app_common.dart';
-import 'package:kivicare_flutter/utils/colors.dart';
-import 'package:kivicare_flutter/utils/common.dart';
-import 'package:kivicare_flutter/utils/extensions/enums.dart';
-import 'package:kivicare_flutter/utils/extensions/string_extensions.dart';
-import 'package:kivicare_flutter/utils/images.dart';
+import 'package:solidcare/components/cached_image_widget.dart';
+import 'package:solidcare/components/custom_image_picker.dart';
+import 'package:solidcare/components/image_border_component.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/model/service_duration_model.dart';
+import 'package:solidcare/model/service_model.dart';
+import 'package:solidcare/model/user_model.dart';
+import 'package:solidcare/utils/app_common.dart';
+import 'package:solidcare/utils/colors.dart';
+import 'package:solidcare/utils/common.dart';
+import 'package:solidcare/utils/extensions/enums.dart';
+import 'package:solidcare/utils/extensions/string_extensions.dart';
+import 'package:solidcare/utils/images.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 // ignore: must_be_immutable
@@ -23,7 +23,11 @@ class EditServiceDataScreen extends StatefulWidget {
   final String doctorId;
   final Function(ServiceData)? onSubmit;
 
-  EditServiceDataScreen({this.serviceData, this.serviceId, required this.doctorId, this.onSubmit});
+  EditServiceDataScreen(
+      {this.serviceData,
+      this.serviceId,
+      required this.doctorId,
+      this.onSubmit});
 
   @override
   State<EditServiceDataScreen> createState() => _EditServiceDataScreenState();
@@ -69,11 +73,15 @@ class _EditServiceDataScreenState extends State<EditServiceDataScreen> {
         selectedImage = widget.serviceData!.imageFile;
       }
 
-      if (selectedDoctor!.duration != null && widget.serviceData!.duration.toInt() != 0) {
-        selectedDuration = durationList.firstWhere((element) => element.value == selectedDoctor!.duration.toInt());
+      if (selectedDoctor!.duration != null &&
+          widget.serviceData!.duration.toInt() != 0) {
+        selectedDuration = durationList.firstWhere(
+            (element) => element.value == selectedDoctor!.duration.toInt());
       }
-      if (selectedDoctor!.status != null) isActive = selectedDoctor!.status.getBoolInt();
-      if (selectedDoctor!.multiple != null) isMultiSelection = selectedDoctor!.multiple;
+      if (selectedDoctor!.status != null)
+        isActive = selectedDoctor!.status.getBoolInt();
+      if (selectedDoctor!.multiple != null)
+        isMultiSelection = selectedDoctor!.multiple;
       isTelemed = selectedDoctor!.isTelemed;
     }
   }
@@ -135,7 +143,9 @@ class _EditServiceDataScreenState extends State<EditServiceDataScreen> {
         systemUiOverlayStyle: defaultSystemUiOverlayStyle(context),
       ),
       body: Form(
-        autovalidateMode: isFirstTime ? AutovalidateMode.disabled : AutovalidateMode.onUserInteraction,
+        autovalidateMode: isFirstTime
+            ? AutovalidateMode.disabled
+            : AutovalidateMode.onUserInteraction,
         key: formKey,
         child: AnimatedScrollView(
           padding: EdgeInsets.only(bottom: 120),
@@ -144,16 +154,28 @@ class _EditServiceDataScreenState extends State<EditServiceDataScreen> {
               clipBehavior: Clip.none,
               children: <Widget>[
                 Container(
-                  decoration: boxDecorationDefault(borderRadius: radius(65), color: appStore.isDarkModeOn ? cardDarkColor : context.scaffoldBackgroundColor, shape: BoxShape.circle),
+                  decoration: boxDecorationDefault(
+                      borderRadius: radius(65),
+                      color: appStore.isDarkModeOn
+                          ? cardDarkColor
+                          : context.scaffoldBackgroundColor,
+                      shape: BoxShape.circle),
                   child: selectedImage != null
-                      ? Image.file(selectedImage!, fit: BoxFit.cover, width: 126, height: 126).cornerRadiusWithClipRRect(65)
+                      ? Image.file(selectedImage!,
+                              fit: BoxFit.cover, width: 126, height: 126)
+                          .cornerRadiusWithClipRRect(65)
                       : widget.serviceData != null
                           ? ImageBorder(
                               src: widget.serviceData!.serviceImage.validate(),
                               height: 120,
                               width: 120,
                             )
-                          : CachedImageWidget(url: '', height: 126, width: 126, fit: BoxFit.cover, circle: true),
+                          : CachedImageWidget(
+                              url: '',
+                              height: 126,
+                              width: 126,
+                              fit: BoxFit.cover,
+                              circle: true),
                 ).onTap(
                   () {
                     _chooseImage();
@@ -167,7 +189,10 @@ class _EditServiceDataScreenState extends State<EditServiceDataScreen> {
                   right: 0,
                   child: Container(
                     padding: EdgeInsets.all(8),
-                    decoration: boxDecorationDefault(color: appPrimaryColor, shape: BoxShape.circle, border: Border.all(color: white, width: 3)),
+                    decoration: boxDecorationDefault(
+                        color: appPrimaryColor,
+                        shape: BoxShape.circle,
+                        border: Border.all(color: white, width: 3)),
                     child: ic_camera.iconImage(size: 14, color: Colors.white),
                   ).onTap(
                     () {
@@ -191,7 +216,9 @@ class _EditServiceDataScreenState extends State<EditServiceDataScreen> {
               decoration: inputDecoration(
                 context: context,
                 labelText: locale.lblCharges,
-                suffixIcon: ic_dollar_icon.iconImage(size: 10, color: context.iconColor).paddingAll(14),
+                suffixIcon: ic_dollar_icon
+                    .iconImage(size: 10, color: context.iconColor)
+                    .paddingAll(14),
               ),
               onFieldSubmitted: (value) {},
             ),
@@ -203,11 +230,15 @@ class _EditServiceDataScreenState extends State<EditServiceDataScreen> {
                 value: selectedDuration,
                 icon: SizedBox.shrink(),
                 dropdownColor: context.cardColor,
-                autovalidateMode: isFirstTime ? AutovalidateMode.disabled : AutovalidateMode.onUserInteraction,
+                autovalidateMode: isFirstTime
+                    ? AutovalidateMode.disabled
+                    : AutovalidateMode.onUserInteraction,
                 decoration: inputDecoration(
                   context: context,
                   labelText: '${locale.lblSelect} ${locale.lblDuration}',
-                  suffixIcon: ic_arrow_down.iconImage(size: 10, color: context.iconColor).paddingAll(14),
+                  suffixIcon: ic_arrow_down
+                      .iconImage(size: 10, color: context.iconColor)
+                      .paddingAll(14),
                 ),
                 onChanged: (value) {
                   if (!isUpdate) {
@@ -218,17 +249,20 @@ class _EditServiceDataScreenState extends State<EditServiceDataScreen> {
 
                   setState(() {});
                 },
-                items: durationList.map<DropdownMenuItem<DurationModel>>((duration) {
+                items: durationList
+                    .map<DropdownMenuItem<DurationModel>>((duration) {
                   return DropdownMenuItem<DurationModel>(
                     value: duration,
-                    child: Text(duration.label.validate(), style: primaryTextStyle()),
+                    child: Text(duration.label.validate(),
+                        style: primaryTextStyle()),
                   );
                 }).toList(),
               ),
             ),
             16.height,
             Container(
-              decoration: boxDecorationDefault(borderRadius: radius(), color: context.cardColor),
+              decoration: boxDecorationDefault(
+                  borderRadius: radius(), color: context.cardColor),
               padding: EdgeInsets.fromLTRB(16, 8, 16, 0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -263,7 +297,8 @@ class _EditServiceDataScreenState extends State<EditServiceDataScreen> {
             ),
             16.height,
             Container(
-              decoration: boxDecorationDefault(borderRadius: radius(), color: context.cardColor),
+              decoration: boxDecorationDefault(
+                  borderRadius: radius(), color: context.cardColor),
               padding: EdgeInsets.fromLTRB(16, 8, 16, 0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -280,7 +315,8 @@ class _EditServiceDataScreenState extends State<EditServiceDataScreen> {
                         value: true,
                         controlAffinity: ListTileControlAffinity.trailing,
                         groupValue: isActive,
-                        title: Text(locale.lblActive, style: primaryTextStyle()),
+                        title:
+                            Text(locale.lblActive, style: primaryTextStyle()),
                         onChanged: changeStatus,
                       ).expand(),
                       RadioListTile<bool>(
@@ -288,7 +324,8 @@ class _EditServiceDataScreenState extends State<EditServiceDataScreen> {
                         value: false,
                         controlAffinity: ListTileControlAffinity.trailing,
                         groupValue: isActive,
-                        title: Text(locale.lblInActive, style: primaryTextStyle()),
+                        title:
+                            Text(locale.lblInActive, style: primaryTextStyle()),
                         onChanged: changeStatus,
                       ).expand(),
                     ],
@@ -298,7 +335,8 @@ class _EditServiceDataScreenState extends State<EditServiceDataScreen> {
             ),
             16.height,
             Container(
-              decoration: boxDecorationDefault(borderRadius: radius(), color: context.cardColor),
+              decoration: boxDecorationDefault(
+                  borderRadius: radius(), color: context.cardColor),
               padding: EdgeInsets.fromLTRB(16, 8, 16, 0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -351,7 +389,9 @@ class _EditServiceDataScreenState extends State<EditServiceDataScreen> {
               status: isActive.getIntBool().toString(),
               isTelemed: isTelemed,
               charges: chargesCont.text,
-              duration: selectedDuration != null ? selectedDuration?.value.toString() : null,
+              duration: selectedDuration != null
+                  ? selectedDuration?.value.toString()
+                  : null,
               imageFile: selectedImage,
               image: widget.serviceData!.serviceImage,
             );
@@ -360,7 +400,9 @@ class _EditServiceDataScreenState extends State<EditServiceDataScreen> {
             finish(context);
           } else {
             isFirstTime = !isFirstTime;
-            if (isActive == null || isMultiSelection == null || isTelemed == null) {
+            if (isActive == null ||
+                isMultiSelection == null ||
+                isTelemed == null) {
               toast(locale.lblPleaseChoose);
             }
             setState(() {});

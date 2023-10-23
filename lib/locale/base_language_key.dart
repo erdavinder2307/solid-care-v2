@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 abstract class BaseLanguage {
-  static BaseLanguage of(BuildContext context) => Localizations.of<BaseLanguage>(context, BaseLanguage)!;
+  static BaseLanguage of(BuildContext context) =>
+      Localizations.of<BaseLanguage>(context, BaseLanguage)!;
   String get lblReportUpdatedSuccessfully;
 
   String get lblNoPrescriptionFound;
@@ -976,7 +977,7 @@ abstract class BaseLanguage {
 
   String get lblClinicTAndC;
 
-  String get lblAboutKiviCare;
+  String get lblAboutSolidCare;
 
   String get lblYourReviewCounts;
 
@@ -986,7 +987,7 @@ abstract class BaseLanguage {
 
   String get lblSubmitYourQueriesHere;
 
-  String get lblShareKiviCare;
+  String get lblShareSolidCare;
 
   String get lblLogout;
 

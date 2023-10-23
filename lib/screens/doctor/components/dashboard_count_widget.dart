@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:kivicare_flutter/components/price_widget.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/utils/colors.dart';
+import 'package:solidcare/components/price_widget.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/utils/colors.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class DashBoardCountWidget extends StatelessWidget {
@@ -15,7 +15,13 @@ class DashBoardCountWidget extends StatelessWidget {
 
   final IconData? icon;
 
-  DashBoardCountWidget({this.title, this.count, this.color1, this.icon, this.isPrice, this.width});
+  DashBoardCountWidget(
+      {this.title,
+      this.count,
+      this.color1,
+      this.icon,
+      this.isPrice,
+      this.width});
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +39,9 @@ class DashBoardCountWidget extends StatelessWidget {
             children: [
               24.height,
               isPrice.validate(value: false)
-                  ? PriceWidget(price: count.validate().toString(), textStyle: boldTextStyle(size: 24))
+                  ? PriceWidget(
+                      price: count.validate().toString(),
+                      textStyle: boldTextStyle(size: 24))
                   : Text(
                       count?.toString() ?? 1.toString(),
                       style: boldTextStyle(size: 24),
@@ -58,7 +66,9 @@ class DashBoardCountWidget extends StatelessWidget {
                 boxShadow: null,
                 backgroundColor: color1 ?? appPrimaryColor,
               ),
-              child: FaIcon(icon ?? FontAwesomeIcons.userInjured, color: Colors.white).center(),
+              child: FaIcon(icon ?? FontAwesomeIcons.userInjured,
+                      color: Colors.white)
+                  .center(),
             ),
           ),
         ],

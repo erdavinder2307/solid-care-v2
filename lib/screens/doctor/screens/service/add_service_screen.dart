@@ -5,33 +5,33 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:kivicare_flutter/components/internet_connectivity_widget.dart';
+import 'package:solidcare/components/internet_connectivity_widget.dart';
 
-import 'package:kivicare_flutter/components/loader_widget.dart';
-import 'package:kivicare_flutter/model/clinic_list_model.dart';
+import 'package:solidcare/components/loader_widget.dart';
+import 'package:solidcare/model/clinic_list_model.dart';
 
-import 'package:kivicare_flutter/model/service_duration_model.dart';
-import 'package:kivicare_flutter/model/user_model.dart';
-import 'package:kivicare_flutter/network/dashboard_repository.dart';
-import 'package:kivicare_flutter/network/service_repository.dart';
-import 'package:kivicare_flutter/screens/appointment/screen/step1_clinic_selection_screen.dart';
-import 'package:kivicare_flutter/screens/doctor/screens/service/edit_service_data_screen.dart';
-import 'package:kivicare_flutter/utils/constants.dart';
-import 'package:kivicare_flutter/utils/extensions/string_extensions.dart';
+import 'package:solidcare/model/service_duration_model.dart';
+import 'package:solidcare/model/user_model.dart';
+import 'package:solidcare/network/dashboard_repository.dart';
+import 'package:solidcare/network/service_repository.dart';
+import 'package:solidcare/screens/appointment/screen/step1_clinic_selection_screen.dart';
+import 'package:solidcare/screens/doctor/screens/service/edit_service_data_screen.dart';
+import 'package:solidcare/utils/constants.dart';
+import 'package:solidcare/utils/extensions/string_extensions.dart';
 import 'package:nb_utils/nb_utils.dart';
 
-import 'package:kivicare_flutter/components/cached_image_widget.dart';
-import 'package:kivicare_flutter/components/custom_image_picker.dart';
-import 'package:kivicare_flutter/components/role_widget.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/model/service_model.dart';
-import 'package:kivicare_flutter/model/static_data_model.dart';
-import 'package:kivicare_flutter/utils/app_common.dart';
-import 'package:kivicare_flutter/utils/colors.dart';
-import 'package:kivicare_flutter/utils/common.dart';
-import 'package:kivicare_flutter/utils/extensions/enums.dart';
-import 'package:kivicare_flutter/utils/images.dart';
-import 'package:kivicare_flutter/screens/receptionist/components/multi_select_doctor_drop_down.dart';
+import 'package:solidcare/components/cached_image_widget.dart';
+import 'package:solidcare/components/custom_image_picker.dart';
+import 'package:solidcare/components/role_widget.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/model/service_model.dart';
+import 'package:solidcare/model/static_data_model.dart';
+import 'package:solidcare/utils/app_common.dart';
+import 'package:solidcare/utils/colors.dart';
+import 'package:solidcare/utils/common.dart';
+import 'package:solidcare/utils/extensions/enums.dart';
+import 'package:solidcare/utils/images.dart';
+import 'package:solidcare/screens/receptionist/components/multi_select_doctor_drop_down.dart';
 
 class AddServiceScreen extends StatefulWidget {
   final ServiceData? serviceData;
@@ -119,7 +119,8 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
   void serviceDataForReceptionistIfIsUpdate() {
     serviceCategoryCont.text = widget.serviceData!.type.validate();
     serviceNameCont.text = widget.serviceData!.name.validate();
-    if (widget.serviceData!.doctorList != null && widget.serviceData!.doctorList.validate().isNotEmpty) {
+    if (widget.serviceData!.doctorList != null &&
+        widget.serviceData!.doctorList.validate().isNotEmpty) {
       if (widget.serviceData!.doctorList.validate().length == 1) {
         setInitialData();
       } else {
@@ -131,7 +132,8 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
       }
 
       if (selectedDoctorList.length > 1)
-        doctorCont.text = selectedDoctorList.length.toString() + ' ${locale.lblDoctorsAvailable}';
+        doctorCont.text = selectedDoctorList.length.toString() +
+            ' ${locale.lblDoctorsAvailable}';
       else {
         doctorCont.text = 'Dr. ' + selectedDoctorData!.displayName.validate();
       }
@@ -144,11 +146,15 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
       doctorCont.text = 'Dr. ' + selectedDoctorData!.displayName.validate();
       chargesCont.text = selectedDoctorData!.charges.validate();
       doctorIdsList.add(selectedDoctorData!.doctorId.toInt());
-      if (selectedDoctorData!.duration != null && selectedDoctorData!.duration.toInt() != 0) {
-        selectedDuration = durationList.firstWhere((element) => element.value == selectedDoctorData!.duration.toInt());
+      if (selectedDoctorData!.duration != null &&
+          selectedDoctorData!.duration.toInt() != 0) {
+        selectedDuration = durationList.firstWhere(
+            (element) => element.value == selectedDoctorData!.duration.toInt());
       }
-      if (selectedDoctorData!.status != null) isActive = selectedDoctorData!.status!.getBoolInt();
-      if (selectedDoctorData!.multiple != null) isMultiSelection = selectedDoctorData!.multiple;
+      if (selectedDoctorData!.status != null)
+        isActive = selectedDoctorData!.status!.getBoolInt();
+      if (selectedDoctorData!.multiple != null)
+        isMultiSelection = selectedDoctorData!.multiple;
       isTelemed = selectedDoctorData!.isTelemed;
       selectedDoctorList.add(selectedDoctorData!);
       tempDoctorList.add(selectedDoctorData!);
@@ -156,17 +162,25 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
       selectedDoctorData = UserModel();
 
       if (widget.serviceData != null && selectedDoctorData != null) {
-        selectedDoctorData = setDoctor(widget.serviceData!, userData: selectedDoctorData!);
+        selectedDoctorData =
+            setDoctor(widget.serviceData!, userData: selectedDoctorData!);
       }
 
-      selectedClinic = Clinic(name: widget.serviceData!.clinicName, id: widget.serviceData!.clinicId);
+      selectedClinic = Clinic(
+          name: widget.serviceData!.clinicName,
+          id: widget.serviceData!.clinicId);
       clinicCont.text = selectedClinic!.name.validate();
       chargesCont.text = widget.serviceData!.charges.validate();
-      if (widget.serviceData!.duration != null && (widget.serviceData!.duration.toInt() != 0 || widget.serviceData!.duration.validate().isNotEmpty)) {
-        selectedDuration = durationList.firstWhere((element) => element.value == widget.serviceData!.duration.toInt());
+      if (widget.serviceData!.duration != null &&
+          (widget.serviceData!.duration.toInt() != 0 ||
+              widget.serviceData!.duration.validate().isNotEmpty)) {
+        selectedDuration = durationList.firstWhere(
+            (element) => element.value == widget.serviceData!.duration.toInt());
       }
-      if (selectedDoctorData!.status != null) isActive = widget.serviceData!.status!.getBoolInt();
-      if (selectedDoctorData!.multiple != null) isMultiSelection = widget.serviceData!.multiple;
+      if (selectedDoctorData!.status != null)
+        isActive = widget.serviceData!.status!.getBoolInt();
+      if (selectedDoctorData!.multiple != null)
+        isMultiSelection = widget.serviceData!.multiple;
       isTelemed = widget.serviceData!.isTelemed;
       tempDoctorList.add(selectedDoctorData!);
     }
@@ -180,14 +194,17 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
       //tempDoctorList.retainWhere((serviceData) => serviceData.doctorId == element.doctorId);
     });
 
-    tempDoctorList.retainWhere((element) => doctorIdsList.contains(element.doctorId.toInt()));
+    tempDoctorList.retainWhere(
+        (element) => doctorIdsList.contains(element.doctorId.toInt()));
 
     if (selectedDoctorList.length == 1) {
       selectedDoctorData = selectedDoctorList.first;
 
       chargesCont.text = selectedDoctorData!.charges.validate();
-      if (selectedDoctorData!.duration != null && selectedDoctorData!.duration.toInt() != 0) {
-        selectedDuration = durationList.firstWhere((element) => element.value == selectedDoctorData!.duration.toInt());
+      if (selectedDoctorData!.duration != null &&
+          selectedDoctorData!.duration.toInt() != 0) {
+        selectedDuration = durationList.firstWhere(
+            (element) => element.value == selectedDoctorData!.duration.toInt());
       } else
         selectedDuration = null;
 
@@ -205,7 +222,9 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
         selectedProfileImage = selectedDoctorData!.imageFile;
       }
     } else {
-      doctorCont.text = selectedDoctorList.length.toString() + " " + locale.lblDoctorsSelected;
+      doctorCont.text = selectedDoctorList.length.toString() +
+          " " +
+          locale.lblDoctorsSelected;
     }
   }
 
@@ -216,26 +235,38 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
         context,
         dialogType: isUpdate ? DialogType.UPDATE : DialogType.CONFIRMATION,
         primaryColor: context.primaryColor,
-        title: isUpdate ? locale.lblDoYouWantToUpdateService : locale.lblDoYouWantToAddNewService,
+        title: isUpdate
+            ? locale.lblDoYouWantToUpdateService
+            : locale.lblDoYouWantToAddNewService,
         onAccept: (c) async {
           Map<String, dynamic> req = {
-            "type": serviceCategoryCont.text.isEmpty ? category?.value : serviceCategoryCont.text,
+            "type": serviceCategoryCont.text.isEmpty
+                ? category?.value
+                : serviceCategoryCont.text,
             "name": serviceNameCont.text,
           };
 
-          if (isUpdate) req.putIfAbsent('id', () => widget.serviceData!.id.validate());
+          if (isUpdate)
+            req.putIfAbsent('id', () => widget.serviceData!.id.validate());
           if (isDoctor()) {
-            if (isUpdate && selectedDoctorData != null) req.putIfAbsent('doctors[0][mapping_table_id]', () => selectedDoctorData?.mappingTableId);
+            if (isUpdate && selectedDoctorData != null)
+              req.putIfAbsent('doctors[0][mapping_table_id]',
+                  () => selectedDoctorData?.mappingTableId);
             req.putIfAbsent('doctors[0][charges]', () => chargesCont.text);
-            req.putIfAbsent('doctors[0][duration]', () => selectedDuration!.value.toString());
+            req.putIfAbsent('doctors[0][duration]',
+                () => selectedDuration!.value.toString());
             req.putIfAbsent('doctors[0][status]', () => isActive.getIntBool());
-            req.putIfAbsent('doctors[0][is_telemed]', () => isTelemed.getIntBool());
-            req.putIfAbsent('doctors[0][is_multiple_selection]', () => isMultiSelection.getIntBool());
+            req.putIfAbsent(
+                'doctors[0][is_telemed]', () => isTelemed.getIntBool());
+            req.putIfAbsent('doctors[0][is_multiple_selection]',
+                () => isMultiSelection.getIntBool());
             req.putIfAbsent('doctors[0][doctor_id]', () => userStore.userId);
             if (selectedClinic != null) {
-              req.putIfAbsent('doctors[0][clinic_id]', () => selectedClinic!.id);
+              req.putIfAbsent(
+                  'doctors[0][clinic_id]', () => selectedClinic!.id);
             } else {
-              req.putIfAbsent('doctors[0][clinic_id]', () => selectedDoctorData?.clinicId);
+              req.putIfAbsent(
+                  'doctors[0][clinic_id]', () => selectedDoctorData?.clinicId);
             }
           }
           if (isReceptionist()) {
@@ -243,7 +274,8 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
               tempDoctorList.clear();
               selectedDoctorData!.charges = chargesCont.text;
               if (selectedDuration != null) {
-                selectedDoctorData!.duration = selectedDuration!.value.toString();
+                selectedDoctorData!.duration =
+                    selectedDuration!.value.toString();
               }
 
               selectedDoctorData!.status = isActive.getIntBool().toString();
@@ -252,7 +284,8 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
               if (selectedProfileImage != null) {
                 selectedDoctorData!.imageFile = selectedProfileImage;
               }
-              if (selectedDoctorData != null) tempDoctorList.add(selectedDoctorData!);
+              if (selectedDoctorData != null)
+                tempDoctorList.add(selectedDoctorData!);
             }
             if (listOfMappingTableId.isNotEmpty) {
               listOfMappingTableId.forEachIndexed((element, index) {
@@ -264,7 +297,11 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
           log("Service Request :${jsonEncode(req)}");
           appStore.setLoading(true);
 
-          await saveServiceAPI(data: req, serviceImage: selectedProfileImage, tempList: tempDoctorList).then((value) {
+          await saveServiceAPI(
+                  data: req,
+                  serviceImage: selectedProfileImage,
+                  tempList: tempDoctorList)
+              .then((value) {
             appStore.setLoading(false);
             toast(value.message);
             finish(context, true);
@@ -337,7 +374,9 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
     return Stack(
       children: [
         Form(
-          autovalidateMode: isFirstTime ? AutovalidateMode.disabled : AutovalidateMode.onUserInteraction,
+          autovalidateMode: isFirstTime
+              ? AutovalidateMode.disabled
+              : AutovalidateMode.onUserInteraction,
           key: formKey,
           child: AnimatedScrollView(
             padding: EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 96),
@@ -347,10 +386,24 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
                   clipBehavior: Clip.none,
                   children: <Widget>[
                     Container(
-                      decoration: boxDecorationDefault(borderRadius: radius(65), color: appStore.isDarkModeOn ? cardDarkColor : context.scaffoldBackgroundColor, shape: BoxShape.circle),
+                      decoration: boxDecorationDefault(
+                          borderRadius: radius(65),
+                          color: appStore.isDarkModeOn
+                              ? cardDarkColor
+                              : context.scaffoldBackgroundColor,
+                          shape: BoxShape.circle),
                       child: selectedProfileImage != null
-                          ? Image.file(selectedProfileImage!, fit: BoxFit.cover, width: 126, height: 126).cornerRadiusWithClipRRect(65)
-                          : CachedImageWidget(url: widget.serviceData != null ? selectedDoctorData!.serviceImage.validate() : "", height: 126, width: 126, fit: BoxFit.cover, circle: true),
+                          ? Image.file(selectedProfileImage!,
+                                  fit: BoxFit.cover, width: 126, height: 126)
+                              .cornerRadiusWithClipRRect(65)
+                          : CachedImageWidget(
+                              url: widget.serviceData != null
+                                  ? selectedDoctorData!.serviceImage.validate()
+                                  : "",
+                              height: 126,
+                              width: 126,
+                              fit: BoxFit.cover,
+                              circle: true),
                     ).onTap(
                       () {
                         _chooseImage();
@@ -364,8 +417,12 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
                       right: 0,
                       child: Container(
                         padding: EdgeInsets.all(8),
-                        decoration: boxDecorationDefault(color: appPrimaryColor, shape: BoxShape.circle, border: Border.all(color: white, width: 3)),
-                        child: ic_camera.iconImage(size: 14, color: Colors.white),
+                        decoration: boxDecorationDefault(
+                            color: appPrimaryColor,
+                            shape: BoxShape.circle,
+                            border: Border.all(color: white, width: 3)),
+                        child:
+                            ic_camera.iconImage(size: 14, color: Colors.white),
                       ).onTap(
                         () {
                           _chooseImage();
@@ -384,8 +441,12 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
                     if (snap.hasData) {
                       if (isUpdate) {
                         List<String> stype = [];
-                        if (stype.contains(widget.serviceData!.type.validate())) {
-                          category = snap.data?.staticData?.firstWhere((element) => element!.value == widget.serviceData!.type.validate());
+                        if (stype
+                            .contains(widget.serviceData!.type.validate())) {
+                          category = snap.data?.staticData?.firstWhere(
+                              (element) =>
+                                  element!.value ==
+                                  widget.serviceData!.type.validate());
                         }
 
                         if (snap.data != null) {
@@ -393,13 +454,19 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
                             snap.data?.staticData!.forEach((element) {
                               stype.add(element!.value.validate());
                             });
-                            if (stype.contains(widget.serviceData!.type.validate())) {
-                              category = snap.data?.staticData?.firstWhere((element) => element!.value == widget.serviceData!.type.validate());
+                            if (stype.contains(
+                                widget.serviceData!.type.validate())) {
+                              category = snap.data?.staticData?.firstWhere(
+                                  (element) =>
+                                      element!.value ==
+                                      widget.serviceData!.type.validate());
                             } else {
-                              category?.value = widget.serviceData!.type.validate();
+                              category?.value =
+                                  widget.serviceData!.type.validate();
 
                               if (category != null) {
-                                serviceCategoryCont.text = category!.value.validate();
+                                serviceCategoryCont.text =
+                                    category!.value.validate();
                               }
                             }
                           }
@@ -414,32 +481,43 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
                           isExpanded: true,
                           borderRadius: radius(),
                           dropdownColor: context.cardColor,
-                          autovalidateMode: isFirstTime ? AutovalidateMode.disabled : AutovalidateMode.onUserInteraction,
+                          autovalidateMode: isFirstTime
+                              ? AutovalidateMode.disabled
+                              : AutovalidateMode.onUserInteraction,
                           value: category,
-                          items: snap.data!.staticData.validate().map<DropdownMenuItem<StaticData>>((serviceData) {
+                          items: snap.data!.staticData
+                              .validate()
+                              .map<DropdownMenuItem<StaticData>>((serviceData) {
                             return DropdownMenuItem<StaticData>(
                               value: serviceData,
                               onTap: () {
                                 category = serviceData;
-                                serviceCategoryCont.text = serviceData.value.validate();
+                                serviceCategoryCont.text =
+                                    serviceData.value.validate();
 
                                 setState(() {});
                               },
-                              child: Text(serviceData!.label.validate(), style: primaryTextStyle()),
+                              child: Text(serviceData!.label.validate(),
+                                  style: primaryTextStyle()),
                             );
                           }).toList(),
                           onChanged: (category) {
                             if (isUpdate) return;
                             if (!isUpdate) {
                               category = category;
-                              serviceCategoryCont.text = category!.value.validate();
+                              serviceCategoryCont.text =
+                                  category!.value.validate();
                               setState(() {});
                             }
                           },
                           decoration: inputDecoration(
                             context: context,
-                            labelText: isUpdate ? '${locale.lblCategory}' : '${locale.lblSelect} ${locale.lblCategory}',
-                            suffixIcon: ic_arrow_down.iconImage(size: 10, color: context.iconColor).paddingAll(14),
+                            labelText: isUpdate
+                                ? '${locale.lblCategory}'
+                                : '${locale.lblSelect} ${locale.lblCategory}',
+                            suffixIcon: ic_arrow_down
+                                .iconImage(size: 10, color: context.iconColor)
+                                .paddingAll(14),
                           ),
                           validator: (s) {
                             if (s == null) return errorThisFieldRequired;
@@ -453,14 +531,17 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
                   }),
               16.height,
               AppTextField(
-                nextFocus: isReceptionist() ? doctorSelectionFocus : clinicFocus,
+                nextFocus:
+                    isReceptionist() ? doctorSelectionFocus : clinicFocus,
                 controller: serviceNameCont,
                 textFieldType: TextFieldType.NAME,
                 textAlign: TextAlign.justify,
                 decoration: inputDecoration(
                   context: context,
                   labelText: locale.lblService + ' ${locale.lblName}',
-                  suffixIcon: ic_services.iconImage(size: 10, color: context.iconColor).paddingAll(14),
+                  suffixIcon: ic_services
+                      .iconImage(size: 10, color: context.iconColor)
+                      .paddingAll(14),
                 ),
               ),
               16.height,
@@ -474,13 +555,23 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
                     nextFocus: serviceChargesFocus,
                     decoration: inputDecoration(
                       context: context,
-                      labelText: isUpdate ? locale.lblClinicName : locale.lblSelectClinic,
-                      suffixIcon: ic_clinic.iconImage(size: 10, color: context.iconColor).paddingAll(14),
+                      labelText: isUpdate
+                          ? locale.lblClinicName
+                          : locale.lblSelectClinic,
+                      suffixIcon: ic_clinic
+                          .iconImage(size: 10, color: context.iconColor)
+                          .paddingAll(14),
                     ),
                     readOnly: true,
                     onTap: () {
                       if (!isUpdate) {
-                        Step1ClinicSelectionScreen(sessionOrEncounter: true, clinicId: selectedClinic != null ? selectedClinic!.id.toInt() : null).launch(context).then((value) {
+                        Step1ClinicSelectionScreen(
+                                sessionOrEncounter: true,
+                                clinicId: selectedClinic != null
+                                    ? selectedClinic!.id.toInt()
+                                    : null)
+                            .launch(context)
+                            .then((value) {
                           if (value != null) {
                             selectedClinic = value;
                             clinicCont.text = selectedClinic!.name.validate();
@@ -522,23 +613,31 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
                             if (selectedDoctorList.isNotEmpty) {
                               selectedDoctorList.forEach((element) {
                                 if (element.doctorId.toInt() == dId) {
-                                  if (!listOfMappingTableId.any((e) => e == element.mappingTableId.toInt())) {
-                                    listOfMappingTableId.add(element.mappingTableId.toInt());
+                                  if (!listOfMappingTableId.any((e) =>
+                                      e == element.mappingTableId.toInt())) {
+                                    listOfMappingTableId
+                                        .add(element.mappingTableId.toInt());
                                   }
                                 }
                               });
                             }
-                            selectedDoctorList.removeWhere((element) => element.doctorId.toInt() == dId);
+                            selectedDoctorList.removeWhere(
+                                (element) => element.doctorId.toInt() == dId);
                           },
                           onSubmit: (selectedDoctorsList) {
                             selectedDoctorsList.forEach((element) {
-                              int index = selectedDoctorList.indexWhere((userData) => userData.doctorId.toInt() == element.doctorId.toInt());
+                              int index = selectedDoctorList.indexWhere(
+                                  (userData) =>
+                                      userData.doctorId.toInt() ==
+                                      element.doctorId.toInt());
 
                               if (index > 0) {
-                                selectedDoctorList[index] = selectedDoctorList[index];
+                                selectedDoctorList[index] =
+                                    selectedDoctorList[index];
                               }
                               if (index < 0) {
-                                if (!doctorIdsList.contains(element.doctorId.toInt())) {
+                                if (!doctorIdsList
+                                    .contains(element.doctorId.toInt())) {
                                   selectedDoctorList.add(element);
                                   tempDoctorList.add(element);
                                 }
@@ -547,8 +646,10 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
 
                             if (selectedDoctorList.isNotEmpty) {
                               selectedDoctorList.forEach((element) {
-                                if (listOfMappingTableId.contains(element.mappingTableId)) {
-                                  listOfMappingTableId.remove(element.mappingTableId);
+                                if (listOfMappingTableId
+                                    .contains(element.mappingTableId)) {
+                                  listOfMappingTableId
+                                      .remove(element.mappingTableId);
                                 }
                               });
 
@@ -562,7 +663,9 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
                       decoration: inputDecoration(
                         context: context,
                         labelText: locale.lblSelectDoctor,
-                        suffixIcon: ic_user.iconImage(size: 10, color: context.iconColor).paddingAll(14),
+                        suffixIcon: ic_user
+                            .iconImage(size: 10, color: context.iconColor)
+                            .paddingAll(14),
                       ).copyWith(alignLabelWithHint: true),
                     ),
                     if (selectedDoctorList.length > 1)
@@ -571,33 +674,43 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
                         children: [
                           Text(
                             "${locale.lblNote} : ${locale.lblDoctorTapMsg}",
-                            style: secondaryTextStyle(size: 10, color: appSecondaryColor),
+                            style: secondaryTextStyle(
+                                size: 10, color: appSecondaryColor),
                           ).paddingSymmetric(horizontal: 4, vertical: 6),
                           8.height,
                           Wrap(
                               direction: Axis.horizontal,
                               runSpacing: 16,
                               spacing: 16,
-                              children: selectedDoctorList.map<Widget>((userData) {
+                              children:
+                                  selectedDoctorList.map<Widget>((userData) {
                                 UserModel data = userData;
                                 return GestureDetector(
                                   onTap: () {
-                                    selectedIndex = selectedDoctorList.indexOf(data);
+                                    selectedIndex =
+                                        selectedDoctorList.indexOf(data);
                                     setState(() {});
                                     EditServiceDataScreen(
                                       doctorId: data.doctorId.toString(),
                                       serviceData: data,
                                       onSubmit: (serviceData) {
-                                        serviceData.displayName = data.displayName;
+                                        serviceData.displayName =
+                                            data.displayName;
 
                                         if (selectedProfileImage != null) {
-                                          serviceData.image = selectedProfileImage!.path;
+                                          serviceData.image =
+                                              selectedProfileImage!.path;
                                         }
 
-                                        data = setDoctor(serviceData, userData: data);
+                                        data = setDoctor(serviceData,
+                                            userData: data);
                                         selectedDoctorData = data;
 
-                                        int index = tempDoctorList.indexWhere((serviceData) => serviceData.doctorId.toString() == data.doctorId.toString());
+                                        int index = tempDoctorList.indexWhere(
+                                            (serviceData) =>
+                                                serviceData.doctorId
+                                                    .toString() ==
+                                                data.doctorId.toString());
 
                                         if (index < 0) {
                                           tempDoctorList.add(data);
@@ -608,26 +721,49 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
                                     ).launch(context);
                                   },
                                   child: Container(
-                                    padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 4, horizontal: 8),
                                     width: context.width() / 2 - 24,
                                     decoration: boxDecorationDefault(
-                                      border: Border.all(color: selectedIndex == selectedDoctorList.indexOf(data) ? appSecondaryColor : borderColor),
+                                      border: Border.all(
+                                          color: selectedIndex ==
+                                                  selectedDoctorList
+                                                      .indexOf(data)
+                                              ? appSecondaryColor
+                                              : borderColor),
                                       color: context.cardColor,
                                       borderRadius: radius(32),
                                     ),
                                     child: Row(
-                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        Icon(CupertinoIcons.person, size: 16, color: context.iconColor),
+                                        Icon(CupertinoIcons.person,
+                                            size: 16, color: context.iconColor),
                                         8.width,
-                                        Text('Dr. ${data.displayName.validate().split(' ').first}', style: primaryTextStyle(color: context.iconColor), maxLines: 1, overflow: TextOverflow.ellipsis)
+                                        Text('Dr. ${data.displayName.validate().split(' ').first}',
+                                                style: primaryTextStyle(
+                                                    color: context.iconColor),
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis)
                                             .expand(),
-                                        ic_clear.iconImage().paddingAll(6).onTap(
+                                        ic_clear
+                                            .iconImage()
+                                            .paddingAll(6)
+                                            .onTap(
                                           () {
-                                            listOfMappingTableId.add(data.mappingTableId.toInt());
-                                            selectedDoctorList.removeWhere((element) => element.doctorId == data.doctorId);
-                                            tempDoctorList.removeWhere((element) => element.doctorId.toString() == data.doctorId.toString());
+                                            listOfMappingTableId.add(
+                                                data.mappingTableId.toInt());
+                                            selectedDoctorList.removeWhere(
+                                                (element) =>
+                                                    element.doctorId ==
+                                                    data.doctorId);
+                                            tempDoctorList.removeWhere(
+                                                (element) =>
+                                                    element.doctorId
+                                                        .toString() ==
+                                                    data.doctorId.toString());
 
                                             if (selectedDoctorList.isNotEmpty) {
                                               ifLengthIsGreater();
@@ -663,7 +799,9 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
                       decoration: inputDecoration(
                         context: context,
                         labelText: locale.lblCharges,
-                        suffixIcon: ic_dollar_icon.iconImage(size: 10, color: context.iconColor).paddingAll(14),
+                        suffixIcon: ic_dollar_icon
+                            .iconImage(size: 10, color: context.iconColor)
+                            .paddingAll(14),
                       ),
                     ),
                     16.height,
@@ -674,11 +812,16 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
                         icon: SizedBox.shrink(),
                         borderRadius: radius(),
                         dropdownColor: context.cardColor,
-                        autovalidateMode: isFirstTime ? AutovalidateMode.disabled : AutovalidateMode.onUserInteraction,
+                        autovalidateMode: isFirstTime
+                            ? AutovalidateMode.disabled
+                            : AutovalidateMode.onUserInteraction,
                         decoration: inputDecoration(
                           context: context,
-                          labelText: '${locale.lblSelect} ${locale.lblDuration}',
-                          suffixIcon: ic_arrow_down.iconImage(size: 10, color: context.iconColor).paddingAll(14),
+                          labelText:
+                              '${locale.lblSelect} ${locale.lblDuration}',
+                          suffixIcon: ic_arrow_down
+                              .iconImage(size: 10, color: context.iconColor)
+                              .paddingAll(14),
                         ),
                         onChanged: (value) {
                           if (!isUpdate) {
@@ -688,24 +831,28 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
                           selectedDuration = value;
                           setState(() {});
                         },
-                        items: durationList.map<DropdownMenuItem<DurationModel>>((duration) {
+                        items: durationList
+                            .map<DropdownMenuItem<DurationModel>>((duration) {
                           return DropdownMenuItem<DurationModel>(
                             value: duration,
-                            child: Text(duration.label.validate(), style: primaryTextStyle()),
+                            child: Text(duration.label.validate(),
+                                style: primaryTextStyle()),
                           );
                         }).toList(),
                       ),
                     ),
                     16.height,
                     Container(
-                      decoration: boxDecorationDefault(borderRadius: radius(), color: context.cardColor),
+                      decoration: boxDecorationDefault(
+                          borderRadius: radius(), color: context.cardColor),
                       padding: EdgeInsets.fromLTRB(16, 8, 16, 0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             locale.lblAllowMultiSelectionWhileBooking,
-                            style: primaryTextStyle(color: textSecondaryColorGlobal),
+                            style: primaryTextStyle(
+                                color: textSecondaryColorGlobal),
                           ),
                           4.height,
                           Row(
@@ -713,17 +860,21 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
                               RadioListTile<bool>(
                                 visualDensity: VisualDensity.compact,
                                 value: true,
-                                controlAffinity: ListTileControlAffinity.trailing,
+                                controlAffinity:
+                                    ListTileControlAffinity.trailing,
                                 groupValue: isMultiSelection,
-                                title: Text(locale.lblYes, style: primaryTextStyle()),
+                                title: Text(locale.lblYes,
+                                    style: primaryTextStyle()),
                                 onChanged: changeMultiSelection,
                               ).expand(),
                               RadioListTile<bool>(
                                 visualDensity: VisualDensity.compact,
                                 value: false,
-                                controlAffinity: ListTileControlAffinity.trailing,
+                                controlAffinity:
+                                    ListTileControlAffinity.trailing,
                                 groupValue: isMultiSelection,
-                                title: Text(locale.lblNo, style: primaryTextStyle()),
+                                title: Text(locale.lblNo,
+                                    style: primaryTextStyle()),
                                 onChanged: changeMultiSelection,
                               ).expand(),
                             ],
@@ -733,14 +884,16 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
                     ),
                     16.height,
                     Container(
-                      decoration: boxDecorationDefault(borderRadius: radius(), color: context.cardColor),
+                      decoration: boxDecorationDefault(
+                          borderRadius: radius(), color: context.cardColor),
                       padding: EdgeInsets.fromLTRB(16, 8, 16, 0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             locale.lblSetStatus,
-                            style: primaryTextStyle(color: textSecondaryColorGlobal),
+                            style: primaryTextStyle(
+                                color: textSecondaryColorGlobal),
                           ),
                           4.height,
                           Row(
@@ -748,17 +901,21 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
                               RadioListTile<bool>(
                                 visualDensity: VisualDensity.compact,
                                 value: true,
-                                controlAffinity: ListTileControlAffinity.trailing,
+                                controlAffinity:
+                                    ListTileControlAffinity.trailing,
                                 groupValue: isActive,
-                                title: Text(locale.lblActive, style: primaryTextStyle()),
+                                title: Text(locale.lblActive,
+                                    style: primaryTextStyle()),
                                 onChanged: changeStatus,
                               ).expand(),
                               RadioListTile<bool>(
                                 visualDensity: VisualDensity.compact,
                                 value: false,
-                                controlAffinity: ListTileControlAffinity.trailing,
+                                controlAffinity:
+                                    ListTileControlAffinity.trailing,
                                 groupValue: isActive,
-                                title: Text(locale.lblInActive, style: primaryTextStyle()),
+                                title: Text(locale.lblInActive,
+                                    style: primaryTextStyle()),
                                 onChanged: changeStatus,
                               ).expand(),
                             ],
@@ -768,14 +925,16 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
                     ),
                     16.height,
                     Container(
-                      decoration: boxDecorationDefault(borderRadius: radius(), color: context.cardColor),
+                      decoration: boxDecorationDefault(
+                          borderRadius: radius(), color: context.cardColor),
                       padding: EdgeInsets.fromLTRB(16, 8, 16, 0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             locale.lblIsThisATelemedService,
-                            style: primaryTextStyle(color: textSecondaryColorGlobal),
+                            style: primaryTextStyle(
+                                color: textSecondaryColorGlobal),
                           ),
                           4.height,
                           Row(
@@ -783,17 +942,21 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
                               RadioListTile<bool>(
                                 visualDensity: VisualDensity.compact,
                                 value: true,
-                                controlAffinity: ListTileControlAffinity.trailing,
+                                controlAffinity:
+                                    ListTileControlAffinity.trailing,
                                 groupValue: isTelemed,
-                                title: Text(locale.lblYes, style: primaryTextStyle()),
+                                title: Text(locale.lblYes,
+                                    style: primaryTextStyle()),
                                 onChanged: allowTelemed,
                               ).expand(),
                               RadioListTile<bool>(
                                 visualDensity: VisualDensity.compact,
                                 value: false,
-                                controlAffinity: ListTileControlAffinity.trailing,
+                                controlAffinity:
+                                    ListTileControlAffinity.trailing,
                                 groupValue: isTelemed,
-                                title: Text(locale.lblNo, style: primaryTextStyle()),
+                                title: Text(locale.lblNo,
+                                    style: primaryTextStyle()),
                                 onChanged: allowTelemed,
                               ).expand(),
                             ],
@@ -806,7 +969,9 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
             ],
           ),
         ),
-        Observer(builder: (context) => LoaderWidget().visible(appStore.isLoading).center())
+        Observer(
+            builder: (context) =>
+                LoaderWidget().visible(appStore.isLoading).center())
       ],
     );
   }
@@ -837,13 +1002,16 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
                     };
                     if (isDoctor()) {
                       req.putIfAbsent("doctor_id", () => userStore.userId);
-                      req.putIfAbsent('service_mapping_id', () => widget.serviceData!.mappingTableId);
+                      req.putIfAbsent('service_mapping_id',
+                          () => widget.serviceData!.mappingTableId);
                     } else {
                       listOfMappingTableId.clear();
                       selectedDoctorList.forEachIndexed((element, index) {
-                        listOfMappingTableId.add(element.mappingTableId.toInt());
+                        listOfMappingTableId
+                            .add(element.mappingTableId.toInt());
                       });
-                      req.putIfAbsent('mapping_table_id', () => listOfMappingTableId);
+                      req.putIfAbsent(
+                          'mapping_table_id', () => listOfMappingTableId);
                     }
                     appStore.setLoading(true);
 

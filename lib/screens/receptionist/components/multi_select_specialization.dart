@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:kivicare_flutter/components/loader_widget.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/model/static_data_model.dart';
-import 'package:kivicare_flutter/network/dashboard_repository.dart';
-import 'package:kivicare_flutter/utils/app_common.dart';
-import 'package:kivicare_flutter/utils/colors.dart';
-import 'package:kivicare_flutter/utils/common.dart';
+import 'package:solidcare/components/loader_widget.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/model/static_data_model.dart';
+import 'package:solidcare/network/dashboard_repository.dart';
+import 'package:solidcare/utils/app_common.dart';
+import 'package:solidcare/utils/colors.dart';
+import 'package:solidcare/utils/common.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 // ignore: must_be_immutable
@@ -17,7 +17,8 @@ class MultiSelectSpecialization extends StatefulWidget {
   MultiSelectSpecialization({this.id, this.selectedServicesId});
 
   @override
-  _MultiSelectSpecializationState createState() => _MultiSelectSpecializationState();
+  _MultiSelectSpecializationState createState() =>
+      _MultiSelectSpecializationState();
 }
 
 class _MultiSelectSpecializationState extends State<MultiSelectSpecialization> {
@@ -40,7 +41,8 @@ class _MultiSelectSpecializationState extends State<MultiSelectSpecialization> {
   void getData({String searchString = ''}) async {
     appStore.setLoading(true);
 
-    await getStaticDataResponseAPI('specialization', searchString: searchString).then((value) {
+    await getStaticDataResponseAPI('specialization', searchString: searchString)
+        .then((value) {
       appStore.setLoading(false);
       specializationList.addAll(value.staticData!);
       searchSpecializationList.addAll(value.staticData!);
@@ -65,7 +67,8 @@ class _MultiSelectSpecializationState extends State<MultiSelectSpecialization> {
 
   @override
   void dispose() {
-    setStatusBarColor(appPrimaryColor, statusBarIconBrightness: Brightness.light);
+    setStatusBarColor(appPrimaryColor,
+        statusBarIconBrightness: Brightness.light);
 
     super.dispose();
   }
@@ -79,7 +82,8 @@ class _MultiSelectSpecializationState extends State<MultiSelectSpecialization> {
       return;
     }
     searchSpecializationList.forEach((element) {
-      if (element!.value!.toLowerCase().contains(text)) specializationList.add(element);
+      if (element!.value!.toLowerCase().contains(text))
+        specializationList.add(element);
     });
     setState(() {});
   }
@@ -87,18 +91,22 @@ class _MultiSelectSpecializationState extends State<MultiSelectSpecialization> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBarWidget(locale.lblSpecialization, textColor: Colors.white, systemUiOverlayStyle: defaultSystemUiOverlayStyle(context)),
+      appBar: appBarWidget(locale.lblSpecialization,
+          textColor: Colors.white,
+          systemUiOverlayStyle: defaultSystemUiOverlayStyle(context)),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(locale.lblSelectSpecialization, style: boldTextStyle(size: 18)),
+            Text(locale.lblSelectSpecialization,
+                style: boldTextStyle(size: 18)),
             Divider(),
             8.height,
             AppTextField(
-              decoration: inputDecoration(context: context, labelText: locale.lblSearch),
+              decoration: inputDecoration(
+                  context: context, labelText: locale.lblSearch),
               controller: search,
               onChanged: onSearchTextChanged,
               autoFocus: false,
@@ -124,12 +132,14 @@ class _MultiSelectSpecializationState extends State<MultiSelectSpecialization> {
                 StaticData data = specializationList[index]!;
                 return Container(
                   padding: EdgeInsets.symmetric(horizontal: 6, vertical: 1),
-                  decoration: boxDecorationDefault(boxShadow: [], color: context.cardColor),
+                  decoration: boxDecorationDefault(
+                      boxShadow: [], color: context.cardColor),
                   child: CheckboxListTile(
                     splashRadius: 16,
                     visualDensity: VisualDensity.compact,
                     controlAffinity: ListTileControlAffinity.leading,
-                    checkboxShape: RoundedRectangleBorder(borderRadius: radius(6)),
+                    checkboxShape:
+                        RoundedRectangleBorder(borderRadius: radius(6)),
                     contentPadding: EdgeInsets.zero,
                     value: data.isSelected,
                     hoverColor: Colors.transparent,
@@ -137,7 +147,8 @@ class _MultiSelectSpecializationState extends State<MultiSelectSpecialization> {
                     onChanged: (v) {
                       data.isSelected = !data.isSelected;
                       if (v!) {
-                        multiSelectStore.addSingleStaticItem(data, isClear: false);
+                        multiSelectStore.addSingleStaticItem(data,
+                            isClear: false);
                         widget.selectedServicesId.validate().add(data.id);
                       } else {
                         multiSelectStore.removeStaticItem(data);
@@ -145,13 +156,19 @@ class _MultiSelectSpecializationState extends State<MultiSelectSpecialization> {
                       }
                       setState(() {});
                     },
-                    title: Text(data.label.validate(), maxLines: 2, overflow: TextOverflow.ellipsis, style: primaryTextStyle()),
+                    title: Text(data.label.validate(),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: primaryTextStyle()),
                   ),
                 ).paddingSymmetric(vertical: 8);
               },
             ),
             Observer(
-              builder: (context) => LoaderWidget().visible(appStore.isLoading).center().paddingSymmetric(vertical: 120),
+              builder: (context) => LoaderWidget()
+                  .visible(appStore.isLoading)
+                  .center()
+                  .paddingSymmetric(vertical: 120),
             )
           ],
         ),

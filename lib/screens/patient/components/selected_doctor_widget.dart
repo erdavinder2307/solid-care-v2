@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/model/user_model.dart';
-import 'package:kivicare_flutter/network/doctor_list_repository.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/model/user_model.dart';
+import 'package:solidcare/network/doctor_list_repository.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class SelectedDoctorWidget extends StatefulWidget {
@@ -54,9 +54,12 @@ class _SelectedDoctorWidgetState extends State<SelectedDoctorWidget> {
               8.height,
               snap.hasData
                   ? Marquee(
-                      child: Text("${snap.data!.displayName.validate().validate()}", style: boldTextStyle(size: 18)),
+                      child: Text(
+                          "${snap.data!.displayName.validate().validate()}",
+                          style: boldTextStyle(size: 18)),
                     )
-                  : Text('${locale.lblLoading} ${locale.lblDoctor}...', style: secondaryTextStyle()),
+                  : Text('${locale.lblLoading} ${locale.lblDoctor}...',
+                      style: secondaryTextStyle()),
             ],
           ),
         );

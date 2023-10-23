@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:kivicare_flutter/components/no_data_found_widget.dart';
-import 'package:kivicare_flutter/components/view_all_widget.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/model/upcoming_appointment_model.dart';
-import 'package:kivicare_flutter/screens/appointment/appointment_functions.dart';
-import 'package:kivicare_flutter/screens/appointment/components/appointment_dashboard_widget.dart';
+import 'package:solidcare/components/no_data_found_widget.dart';
+import 'package:solidcare/components/view_all_widget.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/model/upcoming_appointment_model.dart';
+import 'package:solidcare/screens/appointment/appointment_functions.dart';
+import 'package:solidcare/screens/appointment/components/appointment_dashboard_widget.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class DashBoardFragmentUpcomingAppointmentComponent extends StatelessWidget {
   final List<UpcomingAppointmentModel> upcomingAppointment;
-  DashBoardFragmentUpcomingAppointmentComponent({required this.upcomingAppointment});
+  DashBoardFragmentUpcomingAppointmentComponent(
+      {required this.upcomingAppointment});
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +31,8 @@ class DashBoardFragmentUpcomingAppointmentComponent extends StatelessWidget {
             padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
             itemCount: upcomingAppointment.length,
             itemBuilder: (context, index) {
-              return AppointmentDashboardComponent(upcomingData: upcomingAppointment[index]);
+              return AppointmentDashboardComponent(
+                  upcomingData: upcomingAppointment[index]);
             },
           )
         else

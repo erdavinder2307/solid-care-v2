@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.10)
 project(runner LANGUAGES CXX)
 
-set(BINARY_NAME "kivicare_flutter")
-set(APPLICATION_ID "com.iqonic.kivicare_flutter")
+set(BINARY_NAME "solidcare")
+set(APPLICATION_ID "com.solidevelectrosoft.solidcare")
 
 cmake_policy(SET CMP0063 NEW)
 

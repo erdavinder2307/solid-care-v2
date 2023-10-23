@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kivicare_flutter/screens/shimmer/components/patient_shimmer_component.dart';
+import 'package:solidcare/screens/shimmer/components/patient_shimmer_component.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class PatientFragmentShimmer extends StatelessWidget {

@@ -4,22 +4,22 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:kivicare_flutter/components/body_widget.dart';
-import 'package:kivicare_flutter/components/empty_error_state_component.dart';
-import 'package:kivicare_flutter/components/image_border_component.dart';
-import 'package:kivicare_flutter/components/loader_widget.dart';
-import 'package:kivicare_flutter/components/no_data_found_widget.dart';
-import 'package:kivicare_flutter/components/price_widget.dart';
-import 'package:kivicare_flutter/main.dart';
-import 'package:kivicare_flutter/model/service_model.dart';
-import 'package:kivicare_flutter/network/service_repository.dart';
-import 'package:kivicare_flutter/screens/shimmer/screen/select_service_shimmer_screen.dart';
-import 'package:kivicare_flutter/utils/app_common.dart';
-import 'package:kivicare_flutter/utils/colors.dart';
-import 'package:kivicare_flutter/utils/common.dart';
-import 'package:kivicare_flutter/utils/constants.dart';
-import 'package:kivicare_flutter/utils/extensions/string_extensions.dart';
-import 'package:kivicare_flutter/utils/images.dart';
+import 'package:solidcare/components/body_widget.dart';
+import 'package:solidcare/components/empty_error_state_component.dart';
+import 'package:solidcare/components/image_border_component.dart';
+import 'package:solidcare/components/loader_widget.dart';
+import 'package:solidcare/components/no_data_found_widget.dart';
+import 'package:solidcare/components/price_widget.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/model/service_model.dart';
+import 'package:solidcare/network/service_repository.dart';
+import 'package:solidcare/screens/shimmer/screen/select_service_shimmer_screen.dart';
+import 'package:solidcare/utils/app_common.dart';
+import 'package:solidcare/utils/colors.dart';
+import 'package:solidcare/utils/common.dart';
+import 'package:solidcare/utils/constants.dart';
+import 'package:solidcare/utils/extensions/string_extensions.dart';
+import 'package:solidcare/utils/images.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 // ignore: must_be_immutable
@@ -57,7 +57,8 @@ class _MultiSelectWidgetState extends State<MultiSelectWidget> {
     future = getServiceResponseAPI(
       searchString: searchCont.text,
       clinicId: widget.clinicId.toString(),
-      doctorId: appointmentAppStore.mDoctorSelected?.iD ?? userStore.userId.validate(),
+      doctorId: appointmentAppStore.mDoctorSelected?.iD ??
+          userStore.userId.validate(),
     ).then((value) {
       if (searchCont.text.isNotEmpty) {
         showClear = true;
@@ -67,15 +68,19 @@ class _MultiSelectWidgetState extends State<MultiSelectWidget> {
       servicesList = value.serviceData.validate();
       if (widget.selectedServicesId != null) {
         multiSelectStore.clearList();
-        if (value.serviceData != null && value.serviceData.validate().isNotEmpty) {
+        if (value.serviceData != null &&
+            value.serviceData.validate().isNotEmpty) {
           value.serviceData.validate().forEach((element) {
-            if (widget.selectedServicesId.validate().contains(element.serviceId)) {
+            if (widget.selectedServicesId
+                .validate()
+                .contains(element.serviceId)) {
               element.isCheck = true;
 
               multiSelectStore.addSingleItem(element, isClear: false);
             }
           });
-          value.serviceData.validate().retainWhere((element) => element.status == ACTIVE_SERVICE_STATUS);
+          value.serviceData.validate().retainWhere(
+              (element) => element.status == ACTIVE_SERVICE_STATUS);
         }
         setState(() {});
         appStore.setLoading(false);
@@ -116,12 +121,14 @@ class _MultiSelectWidgetState extends State<MultiSelectWidget> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text('${locale.lblNote}: ', style: boldTextStyle()).paddingSymmetric(horizontal: 16, vertical: 16),
+              Text('${locale.lblNote}: ', style: boldTextStyle())
+                  .paddingSymmetric(horizontal: 16, vertical: 16),
               ...[
                 TextIcon(
                   prefix: ic_multi_select.iconImage(),
                   spacing: 16,
-                  text: text ?? locale.lblMultipleSelectionIsAvailableForThisService,
+                  text: text ??
+                      locale.lblMultipleSelectionIsAvailableForThisService,
                   expandedText: true,
                   maxLine: 2,
                   textStyle: primaryTextStyle(size: 14),
@@ -134,7 +141,8 @@ class _MultiSelectWidgetState extends State<MultiSelectWidget> {
                   onPressed: () {
                     finish(context);
                   },
-                  child: Text(locale.lblClose, style: primaryTextStyle(color: primaryColor, size: 14)),
+                  child: Text(locale.lblClose,
+                      style: primaryTextStyle(color: primaryColor, size: 14)),
                 ),
               ).paddingRight(8),
             ],
@@ -204,7 +212,9 @@ class _MultiSelectWidgetState extends State<MultiSelectWidget> {
               children: [
                 ic_multi_select.iconImage(size: 16),
                 8.width,
-                Text(locale.lblMultipleSelectionIsAvailableForThisService, style: secondaryTextStyle()).expand(),
+                Text(locale.lblMultipleSelectionIsAvailableForThisService,
+                        style: secondaryTextStyle())
+                    .expand(),
               ],
             ).paddingOnly(top: 84, bottom: 16, left: 16, right: 16),
             SnapHelperWidget<ServiceListModel>(
@@ -222,32 +232,48 @@ class _MultiSelectWidgetState extends State<MultiSelectWidget> {
               },
               errorWidget: ErrorStateWidget(),
               onSuccess: (snap) {
-                if (snap.serviceData.validate().isEmpty && !appStore.isLoading) {
-                  return SingleChildScrollView(child: NoDataFoundWidget(text: searchCont.text.isEmpty ? locale.lblNoActiveServicesAvailable : locale.lblCantFindServiceYouSearchedFor)).center();
+                if (snap.serviceData.validate().isEmpty &&
+                    !appStore.isLoading) {
+                  return SingleChildScrollView(
+                          child: NoDataFoundWidget(
+                              text: searchCont.text.isEmpty
+                                  ? locale.lblNoActiveServicesAvailable
+                                  : locale.lblCantFindServiceYouSearchedFor))
+                      .center();
                 }
-                snap.serviceData.validate().retainWhere((element) => element.status == ACTIVE_SERVICE_STATUS);
+                snap.serviceData.validate().retainWhere(
+                    (element) => element.status == ACTIVE_SERVICE_STATUS);
 
                 return AnimatedListView(
                   itemCount: snap.serviceData.validate().length,
                   shrinkWrap: true,
-                  padding: EdgeInsets.only(top: 0, bottom: 80, right: 16, left: 16),
+                  padding:
+                      EdgeInsets.only(top: 0, bottom: 80, right: 16, left: 16),
                   itemBuilder: (context, index) {
-                    ServiceData serviceData = snap.serviceData.validate()[index];
+                    ServiceData serviceData =
+                        snap.serviceData.validate()[index];
 
                     if (serviceData.name.isEmptyOrNull) return Offstage();
                     return Container(
                       padding: EdgeInsets.zero,
-                      decoration: boxDecorationDefault(boxShadow: [], color: context.cardColor),
+                      decoration: boxDecorationDefault(
+                          boxShadow: [], color: context.cardColor),
                       child: CheckboxListTile(
                         contentPadding: EdgeInsets.zero,
                         visualDensity: VisualDensity.compact,
-                        checkboxShape: RoundedRectangleBorder(borderRadius: radius(4)),
+                        checkboxShape:
+                            RoundedRectangleBorder(borderRadius: radius(4)),
                         controlAffinity: ListTileControlAffinity.trailing,
                         tileColor: context.cardColor,
                         secondary: serviceData.image.validate().isNotEmpty
-                            ? ImageBorder(src: serviceData.image.validate(), height: 40).paddingSymmetric(horizontal: 8)
+                            ? ImageBorder(
+                                    src: serviceData.image.validate(),
+                                    height: 40)
+                                .paddingSymmetric(horizontal: 8)
                             : GradientBorder(
-                                gradient: LinearGradient(colors: [primaryColor, appSecondaryColor], tileMode: TileMode.mirror),
+                                gradient: LinearGradient(
+                                    colors: [primaryColor, appSecondaryColor],
+                                    tileMode: TileMode.mirror),
                                 strokeWidth: 2,
                                 borderRadius: 80,
                                 child: PlaceHolderWidget(
@@ -256,8 +282,11 @@ class _MultiSelectWidgetState extends State<MultiSelectWidget> {
                                   alignment: Alignment.center,
                                   shape: BoxShape.circle,
                                   child: Text(
-                                    serviceData.name.validate(value: 'S')[0].capitalizeFirstLetter(),
-                                    style: boldTextStyle(color: Colors.black, size: 20),
+                                    serviceData.name
+                                        .validate(value: 'S')[0]
+                                        .capitalizeFirstLetter(),
+                                    style: boldTextStyle(
+                                        color: Colors.black, size: 20),
                                   ),
                                 ),
                               ).paddingSymmetric(horizontal: 8),
@@ -275,13 +304,16 @@ class _MultiSelectWidgetState extends State<MultiSelectWidget> {
                                   style: primaryTextStyle(),
                                 ),
                                 4.height,
-                                PriceWidget(price: serviceData.charges.validate(), textStyle: boldTextStyle()),
+                                PriceWidget(
+                                    price: serviceData.charges.validate(),
+                                    textStyle: boldTextStyle()),
                               ],
                             ).expand(),
                             8.width,
                             Row(
                               children: [
-                                if (serviceData.multiple.validate()) ic_multi_select.iconImage(size: 20),
+                                if (serviceData.multiple.validate())
+                                  ic_multi_select.iconImage(size: 20),
                               ],
                             ),
                           ],
@@ -289,21 +321,29 @@ class _MultiSelectWidgetState extends State<MultiSelectWidget> {
                         onChanged: (v) async {
                           if (serviceData.multiple.validate()) {
                             servicesList.forEach((element) {
-                              if (element.multiple.validate() == false && element.isCheck) {
+                              if (element.multiple.validate() == false &&
+                                  element.isCheck) {
                                 element.isCheck = false;
                                 multiSelectStore.removeItem(element);
                               }
                             });
                             serviceData.isCheck = !serviceData.isCheck;
                             if (serviceData.isCheck) {
-                              multiSelectStore.addSingleItem(serviceData, isClear: false);
+                              multiSelectStore.addSingleItem(serviceData,
+                                  isClear: false);
                             } else {
                               multiSelectStore.removeItem(serviceData);
                             }
                             setState(() {});
                           } else {
-                            if (servicesList.where((element) => element.isCheck.validate()).length > 1) {
-                              await multiSelectDialog(text: locale.lblMultipleSelectionIsNotAvailableForThisService);
+                            if (servicesList
+                                    .where(
+                                        (element) => element.isCheck.validate())
+                                    .length >
+                                1) {
+                              await multiSelectDialog(
+                                  text: locale
+                                      .lblMultipleSelectionIsNotAvailableForThisService);
                             }
                             servicesList.forEach((element) {
                               if (element.isCheck) {
@@ -314,7 +354,8 @@ class _MultiSelectWidgetState extends State<MultiSelectWidget> {
 
                             serviceData.isCheck = !serviceData.isCheck;
                             if (serviceData.isCheck) {
-                              multiSelectStore.addSingleItem(serviceData, isClear: true);
+                              multiSelectStore.addSingleItem(serviceData,
+                                  isClear: true);
                             } else {
                               multiSelectStore.removeItem(serviceData);
                             }
