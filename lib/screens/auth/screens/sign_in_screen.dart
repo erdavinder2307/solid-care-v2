@@ -1,26 +1,28 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:solidcare/components/app_common_dialog.dart';
 import 'package:solidcare/components/app_logo.dart';
-import 'package:solidcare/components/body_widget.dart';
 import 'package:solidcare/components/loader_widget.dart';
 import 'package:solidcare/config.dart';
 import 'package:solidcare/main.dart';
 import 'package:solidcare/model/demo_login_model.dart';
-
 import 'package:solidcare/network/auth_repository.dart';
+import 'package:solidcare/network/google_repository.dart';
 import 'package:solidcare/screens/auth/components/login_register_widget.dart';
 import 'package:solidcare/screens/auth/screens/sign_up_screen.dart';
+import 'package:solidcare/screens/dashboard/screens/doctor_dashboard_screen.dart';
+import 'package:solidcare/screens/dashboard/screens/patient_dashboard_screen.dart';
+import 'package:solidcare/screens/dashboard/screens/receptionist_dashboard_screen.dart';
 import 'package:solidcare/screens/demo_scanners/qr_info_screen.dart';
 import 'package:solidcare/screens/demo_scanners/scanner_screen.dart';
-import 'package:solidcare/screens/doctor/doctor_dashboard_screen.dart';
-import 'package:solidcare/screens/patient/p_dashboard_screen.dart';
-import 'package:solidcare/screens/receptionist/r_dashboard_screen.dart';
 import 'package:solidcare/utils/app_widgets.dart';
 import 'package:solidcare/utils/colors.dart';
 import 'package:solidcare/utils/common.dart';
 import 'package:solidcare/utils/constants.dart';
 import 'package:solidcare/utils/extensions/string_extensions.dart';
+import 'package:solidcare/utils/extensions/widget_extentions.dart';
 import 'package:solidcare/utils/images.dart';
 import 'package:solidcare/utils/one_signal_notifications.dart';
 import 'package:nb_utils/nb_utils.dart';
@@ -51,12 +53,21 @@ class _SignInScreenState extends State<SignInScreen> {
   @override
   void initState() {
     super.initState();
+
+    afterBuildCreated(() => () {
+          setStatusBarColor(
+            appStore.isDarkModeOn
+                ? context.scaffoldBackgroundColor
+                : appPrimaryColor.withOpacity(0.02),
+            statusBarIconBrightness:
+                appStore.isDarkModeOn ? Brightness.light : Brightness.dark,
+          );
+        });
+
     init();
   }
 
   init() async {
-    initializeOneSignal();
-
     if (getBoolAsync(IS_REMEMBER_ME)) {
       isRemember = true;
       emailCont.text = getStringAsync(USER_NAME);
@@ -72,7 +83,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
       hideKeyboard(context);
       appStore.setLoading(true);
-
+      initializeOneSignal();
       Map<String, dynamic> req = {
         'username': emailCont.text,
         'password': passwordCont.text,
@@ -82,7 +93,6 @@ class _SignInScreenState extends State<SignInScreen> {
       log(req.toString());
 
       await loginAPI(req).then((value) async {
-        appStore.setLoading(false);
         if (isRemember) {
           setValue(USER_NAME, emailCont.text);
           setValue(USER_PASSWORD, passwordCont.text);
@@ -90,21 +100,44 @@ class _SignInScreenState extends State<SignInScreen> {
           setValue(SELECTED_PROFILE_INDEX, selectedIndex);
         }
 
-        if (userStore.userRole!.toLowerCase() == UserRoleDoctor) {
-          toast(locale.lblLoginSuccessfullyAsADoctor + '!! 🎉');
-          DoctorDashboardScreen().launch(context, isNewTask: true);
-        } else if (userStore.userRole!.toLowerCase() == UserRolePatient) {
-          toast(locale.lblLoginSuccessfullyAsAPatient + '!! 🎉');
-          patientStore.setBottomNavIndex(0);
-          PatientDashBoardScreen().launch(context,
-              isNewTask: true, pageRouteAnimation: PageRouteAnimation.Slide);
-        } else if (userStore.userRole!.toLowerCase() == UserRoleReceptionist) {
-          toast(locale.lblLoginSuccessfullyAsAReceptionist + '!! 🎉');
-          RDashBoardScreen().launch(context,
-              isNewTask: true, pageRouteAnimation: PageRouteAnimation.Slide);
-        } else {
-          toast(locale.lblWrongUser);
-        }
+        getConfigurationAPI().whenComplete(() {
+          if (userStore.userRole!.toLowerCase() == UserRoleDoctor) {
+            doctorAppStore.setBottomNavIndex(0);
+            toast(locale.lblLoginSuccessfullyAsADoctor + '!! 🎉');
+            userStore.setOneSignalTag(
+                ConstantKeys.appTypeKey, ConstantKeys.doctorAppKey);
+            DoctorDashboardScreen().launch(context,
+                isNewTask: true,
+                pageRouteAnimation: pageAnimation,
+                duration: pageAnimationDuration);
+          } else if (userStore.userRole!.toLowerCase() == UserRolePatient) {
+            toast(locale.lblLoginSuccessfullyAsAPatient + '!! 🎉');
+            userStore.setOneSignalTag(
+                ConstantKeys.appTypeKey, ConstantKeys.patientAppKey);
+            patientStore.setBottomNavIndex(0);
+            PatientDashBoardScreen().launch(context,
+                isNewTask: true,
+                pageRouteAnimation: pageAnimation,
+                duration: pageAnimationDuration);
+          } else if (userStore.userRole!.toLowerCase() ==
+              UserRoleReceptionist) {
+            toast(locale.lblLoginSuccessfullyAsAReceptionist + '!! 🎉');
+            receptionistAppStore.setBottomNavIndex(0);
+            userStore.setOneSignalTag(
+                ConstantKeys.appTypeKey, ConstantKeys.receptionistAppKey);
+            RDashBoardScreen().launch(context,
+                isNewTask: true,
+                pageRouteAnimation: pageAnimation,
+                duration: pageAnimationDuration);
+          } else {
+            toast(locale.lblWrongUser);
+          }
+          appStore.setLoading(false);
+        }).catchError((r) {
+          appStore.setLoading(false);
+          setState(() {});
+          throw r;
+        });
       }).catchError((e) {
         appStore.setLoading(false);
 
@@ -136,6 +169,11 @@ class _SignInScreenState extends State<SignInScreen> {
   @override
   void setState(fn) {
     if (mounted) super.setState(fn);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
@@ -221,9 +259,13 @@ class _SignInScreenState extends State<SignInScreen> {
                   Text(locale.lblScanToTest,
                       style: primaryTextStyle(color: primaryColor)),
                 ],
-              ).onTap(
+              ).appOnTap(
                 () {
-                  ScannerScreen().launch(context).then((value) {
+                  ScannerScreen()
+                      .launch(context,
+                          pageRouteAnimation: pageAnimation,
+                          duration: pageAnimationDuration)
+                      .then((value) {
                     setStatusBarColor(
                       appStore.isDarkModeOn
                           ? context.scaffoldBackgroundColor
@@ -253,12 +295,14 @@ class _SignInScreenState extends State<SignInScreen> {
                     }
                   });
                 },
-                splashColor: Colors.transparent,
-                highlightColor: Colors.transparent,
               ),
               TextButton(
                 onPressed: () {
-                  QrInfoScreen().launch(context).then((value) {
+                  QrInfoScreen()
+                      .launch(context,
+                          pageRouteAnimation: pageAnimation,
+                          duration: pageAnimationDuration)
+                      .then((value) {
                     setStatusBarColor(
                       appStore.isDarkModeOn
                           ? context.scaffoldBackgroundColor
@@ -309,6 +353,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     nextFocus: passwordFocus,
                     textStyle: primaryTextStyle(),
                     textFieldType: TextFieldType.EMAIL,
+                    errorThisFieldRequired: locale.lblEmailIsRequired,
                     decoration: inputDecoration(
                         context: context,
                         labelText: locale.lblEmail,
@@ -322,6 +367,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     focus: passwordFocus,
                     textStyle: primaryTextStyle(),
                     textFieldType: TextFieldType.PASSWORD,
+                    errorThisFieldRequired: locale.passwordIsRequired,
                     suffixPasswordVisibleWidget: ic_showPassword
                         .iconImage(size: 10, color: context.iconColor)
                         .paddingAll(14),
@@ -396,10 +442,12 @@ class _SignInScreenState extends State<SignInScreen> {
                     title: locale.lblNewMember,
                     subTitle: locale.lblSignUp + '?',
                     onTap: () {
-                      SignUpScreen().launch(context);
+                      SignUpScreen().launch(context,
+                          pageRouteAnimation: pageAnimation,
+                          duration: pageAnimationDuration);
                     },
                   ),
-                  buildIconicWidget(),
+                  //buildIconicWidget(),
                 ],
               ),
             ),

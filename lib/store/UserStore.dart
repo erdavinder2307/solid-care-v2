@@ -1,3 +1,5 @@
+import 'package:solidcare/model/clinic_list_model.dart';
+import 'package:solidcare/model/user_model.dart';
 import 'package:mobx/mobx.dart';
 import 'package:nb_utils/nb_utils.dart';
 
@@ -9,7 +11,13 @@ class UserStore = UserStoreBase with _$UserStore;
 
 abstract class UserStoreBase with Store {
   @observable
+  UserModel? userData;
+
+  @observable
   String? userEmail;
+
+  @observable
+  String? termsEndConditionUrl;
 
   @observable
   String? profileImage;
@@ -53,6 +61,26 @@ abstract class UserStoreBase with Store {
   @observable
   String? userDob;
 
+  @observable
+  Clinic? userClinic;
+
+  @observable
+  Map<String, String> oneSignalTag = {};
+
+  Future<void> setUserClinic(Clinic? clinicData) async {
+    userClinic = clinicData;
+  }
+
+  Future<void> setOneSignalTag(String key, String value) async {
+    oneSignalTag[key] = value;
+    log('OneSignal Tag : $oneSignalTag');
+  }
+
+  @action
+  Future<void> setUserData(UserModel value, {bool initialize = false}) async {
+    userData = value;
+  }
+
   @action
   Future<void> setUserEmail(String value, {bool initialize = false}) async {
     if (initialize) setValue(USER_EMAIL, value);
@@ -61,28 +89,37 @@ abstract class UserStoreBase with Store {
   }
 
   @action
-  Future<void> setUserClinicName(String value, {bool initialize = false}) async {
+  Future<void> setUserClinicName(String value,
+      {bool initialize = false}) async {
     if (initialize) setValue(USER_CLINIC_NAME, value);
 
     userClinicName = value;
   }
 
   @action
-  Future<void> setUserClinicAddress(String value, {bool initialize = false}) async {
+  Future<void> setTermsAndCondition(String value) async {
+    termsEndConditionUrl = value;
+  }
+
+  @action
+  Future<void> setUserClinicAddress(String value,
+      {bool initialize = false}) async {
     if (initialize) setValue(USER_CLINIC_ADDRESS, value);
 
     userClinicAddress = value;
   }
 
   @action
-  Future<void> setUserClinicStatus(String value, {bool initialize = false}) async {
+  Future<void> setUserClinicStatus(String value,
+      {bool initialize = false}) async {
     if (initialize) setValue(USER_CLINIC_STATUS, value);
 
     userClinicStatus = value;
   }
 
   @action
-  Future<void> setUserClinicImage(String value, {bool initialize = false}) async {
+  Future<void> setUserClinicImage(String value,
+      {bool initialize = false}) async {
     if (initialize) setValue(USER_CLINIC_IMAGE, value);
 
     userClinicImage = value;
@@ -128,14 +165,16 @@ abstract class UserStoreBase with Store {
   }
 
   @action
-  Future<void> setUserDisplayName(String value, {bool initialize = false}) async {
+  Future<void> setUserDisplayName(String value,
+      {bool initialize = false}) async {
     if (initialize) setValue(USER_DISPLAY_NAME, value);
 
     userDisplayName = value;
   }
 
   @action
-  Future<void> setUserMobileNumber(String value, {bool initialize = false}) async {
+  Future<void> setUserMobileNumber(String value,
+      {bool initialize = false}) async {
     if (initialize) setValue(USER_MOBILE, value);
 
     userMobileNumber = value;

@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:solidcare/components/empty_error_state_component.dart';
 import 'package:solidcare/components/internet_connectivity_widget.dart';
+
 // ignore: unused_import
 import 'package:solidcare/components/loader_widget.dart';
 import 'package:solidcare/components/no_data_found_widget.dart';
 import 'package:solidcare/main.dart';
 import 'package:solidcare/model/report_model.dart';
 import 'package:solidcare/network/report_repository.dart';
+import 'package:solidcare/screens/doctor/screens/add_report_screen.dart';
 import 'package:solidcare/screens/encounter/component/report_component.dart';
 import 'package:solidcare/screens/shimmer/screen/report_shimmer_screen.dart';
 import 'package:solidcare/utils/app_common.dart';
 import 'package:solidcare/utils/colors.dart';
+import 'package:solidcare/utils/common.dart';
+import 'package:solidcare/utils/constants.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class MyReportsScreen extends StatefulWidget {
@@ -34,7 +39,8 @@ class _MyReportsScreenState extends State<MyReportsScreen> {
     init();
   }
 
-  void init() async {
+  void init({showLoader = false}) async {
+    if (showLoader) appStore.setLoading(true);
     future = getPatientReportListApi(
       patientId: userStore.userId,
       page: page,
@@ -43,6 +49,7 @@ class _MyReportsScreenState extends State<MyReportsScreen> {
       reportList: reportList,
     ).then((value) {
       appStore.setLoading(false);
+      setState(() {});
       return value;
     }).catchError((e) {
       appStore.setLoading(false);
@@ -53,13 +60,12 @@ class _MyReportsScreenState extends State<MyReportsScreen> {
   void deleteReportData(String? id) {
     appStore.setLoading(true);
 
-    Map<String, dynamic> res = {"report_id": "$id"};
+    Map<String, dynamic> res = {"id": "$id"};
     deleteReportAPI(res).then((value) {
-      appStore.setLoading(false);
-      toast(locale.lblReport + " " + locale.lblDeletedSuccessfully);
-    }).whenComplete(() {
-      appStore.setLoading(false);
+      toast(value.reportResponse?.message.validate());
+      init(showLoader: true);
       setState(() {});
+      appStore.setLoading(false);
     }).catchError((e) {
       appStore.setLoading(false);
       toast(e.toString());
@@ -73,6 +79,7 @@ class _MyReportsScreenState extends State<MyReportsScreen> {
 
   @override
   void dispose() {
+    getDisposeStatusBarColor();
     super.dispose();
   }
 
@@ -85,30 +92,63 @@ class _MyReportsScreenState extends State<MyReportsScreen> {
           elevation: 0,
           color: appPrimaryColor),
       body: InternetConnectivityWidget(
-        child: SnapHelperWidget<List<ReportData>>(
-          future: future,
-          loadingWidget: ReportShimmerScreen(),
-          errorWidget: ErrorStateWidget().center(),
-          onSuccess: (snap) {
-            return AnimatedScrollView(
-              padding:
-                  EdgeInsets.only(bottom: 60, top: 16, left: 16, right: 16),
-              children: snap
-                  .map((reportData) => ReportComponent(
-                        reportData: reportData,
-                        isForMyReportScreen: true,
-                      ))
-                  .toList(),
-            ).visible(snap.isNotEmpty,
-                defaultWidget: snap.isEmpty && !appStore.isLoading
-                    ? NoDataFoundWidget(text: locale.lblNoReportsFound).center()
-                    : ReportShimmerScreen().visible(appStore.isLoading));
-          },
+        child: Stack(
+          children: [
+            SnapHelperWidget<List<ReportData>>(
+              future: future,
+              loadingWidget: ReportShimmerScreen(),
+              errorWidget: ErrorStateWidget().center(),
+              onSuccess: (snap) {
+                return AnimatedScrollView(
+                  listAnimationType: listAnimationType,
+                  padding:
+                      EdgeInsets.only(bottom: 60, top: 16, left: 16, right: 16),
+                  children: snap
+                      .map(
+                        (reportData) => ReportComponent(
+                          reportData: reportData,
+                          isForMyReportScreen: true,
+                          showDelete: true,
+                          refreshReportData: () {
+                            init();
+                          },
+                          deleteReportData: () {
+                            showConfirmDialogCustom(
+                              context,
+                              onAccept: (p0) {
+                                deleteReportData(
+                                    reportData.id.validate().toString());
+                              },
+                              dialogType: DialogType.DELETE,
+                              title: locale.lblDoYouWantToDeleteReport,
+                            );
+                          },
+                        ),
+                      )
+                      .toList(),
+                ).visible(
+                  snap.isNotEmpty,
+                  defaultWidget:
+                      NoDataFoundWidget(text: locale.lblNoReportsFound)
+                          .center(),
+                );
+              },
+            ),
+            Observer(
+                builder: (context) =>
+                    LoaderWidget().center().visible(appStore.isLoading))
+          ],
         ),
         retryCallback: () {
           setState(() {});
         },
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => AddReportScreen().launch(context,
+            pageRouteAnimation: pageAnimation, duration: pageAnimationDuration),
+        child: Icon(Icons.add),
+      ).visible(!isPatient() &&
+          isVisible(SharedPreferenceKey.solidCarePatientReportAddKey)),
     );
   }
 }

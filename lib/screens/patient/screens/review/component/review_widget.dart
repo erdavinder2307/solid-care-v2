@@ -1,81 +1,120 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:solidcare/components/disabled_rating_bar_widget.dart';
 import 'package:solidcare/components/image_border_component.dart';
+import 'package:solidcare/main.dart';
 import 'package:solidcare/model/rating_model.dart';
 import 'package:solidcare/utils/colors.dart';
+import 'package:solidcare/utils/common.dart';
+import 'package:solidcare/utils/constants.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class ReviewWidget extends StatelessWidget {
   final RatingData data;
+  final bool addMargin;
 
-  ReviewWidget({required this.data});
+  final Decoration? decoration;
+  final EdgeInsets? padding;
+  final EdgeInsets? margin;
+
+  final VoidCallback? callDelete;
+
+  ReviewWidget(
+      {required this.data,
+      this.addMargin = true,
+      this.callDelete,
+      this.decoration,
+      this.margin,
+      this.padding});
+  bool get showDelete {
+    return isVisible(SharedPreferenceKey.solidCarePatientReviewDeleteKey);
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 8),
-      padding: EdgeInsets.all(16),
-      width: context.width(),
-      decoration: boxDecorationDefault(color: context.cardColor),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    return Slidable(
+      enabled: showDelete,
+      endActionPane: ActionPane(
+        motion: ScrollMotion(),
         children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (data.patientProfileImage.validate().isNotEmpty)
-                ImageBorder(
-                    src: data.patientProfileImage.validate(), height: 40)
-              else
-                GradientBorder(
-                  gradient: LinearGradient(
-                      colors: [primaryColor, appSecondaryColor],
-                      tileMode: TileMode.mirror),
-                  strokeWidth: 2,
-                  borderRadius: 80,
-                  child: PlaceHolderWidget(
-                    height: 40,
-                    width: 40,
-                    shape: BoxShape.circle,
-                    alignment: Alignment.center,
-                    child: Text(
-                        '${data.patientName.validate(value: 'P')[0].capitalizeFirstLetter()}',
-                        style: boldTextStyle(color: Colors.black)),
-                  ),
-                ),
-              16.width,
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(data.patientName.validate(),
-                              style: boldTextStyle(size: 14),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis)
-                          .flexible(),
-                      DisabledRatingBarWidget(
-                          rating: data.rating.validate().toDouble(),
-                          size: 14,
-                          showRatingText: true),
-                    ],
-                  ),
-                  if (data.createdAt.validate().isNotEmpty)
-                    Text(data.createdAt.validate(),
-                        style: secondaryTextStyle(size: 12)),
-                  if (data.reviewDescription.validate().isNotEmpty)
-                    ReadMoreText(
-                      data.reviewDescription.validate(),
-                      style: secondaryTextStyle(),
-                      trimLength: 120,
-                      colorClickableText: appSecondaryColor,
-                    ).paddingTop(8),
-                ],
-              ).flexible(),
-            ],
-          ),
+          if (showDelete)
+            SlidableAction(
+              flex: 2,
+              borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(defaultRadius),
+                  bottomRight: Radius.circular(defaultRadius)),
+              onPressed: (BuildContext context) async {
+                showConfirmDialogCustom(
+                  context,
+                  primaryColor: context.primaryColor,
+                  title: locale.lblDoYouWantToDeleteReview,
+                  positiveText: locale.lblYes,
+                  negativeText: locale.lblCancel,
+                  dialogType: DialogType.DELETE,
+                  onAccept: (c) async {
+                    callDelete?.call();
+                  },
+                );
+              },
+              backgroundColor: Colors.red,
+              foregroundColor: Colors.white,
+              icon: Icons.delete,
+              label: locale.lblDelete,
+            )
         ],
+      ),
+      child: Container(
+        margin: addMargin ? EdgeInsets.symmetric(vertical: 8) : null,
+        padding: padding ?? EdgeInsets.all(16),
+        width: context.width(),
+        decoration:
+            decoration ?? boxDecorationDefault(color: context.cardColor),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ImageBorder(
+                  src: data.patientProfileImage.validate(),
+                  height: 40,
+                  nameInitial: data.patientName.validate(value: 'P')[0],
+                ),
+                16.width,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(data.patientName.validate(),
+                                style: boldTextStyle(size: 14),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis)
+                            .flexible(),
+                        DisabledRatingBarWidget(
+                            rating: data.rating.validate().toDouble(),
+                            size: 14,
+                            showRatingText: true,
+                            itemCount: 1),
+                      ],
+                    ),
+                    if (data.createdAt.validate().isNotEmpty)
+                      Text(data.createdAt.validate(),
+                          style: secondaryTextStyle(size: 12)),
+                    if (data.reviewDescription.validate().isNotEmpty)
+                      ReadMoreText(
+                        data.reviewDescription.validate(),
+                        style: secondaryTextStyle(),
+                        trimLength: 120,
+                        colorClickableText: appSecondaryColor,
+                      ).paddingTop(4),
+                  ],
+                ).flexible(),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

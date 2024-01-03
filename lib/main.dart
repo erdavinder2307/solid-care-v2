@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -11,25 +12,24 @@ import 'package:solidcare/config.dart';
 import 'package:solidcare/locale/app_localizations.dart';
 import 'package:solidcare/locale/base_language_key.dart';
 import 'package:solidcare/locale/language_en.dart';
-import 'package:solidcare/model/bill_list_model.dart';
-import 'package:solidcare/model/clinic_list_model.dart';
-import 'package:solidcare/model/encounter_model.dart';
 import 'package:solidcare/model/language_model.dart';
-import 'package:solidcare/model/report_model.dart';
+import 'package:solidcare/network/auth_repository.dart';
 import 'package:solidcare/network/services/default_firebase_config.dart';
 import 'package:solidcare/screens/patient/store/patient_store.dart';
 import 'package:solidcare/screens/splash_screen.dart';
 import 'package:solidcare/store/AppStore.dart';
 import 'package:solidcare/store/AppointmentAppStore.dart';
+import 'package:solidcare/screens/doctor/store/DoctorAppStore.dart';
 import 'package:solidcare/store/ListAppStore.dart';
 import 'package:solidcare/store/MultiSelectStore.dart';
+import 'package:solidcare/screens/receptionist/store/ReceptionistAppStore.dart';
+import 'package:solidcare/store/PermissionStore.dart';
 import 'package:solidcare/store/UserStore.dart';
-import 'package:solidcare/utils/app_widgets.dart';
 import 'package:solidcare/utils/colors.dart';
 import 'package:solidcare/utils/common.dart';
 import 'package:solidcare/utils/constants.dart';
-import 'package:solidcare/utils/one_signal_notifications.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 import 'utils/app_common.dart';
 
@@ -42,14 +42,19 @@ PatientStore patientStore = PatientStore();
 ListAppStore listAppStore = ListAppStore();
 AppointmentAppStore appointmentAppStore = AppointmentAppStore();
 MultiSelectStore multiSelectStore = MultiSelectStore();
+DoctorAppStore doctorAppStore = DoctorAppStore();
+ReceptionistAppStore receptionistAppStore = ReceptionistAppStore();
+PermissionStore permissionStore = PermissionStore();
 
 UserStore userStore = UserStore();
-ListAnimationType listAnimationType = ListAnimationType.Slide;
+ListAnimationType listAnimationType = ListAnimationType.FadeIn;
+PageRouteAnimation pageAnimation = PageRouteAnimation.Fade;
 
-List<Clinic> cachedClinicList = [];
-List<BillListData> cachedBillRecordList = [];
-List<ReportData> cachedReportList = [];
-List<EncounterModel> cachedEncounterList = [];
+Duration pageAnimationDuration = Duration(milliseconds: 500);
+
+List<String> paymentMethodList = [];
+List<String> paymentMethodImages = [];
+List<String> paymentModeList = [];
 
 BaseLanguage locale = LanguageEn();
 
@@ -111,7 +116,17 @@ class _MyAppState extends State<MyApp> {
       appStore.setInternetStatus(event == ConnectivityResult.mobile ||
           event == ConnectivityResult.wifi);
     });
-    initializeOneSignal();
+    OneSignal.initialize(ONESIGNAL_APP_ID);
+    OneSignal.Notifications.requestPermission(false);
+
+    OneSignal.Notifications.addClickListener((event) {
+      log('${jsonEncode(event.notification)}');
+
+      if (isPatient()) patientStore.setBottomNavIndex(1);
+      if (isDoctor()) doctorAppStore.setBottomNavIndex(1);
+      if (isReceptionist()) receptionistAppStore.setBottomNavIndex(1);
+    });
+    removePermission();
   }
 
   @override

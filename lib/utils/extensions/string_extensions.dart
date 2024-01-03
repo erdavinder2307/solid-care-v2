@@ -13,9 +13,7 @@ extension StExt on String {
   }
 
   String getFormattedTime() {
-    return DateFormat(TIME_WITH_SECONDS)
-        .parse(this.validate())
-        .getFormattedDate(FORMAT_12_HOUR);
+    return DateFormat(TIME_WITH_SECONDS).parse(this.validate()).getFormattedDate(FORMAT_12_HOUR);
   }
 
   Widget iconImage({double? size, Color? color, BoxFit? fit}) {
@@ -24,8 +22,7 @@ extension StExt on String {
       height: size ?? 24,
       width: size ?? 24,
       fit: fit ?? BoxFit.cover,
-      color:
-          color ?? (appStore.isDarkModeOn ? Colors.white : appSecondaryColor),
+      color: color ?? (appStore.isDarkModeOn ? Colors.white : appSecondaryColor),
       errorBuilder: (context, error, stackTrace) {
         return PlaceHolderWidget();
       },
@@ -61,6 +58,19 @@ extension StExt on String {
     }
 
     return this;
+  }
+
+  Widget iconImageColored({double? size, Color? color, BoxFit? fit, double? height, double? width}) {
+    return Image.asset(
+      this,
+      height: size ?? height ?? 24,
+      width: size ?? width ?? 24,
+      fit: fit ?? BoxFit.cover,
+      color: color,
+      errorBuilder: (context, error, stackTrace) {
+        return PlaceHolderWidget();
+      },
+    );
   }
 
   String suffixText({required String value}) {
@@ -112,4 +122,6 @@ extension StExt on String {
     else
       return "$this${appStore.currency}";
   }
+
+
 }

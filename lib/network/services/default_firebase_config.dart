@@ -10,15 +10,15 @@ class DefaultFirebaseConfig {
       return const FirebaseOptions(
         appId: '',
         apiKey: '',
-        projectId: '',
+        projectId: 'solidcare-2de34',
         messagingSenderId: '',
       );
     } else if (Platform.isIOS || Platform.isMacOS) {
       // iOS and MacOS
       return const FirebaseOptions(
-        appId: '',
+        appId: '1:149248552751:ios:823e91576f1f34804bfbda',
         apiKey: '',
-        projectId: '',
+        projectId: 'solidcare-2de34',
         messagingSenderId: '',
         iosBundleId: '',
       );

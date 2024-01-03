@@ -32,6 +32,8 @@ class BillListData {
   String? paymentStatus;
   num? totalAmount;
   num? encounterId;
+
+  num? totalTax;
   //Extra? extra;
 
   BillListData({
@@ -42,6 +44,7 @@ class BillListData {
     this.doctorName,
     this.id,
     //this.extra,
+    this.totalTax,
     this.patientName,
     this.paymentStatus,
     this.totalAmount,
@@ -50,16 +53,18 @@ class BillListData {
 
   factory BillListData.fromJson(Map<String, dynamic> json) {
     return BillListData(
-        id: json['id'],
-        actualAmount: json['actual_amount'],
-        clinicName: json['clinic_name'],
-        createdAt: json['created_at'],
-        discount: json['discount'],
-        doctorName: json['doctor_name'],
-        patientName: json['patient_name'],
-        paymentStatus: json['payment_status'].runtimeType == bool ? (json['payment_status'] as bool).getIntBool().toString() : json['payment_status'],
-        totalAmount: json['total_amount'],
-        encounterId: json['encounter_id']);
+      id: json['id'],
+      actualAmount: json['actual_amount'],
+      clinicName: json['clinic_name'],
+      createdAt: json['created_at'],
+      discount: json['discount'],
+      doctorName: json['doctor_name'],
+      patientName: json['patient_name'],
+      paymentStatus: json['payment_status'].runtimeType == bool ? (json['payment_status'] as bool).getIntBool().toString() : json['payment_status'],
+      totalAmount: json['total_amount'],
+      encounterId: json['encounter_id'],
+      totalTax: json['tax_total'],
+    );
   }
 
   Map<String, dynamic> toJson() {
@@ -74,6 +79,7 @@ class BillListData {
     data['payment_status'] = this.paymentStatus;
     data['total_amount'] = this.totalAmount;
     data['encounter_id'] = this.encounterId;
+    data['tax_total'] = this.totalTax;
 
     //if (data["extra"] != null) data['extra'] = this.extra!.toJson();
     return data;

@@ -1,9 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:solidcare/components/empty_error_state_component.dart';
 import 'package:solidcare/components/internet_connectivity_widget.dart';
 import 'package:solidcare/components/loader_widget.dart';
-import 'package:solidcare/components/no_data_found_widget.dart';
 import 'package:solidcare/main.dart';
 import 'package:solidcare/model/bill_list_model.dart';
 import 'package:solidcare/network/bill_repository.dart';
@@ -11,6 +12,8 @@ import 'package:solidcare/screens/patient/components/bill_component.dart';
 import 'package:solidcare/screens/shimmer/screen/bill_records_shimmer_screen.dart';
 import 'package:solidcare/utils/app_common.dart';
 import 'package:solidcare/utils/colors.dart';
+import 'package:solidcare/utils/common.dart';
+import 'package:solidcare/utils/constants.dart';
 import 'package:solidcare/utils/images.dart';
 import 'package:nb_utils/nb_utils.dart';
 
@@ -22,11 +25,15 @@ class MyBillRecordsScreen extends StatefulWidget {
 class _MyBillRecordsScreenState extends State<MyBillRecordsScreen> {
   Future<List<BillListData>>? future;
 
+  TextEditingController searchCont = TextEditingController();
+
   List<BillListData> billList = [];
+  Map<String, List<BillListData>> groupedBill = {};
 
   int page = 1;
 
   bool isLastPage = false;
+  bool showClear = false;
 
   @override
   void initState() {
@@ -54,6 +61,14 @@ class _MyBillRecordsScreenState extends State<MyBillRecordsScreen> {
     });
   }
 
+  bool get showBillDetails {
+    return isVisible(SharedPreferenceKey.solidCarePatientBillViewKey);
+  }
+
+  bool get showEncounterDashboard {
+    return isVisible(SharedPreferenceKey.solidCarePatientEncounterViewKey);
+  }
+
   @override
   void setState(fn) {
     if (mounted) super.setState(fn);
@@ -61,6 +76,7 @@ class _MyBillRecordsScreenState extends State<MyBillRecordsScreen> {
 
   @override
   void dispose() {
+    getDisposeStatusBarColor();
     super.dispose();
   }
 
@@ -101,12 +117,13 @@ class _MyBillRecordsScreenState extends State<MyBillRecordsScreen> {
                     init(showLoader: false);
                     return await 1.seconds.delay;
                   },
-                  onNextPage: () {
+                  onNextPage: () async {
                     if (!isLastPage) {
                       setState(() {
                         page++;
                       });
                       init(showLoader: true);
+                      await 1.seconds.delay;
                     }
                   },
                   disposeScrollController: true,
@@ -115,18 +132,26 @@ class _MyBillRecordsScreenState extends State<MyBillRecordsScreen> {
                   physics: AlwaysScrollableScrollPhysics(),
                   slideConfiguration: SlideConfiguration(verticalOffset: 400),
                   children: [
-                    Text('${locale.lblNote} :  ${locale.lblSwipeMassage}',
-                        style: secondaryTextStyle(
-                            size: 10, color: appSecondaryColor)),
+                    if (!isPatient())
+                      Text('${locale.lblNote} :  ${locale.lblSwipeMassage}',
+                          style: secondaryTextStyle(
+                              size: 10, color: appSecondaryColor)),
+
+                    ///To do add language key
+                    if (isPatient() &&
+                        (showBillDetails || showEncounterDashboard))
+                      Text('${locale.lblNote} :  Swipe to view details',
+                          style: secondaryTextStyle(
+                              size: 10, color: appSecondaryColor)),
                     8.height,
-                    ...snap
-                        .map((billData) => BillComponent(
-                              billData: billData,
-                              callToRefresh: () {
-                                init(showLoader: true);
-                              },
-                            ))
-                        .toList()
+                    ...snap.map((billData) {
+                      return BillComponent(
+                        billData: billData,
+                        callToRefresh: () {
+                          init(showLoader: true);
+                        },
+                      ).paddingSymmetric(vertical: 8);
+                    }).toList()
                   ],
                 );
               },

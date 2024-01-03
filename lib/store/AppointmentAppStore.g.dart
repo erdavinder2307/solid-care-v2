@@ -75,6 +75,23 @@ mixin _$AppointmentAppStore on AppointmentAppStoreBase, Store {
     });
   }
 
+  late final _$mSelectedPaymentMethodAtom = Atom(
+      name: 'AppointmentAppStoreBase.mSelectedPaymentMethod', context: context);
+
+  @override
+  String? get mSelectedPaymentMethod {
+    _$mSelectedPaymentMethodAtom.reportRead();
+    return super.mSelectedPaymentMethod;
+  }
+
+  @override
+  set mSelectedPaymentMethod(String? value) {
+    _$mSelectedPaymentMethodAtom
+        .reportWrite(value, super.mSelectedPaymentMethod, () {
+      super.mSelectedPaymentMethod = value;
+    });
+  }
+
   late final _$mPatientSelectedAtom =
       Atom(name: 'AppointmentAppStoreBase.mPatientSelected', context: context);
 
@@ -328,12 +345,24 @@ mixin _$AppointmentAppStore on AppointmentAppStoreBase, Store {
   }
 
   @override
+  void setPaymentMethod(String? paymentMethod) {
+    final _$actionInfo = _$AppointmentAppStoreBaseActionController.startAction(
+        name: 'AppointmentAppStoreBase.setPaymentMethod');
+    try {
+      return super.setPaymentMethod(paymentMethod);
+    } finally {
+      _$AppointmentAppStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 selectedAppointmentDate: ${selectedAppointmentDate},
 mDoctorSelected: ${mDoctorSelected},
 mClinicSelected: ${mClinicSelected},
 mIsUpdate: ${mIsUpdate},
+mSelectedPaymentMethod: ${mSelectedPaymentMethod},
 mPatientSelected: ${mPatientSelected},
 mPatientId: ${mPatientId},
 mStatusSelected: ${mStatusSelected},

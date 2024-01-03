@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:solidcare/components/loader_widget.dart';
 import 'package:solidcare/main.dart';
 import 'package:nb_utils/nb_utils.dart';
@@ -12,11 +11,7 @@ class AppLoader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Observer(
-      builder: (BuildContext context) {
-        return LoaderWidget(size: loaderSize)
-            .visible(visibleOn ?? appStore.isLoading);
-      },
-    );
+    return LoaderWidget(size: loaderSize)
+        .visible(visibleOn ?? appStore.isLoading);
   }
 }

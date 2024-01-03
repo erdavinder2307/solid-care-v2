@@ -7,6 +7,8 @@ Color appPrimaryColor = primaryColor;
 const appSecondaryColor = Color(0xFFF68685);
 const primaryDarkColor = Color(0xff0a0909);
 
+const telemedColor = Color(0xFF181474);
+
 const borderColor = Color(0xFFEBEBEB);
 const cardColor = Color(0xFFFFFFFF);
 

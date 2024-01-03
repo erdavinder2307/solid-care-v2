@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:solidcare/components/cached_image_widget.dart';
-// ignore: unused_import
-import 'package:solidcare/components/status_widget.dart';
 import 'package:solidcare/main.dart';
-import 'package:solidcare/model/service_duration_model.dart';
 import 'package:solidcare/model/service_model.dart';
 import 'package:solidcare/model/static_data_model.dart';
+import 'package:solidcare/screens/patient/components/clinic_list_component.dart';
 import 'package:solidcare/screens/receptionist/screens/doctor/doctor_details_screen.dart';
 import 'package:solidcare/utils/app_common.dart';
 import 'package:solidcare/utils/colors.dart';
+import 'package:solidcare/utils/constants.dart';
 import 'package:solidcare/utils/extensions/string_extensions.dart';
-import 'package:solidcare/utils/images.dart';
+import 'package:solidcare/utils/extensions/widget_extentions.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class ViewServiceDetailScreen extends StatefulWidget {
@@ -24,10 +23,7 @@ class ViewServiceDetailScreen extends StatefulWidget {
 }
 
 class _ViewServiceDetailScreenState extends State<ViewServiceDetailScreen> {
-  List<DurationModel> durationList = getServiceDuration();
   Future<StaticDataModel>? future;
-
-  StaticData? category;
 
   @override
   void initState() {
@@ -51,130 +47,143 @@ class _ViewServiceDetailScreenState extends State<ViewServiceDetailScreen> {
         widget.serviceData.name.validate(),
         textColor: Colors.white,
       ),
-      body: SingleChildScrollView(
+      body: AnimatedScrollView(
         padding: EdgeInsets.only(bottom: 60, left: 16, right: 16, top: 16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            16.height,
-            RichText(
-              text: TextSpan(children: [
-                TextSpan(text: locale.lblCategory, style: primaryTextStyle()),
-                TextSpan(
-                    text: " : " +
-                        widget.serviceData.type
-                            .validate()
-                            .replaceAll(RegExp('[^A-Za-z]'), ' ')
-                            .capitalizeEachWord(),
-                    style: boldTextStyle()),
-              ]),
-            ),
-            16.height,
-            Text(
-                widget.serviceData.doctorList.validate().length > 1
-                    ? locale.lblAvailableDoctors
-                    : locale.lblAvailableDoctor,
-                style: boldTextStyle()),
-            16.height,
-            AnimatedWrap(
-              runSpacing: 16,
-              listAnimationType: listAnimationType,
-              children:
-                  widget.serviceData.doctorList.validate().map((doctorData) {
-                return GestureDetector(
-                  onTap: () {
-                    DoctorDetailScreen(doctorData: doctorData).launch(context,
-                        pageRouteAnimation: PageRouteAnimation.Fade,
-                        duration: 800.milliseconds);
-                  },
-                  child: Container(
-                    decoration: boxDecorationDefault(color: context.cardColor),
-                    child: Stack(
+        children: [
+          RichText(
+            text: TextSpan(children: [
+              TextSpan(
+                  text: locale.lblCategory,
+                  style: secondaryTextStyle(size: 16)),
+              TextSpan(
+                  text: " : " +
+                      widget.serviceData.type
+                          .validate()
+                          .replaceAll(RegExp('[^A-Za-z]'), ' ')
+                          .capitalizeEachWord(),
+                  style: primaryTextStyle()),
+            ]),
+          ),
+          16.height,
+          Text(
+              widget.serviceData.doctorList.validate().length > 1
+                  ? locale.lblAvailableDoctors
+                  : locale.lblAvailableDoctor,
+              style: primaryTextStyle()),
+          16.height,
+          AnimatedWrap(
+            runSpacing: 16,
+            spacing: 16,
+            listAnimationType: listAnimationType,
+            children:
+                widget.serviceData.doctorList.validate().map((doctorData) {
+              return Container(
+                width: context.width() / 2 - 24,
+                decoration: boxDecorationDefault(color: context.cardColor),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (doctorData.profileImage.validate().isNotEmpty)
+                      CachedImageWidget(
+                        url: doctorData.profileImage.validate(),
+                        fit: BoxFit.cover,
+                        width: context.width() / 2 - 24,
+                        height: 100,
+                      )
+                          .cornerRadiusWithClipRRectOnly(
+                              topLeft: defaultRadius.toInt(),
+                              topRight: defaultRadius.toInt())
+                          .appOnTap(() {
+                        DoctorDetailScreen(doctorData: doctorData).launch(
+                            context,
+                            pageRouteAnimation: pageAnimation,
+                            duration: 800.milliseconds);
+                      })
+                    else
+                      PlaceHolderWidget(
+                        width: context.width() / 2 - 24,
+                        borderRadius: radiusOnly(
+                            topLeft: defaultRadius, topRight: defaultRadius),
+                        alignment: Alignment.center,
+                        child: Text(
+                            doctorData.displayName.validate().isNotEmpty
+                                ? doctorData.displayName.validate()[0]
+                                : '',
+                            style: boldTextStyle(
+                                color: appStore.isDarkModeOn
+                                    ? Colors.white
+                                    : Colors.black,
+                                size: titleTextSize)),
+                        height: 100,
+                        color: appStore.isDarkModeOn ? context.cardColor : null,
+                      ).appOnTap(() {
+                        DoctorDetailScreen(doctorData: doctorData).launch(
+                            context,
+                            pageRouteAnimation: pageAnimation,
+                            duration: 800.milliseconds);
+                      }),
+                    Divider(color: viewLineColor, height: 2).visible(
+                        appStore.isDarkModeOn &&
+                            doctorData.profileImage.validate().isEmpty),
+                    Column(
                       children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('Dr. ' + doctorData.displayName.validate(),
-                                    style: boldTextStyle(size: 14)),
-                                8.height,
-                                Row(
-                                  children: [
-                                    SettingItemWidget(
-                                      splashColor: Colors.transparent,
-                                      highlightColor: Colors.transparent,
-                                      title: appStore.currencyPrefix
-                                              .validate(value: '') +
-                                          doctorData.charges
-                                              .validate(value: '') +
-                                          appStore.currencyPostfix
-                                              .validate(value: ''),
-                                      titleTextStyle:
-                                          secondaryTextStyle(size: 14),
-                                      leading: ic_bill
-                                          .iconImage(size: 20)
-                                          .paddingRight(6),
-                                      padding: EdgeInsets.zero,
-                                      paddingAfterLeading: 4,
-                                    ).expand(),
-                                    if (doctorData.duration != null &&
-                                        doctorData.duration
-                                                .validate()
-                                                .toInt() !=
-                                            0)
-                                      SettingItemWidget(
-                                        splashColor: Colors.transparent,
-                                        highlightColor: Colors.transparent,
-                                        padding: EdgeInsets.zero,
-                                        paddingAfterLeading: 4,
-                                        title: durationList
-                                            .where((element) =>
-                                                element.value ==
-                                                doctorData.duration.toInt())
-                                            .first
-                                            .label
-                                            .validate(),
-                                        titleTextStyle:
-                                            secondaryTextStyle(size: 14),
-                                        leading: ic_timer
-                                            .iconImage(size: 20)
-                                            .paddingRight(6),
-                                      ).expand(flex: 2),
-                                  ],
+                        Text(
+                          doctorData.displayName
+                              .validate()
+                              .prefixText(value: 'Dr. '),
+                          style: primaryTextStyle(),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.center,
+                        ),
+                        4.height,
+                        FittedBox(
+                          child: Wrap(
+                            crossAxisAlignment: WrapCrossAlignment.center,
+                            children: [
+                              Text(
+                                locale.lblAvailableAtClinics,
+                                style: secondaryTextStyle(
+                                  decoration: TextDecoration.underline,
+                                  color: appPrimaryColor,
+                                  decorationColor: appPrimaryColor,
                                 ),
-                                if (doctorData.isTelemed ?? false) 8.height,
-                                if (doctorData.isTelemed ?? false)
-                                  SettingItemWidget(
-                                    splashColor: Colors.transparent,
-                                    highlightColor: Colors.transparent,
-                                    padding: EdgeInsets.zero,
-                                    paddingAfterLeading: 4,
-                                    leading: ic_telemed.iconImage(size: 20),
-                                    title: locale.lblTelemedServiceAvailable,
-                                    titleTextStyle:
-                                        secondaryTextStyle(size: 14),
-                                  )
-                              ],
-                            ).expand(flex: 3),
-                            if (doctorData.serviceImage.validate().isNotEmpty)
-                              CachedImageWidget(
-                                url: doctorData.serviceImage.validate(),
-                                height: 50,
-                                width: 50,
-                                radius: 8,
-                              ).cornerRadiusWithClipRRect(8)
-                          ],
-                        ).paddingSymmetric(horizontal: 16, vertical: 8),
+                              ),
+                              1.width,
+                              Icon(Icons.visibility_outlined,
+                                  color: appPrimaryColor, size: 16),
+                            ],
+                          ).appOnTap(() {
+                            showModalBottomSheet(
+                              context: context,
+                              backgroundColor: context.scaffoldBackgroundColor,
+                              constraints: BoxConstraints(
+                                  maxWidth: context.width(),
+                                  maxHeight: context.height() * 0.7),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.only(
+                                      topRight: radiusCircular(),
+                                      topLeft: radiusCircular())),
+                              isScrollControlled: true,
+                              showDragHandle: true,
+                              builder: (context) {
+                                return AvailableClinicListComponent(
+                                  doctorData: doctorData,
+                                  serviceName:
+                                      widget.serviceData.name.validate(),
+                                );
+                              },
+                            );
+                          }),
+                        ),
                       ],
-                    ),
-                  ),
-                );
-              }).toList(),
-            )
-          ],
-        ),
+                    ).paddingSymmetric(horizontal: 16, vertical: 16),
+                  ],
+                ),
+              );
+            }).toList(),
+          )
+        ],
       ),
     );
   }

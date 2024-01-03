@@ -1,3 +1,8 @@
 {
-    "dart.flutterSdkPath": "~/Development/flutter"
+    "dart.flutterSdkPath": "~/Development/flutter",
+    "editor.quickSuggestions": {
+        "comments": "off",
+        "strings": "off",
+        "other": "off"
+    }
 }

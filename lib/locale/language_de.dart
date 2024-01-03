@@ -2,7 +2,129 @@ import 'package:solidcare/locale/base_language_key.dart';
 
 class LanguageDe extends BaseLanguage {
   @override
-  String get appName => 'Kivicare';
+  String get appName => 'Solidcare';
+
+  @override
+  String get lblBill => "";
+
+  @override
+  String get lblStripeTestCredential => "";
+
+  @override
+  String get lblTodayIsHoliday => "Heute ist Ihr Feiertag";
+
+  @override
+  String get lblTotalTax => "Gesamtsteuer";
+
+  @override
+  String get lblStart => "Start";
+
+  @override
+  String get lblJoin => "Verbinden";
+
+  @override
+  String get lblTotalDoctors => "Insgesamt Ärzte";
+
+  @override
+  String get lblTax => "Steuer";
+
+  @override
+  String get lblTaxRate => "Steuersatz";
+
+  @override
+  String get lblSubTotal => "Zwischensumme";
+
+  @override
+  String get lblThisServiceAlreadyExistInClinic =>
+      "Dieser Service ist in der ausgewählten Klinik bereits vorhanden";
+
+  @override
+  String get lblPleaseSelectPayment => "Bitte wählen Sie Zahlungsmethode aus";
+
+  @override
+  String get lblChargesIsNegative =>
+      "Die Gebühren müssen größer oder gleich 0 sein";
+
+  @override
+  String get lblServiceCategoryIsRequired =>
+      "Servicekategorie ist erforderlich";
+
+  @override
+  String get lblServiceNameIsRequired => "Servicename ist erforderlich";
+
+  @override
+  String get lblDurationIsRequired => "Dauer ist erforderlich";
+
+  @override
+  String get lblChargesIsRequired => "Gebühren sind erforderlich";
+
+  @override
+  String get lblNoLatestAppointmentFound => "Kein jüngster Termin gefunden";
+  @override
+  String get lblNoPendingAppointmentFound => "Kein anstehender Termin gefunden";
+  @override
+  String get lblNoCompletedAppointmentFound =>
+      "Kein abgeschlossener Termin gefunden";
+  @override
+  String get lblNoCancelledAppointmentFound =>
+      "Kein stornierter Termin gefunden";
+
+  @override
+  String get clinicIdRequired => "Klinik ist erforderlich";
+  @override
+  String get roleIsRequired => "Rolle ist erforderlich";
+
+  @override
+  String get confirmPasswordIsRequired =>
+      "Bestätigen Sie das Passwort erforderlich";
+
+  @override
+  String get passwordIsRequired => "Passwort wird benötigt";
+
+  @override
+  String get contactNumberIsRequired => "Kontaktnummer ist erforderlich";
+
+  @override
+  String get lblSwipeLeftToEdit => "Links wischen, um Details zu bearbeiten";
+  @override
+  String get lblNoEncounterFoundAtYourClinic =>
+      "Keine Begegnung in Ihrer Klinik gefunden";
+
+  @override
+  String get lblAvailableAtClinics => 'Erhältlich in Kliniken';
+
+  @override
+  String get lblClinicsSelected => "Kliniken ausgewählt";
+
+  @override
+  String get lblClinicsAvailable => "Kliniken verfügbar";
+
+  @override
+  String get lblSelectRole => "Rolle auswählen";
+
+  @override
+  String get lblPwdDoesNotMatch => "Passwort stimmt nicht überein";
+
+  @override
+  String get lblSelectPaymentMethod => "Wählen Sie die Zahlungsmethode";
+
+  @override
+  String get lblAmount => "Menge";
+
+  @override
+  String get lblPaymentId => "Zahlungs -ID";
+
+  @override
+  String get lblPaymentMethod => "Bezahlverfahren";
+
+  @override
+  String get lblVPA => "VPA";
+
+  @override
+  String get lblCardId => "Ausweiskarte";
+
+  @override
+  String get lblTransactionId => "Transaktions-ID";
 
   @override
   String get lblReportUpdatedSuccessfully => "Bericht erfolgreich aktualisiert";
@@ -366,19 +488,19 @@ class LanguageDe extends BaseLanguage {
 
   @override
   String get lblWalkThroughSubTitle1 =>
-      '""Die Kivicare-App ist die EHR-Lösung für die vorbereitete und ultimative elektronische Gesundheitsakten (ELEPONISIERUNGSBEDEUTUNG) für Ärzte, Mediziner, Klinik und Patientenmanagement. Vier einzigartige Modelle für Arzt, Klinikadministratoren, Empfangsanlagen und Patienten.';
+      '""Die Solidcare-App ist die EHR-Lösung für die vorbereitete und ultimative elektronische Gesundheitsakten (ELEPONISIERUNGSBEDEUTUNG) für Ärzte, Mediziner, Klinik und Patientenmanagement. Vier einzigartige Modelle für Arzt, Klinikadministratoren, Empfangsanlagen und Patienten.';
 
   @override
   String get lblWalkThroughSubTitle2 =>
-      'Erstellen Sie Ihre mobile App einfallsreich, indem Sie Ärzte auflisten. Sie können einen Arzt finden, der Ihnen mit diesem erstaunlichen Ärztemodell am nächsten liegt. Fügen Sie die Ärzteliste mit Kivicare hinzu und verwalten Sie sie.';
+      'Erstellen Sie Ihre mobile App einfallsreich, indem Sie Ärzte auflisten. Sie können einen Arzt finden, der Ihnen mit diesem erstaunlichen Ärztemodell am nächsten liegt. Fügen Sie die Ärzteliste mit Solidcare hinzu und verwalten Sie sie.';
 
   @override
   String get lblWalkThroughSubTitle3 =>
-      'Verwalten Sie Termine in der Klinik oder im Krankenhaus und planen Sie Patienten im Voraus mit intelligenter Kivicare -Schnittstelle. Vermeiden Sie Verzögerungen oder längeres Warten in Warteschlangen';
+      'Verwalten Sie Termine in der Klinik oder im Krankenhaus und planen Sie Patienten im Voraus mit intelligenter Solidcare -Schnittstelle. Vermeiden Sie Verzögerungen oder längeres Warten in Warteschlangen';
 
   @override
   String get lblWalkThroughSubTitle4 =>
-      'Patienten können direkt mit dem Arzt konsultieren, was die erste Diagnose genau und rechtzeitig darstellt. Die SMS -Benachrichtigung von Kivicare sendet Benachrichtigungen über die registrierte Nummer des Patienten.';
+      'Patienten können direkt mit dem Arzt konsultieren, was die erste Diagnose genau und rechtzeitig darstellt. Die SMS -Benachrichtigung von Solidcare sendet Benachrichtigungen über die registrierte Nummer des Patienten.';
 
   @override
   String get lblWalkThroughSkipButton => 'Überspringen';
@@ -517,7 +639,7 @@ class LanguageDe extends BaseLanguage {
   String get lblDone => 'Erledigt';
 
   @override
-  String get lblSignUpAsPatient => 'Erstellen Sie Ihr Kivicare -Konto';
+  String get lblSignUpAsPatient => 'Erstellen Sie Ihr Solidcare -Konto';
 
   @override
   String get lblAlreadyAMember => 'Schon ein Mitglied?';
@@ -1065,7 +1187,7 @@ class LanguageDe extends BaseLanguage {
   String get lblClinicTAndC => 'Klinik T & C';
 
   @override
-  String get lblAboutSolidCare => 'Über Kivicare';
+  String get lblAboutSolidCare => 'Über Solidcare';
 
   @override
   String get lblYourReviewCounts => 'Ihre Bewertung zählt';
@@ -1080,7 +1202,7 @@ class LanguageDe extends BaseLanguage {
   String get lblSubmitYourQueriesHere => 'Senden Sie hier Ihre Fragen';
 
   @override
-  String get lblShareSolidCare => 'Teile Kivicare';
+  String get lblShareSolidCare => 'Teile Solidcare';
 
   @override
   String get lblLogout => 'Ausloggen';
@@ -1102,7 +1224,7 @@ class LanguageDe extends BaseLanguage {
 
   @override
   String get lblAboutUsDes =>
-      '""Kivicare ist eine vollständige Klinik-/Krankenhaustermin- und Rekordmanagement für Ärzte und Patienten App. Es hilft den Patienten, ihren Arzttermin zu jedem Zeitpunkt leicht zu buchen Informationen, medizinische Berichte, Medikamente, Besuch der Geschichte, klinische Notizen, Patientenanamnese und andere Notizen. Termine für Ihre Patienten können einfach mit der Kivicare -App verwaltet werden. Alle Ihre medizinischen Unterlagen für Patienten können Sie sofort betrachten. Also nicht mehr Wenn Sie durch Papiere jonglieren, um die Vorgeschichte Ihrer Patienten zu sehen, ist alles für Ihre Diagnose verfügbar.';
+      '""Solidcare ist eine vollständige Klinik-/Krankenhaustermin- und Rekordmanagement für Ärzte und Patienten App. Es hilft den Patienten, ihren Arzttermin zu jedem Zeitpunkt leicht zu buchen Informationen, medizinische Berichte, Medikamente, Besuch der Geschichte, klinische Notizen, Patientenanamnese und andere Notizen. Termine für Ihre Patienten können einfach mit der Solidcare -App verwaltet werden. Alle Ihre medizinischen Unterlagen für Patienten können Sie sofort betrachten. Also nicht mehr Wenn Sie durch Papiere jonglieren, um die Vorgeschichte Ihrer Patienten zu sehen, ist alles für Ihre Diagnose verfügbar.';
 
   @override
   String get lblPurchase => 'Kaufen';
@@ -1437,8 +1559,8 @@ class LanguageDe extends BaseLanguage {
       'Sie sehen eine QR für App -Option in der rechten Ecke.';
 
   @override
-  String get lblEnjoyTheFlawlessKivicareSystemWithEase =>
-      'Genießen! Das makellose Kivicare -System mit Leichtigkeit.';
+  String get lblEnjoyTheFlawlessSolidcareSystemWithEase =>
+      'Genießen! Das makellose Solidcare -System mit Leichtigkeit.';
 
   @override
   String get lblCamera => 'Kamera';

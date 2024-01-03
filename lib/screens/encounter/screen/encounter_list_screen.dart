@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:solidcare/components/empty_error_state_component.dart';
@@ -10,13 +12,12 @@ import 'package:solidcare/network/appointment_repository.dart';
 import 'package:solidcare/network/encounter_repository.dart';
 import 'package:solidcare/screens/doctor/fragments/appointment_fragment.dart';
 import 'package:solidcare/screens/encounter/component/encounter_component.dart';
-import 'package:solidcare/screens/encounter/screen/add_encounter_screen.dart';
 import 'package:solidcare/screens/shimmer/screen/encounter_shimmer_screen.dart';
 import 'package:solidcare/utils/app_common.dart';
 import 'package:solidcare/utils/colors.dart';
 import 'package:solidcare/utils/common.dart';
-import 'package:solidcare/utils/constants.dart';
 import 'package:solidcare/utils/extensions/int_extensions.dart';
+import 'package:solidcare/utils/extensions/string_extensions.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class EncounterListScreen extends StatefulWidget {
@@ -45,6 +46,7 @@ class _EncounterListScreenState extends State<EncounterListScreen> {
 
   Future<void> init({bool showLoader = false}) async {
     if (showLoader) appStore.setLoading(true);
+
     future = getPatientEncounterList(
       id: (isPatient() ? userStore.userId.validate() : null),
       page: page,
@@ -103,6 +105,7 @@ class _EncounterListScreenState extends State<EncounterListScreen> {
 
   @override
   void dispose() {
+    getDisposeStatusBarColor();
     super.dispose();
   }
 
@@ -156,38 +159,20 @@ class _EncounterListScreenState extends State<EncounterListScreen> {
                   listAnimationType: listAnimationType,
                   slideConfiguration: SlideConfiguration(verticalOffset: 400),
                   children: [
-                    Text('${locale.lblNote} :  ${locale.lblSwipeMassage}',
-                        style: secondaryTextStyle(
-                            size: 10, color: appSecondaryColor)),
+                    if (!isPatient())
+                      Text('${locale.lblNote} :  ${locale.lblSwipeMassage}',
+                          style: secondaryTextStyle(
+                              size: 10, color: appSecondaryColor)),
                     8.height,
-                    ...snap
-                        .map(
-                          (encounterData) => GestureDetector(
-                            onTap: () {
-                              if (isReceptionist() || isDoctor()) {
-                                AddEncounterScreen(
-                                        patientId:
-                                            encounterData.patientId.toInt(),
-                                        patientEncounterData: encounterData)
-                                    .launch(context)
-                                    .then((value) {
-                                  init();
-                                });
-                              }
-                            },
-                            child: EncounterComponent(
-                              data: encounterData,
-                              deleteEncounter: deleteEncounter,
-                              callForRefresh: () {
-                                updateStatus(
-                                    id: encounterData.appointmentId.toInt(),
-                                    status: CheckOutStatusInt);
-                                init(showLoader: true);
-                              },
-                            ),
-                          ),
-                        )
-                        .toList()
+                    ...snap.map((encounterData) {
+                      return EncounterComponent(
+                        data: encounterData,
+                        deleteEncounter: deleteEncounter,
+                        callForRefresh: () {
+                          init(showLoader: true);
+                        },
+                      );
+                    })
                   ],
                 );
               },

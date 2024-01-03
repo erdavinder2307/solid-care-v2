@@ -13,6 +13,7 @@ import 'package:solidcare/utils/colors.dart';
 import 'package:solidcare/utils/common.dart';
 import 'package:solidcare/utils/extensions/enums.dart';
 import 'package:solidcare/utils/extensions/string_extensions.dart';
+import 'package:solidcare/utils/extensions/widget_extentions.dart';
 import 'package:solidcare/utils/images.dart';
 import 'package:nb_utils/nb_utils.dart';
 
@@ -21,6 +22,7 @@ class EditServiceDataScreen extends StatefulWidget {
   UserModel? serviceData;
   final int? serviceId;
   final String doctorId;
+
   final Function(ServiceData)? onSubmit;
 
   EditServiceDataScreen(
@@ -66,6 +68,7 @@ class _EditServiceDataScreenState extends State<EditServiceDataScreen> {
 
   void init() async {
     isUpdate = widget.serviceData != null;
+
     if (isUpdate) {
       selectedDoctor = widget.serviceData;
       chargesCont.text = selectedDoctor!.charges.validate();
@@ -176,13 +179,11 @@ class _EditServiceDataScreenState extends State<EditServiceDataScreen> {
                               width: 126,
                               fit: BoxFit.cover,
                               circle: true),
-                ).onTap(
+                ).appOnTap(
                   () {
                     _chooseImage();
                   },
                   borderRadius: radius(65),
-                  splashColor: Colors.transparent,
-                  highlightColor: Colors.transparent,
                 ),
                 Positioned(
                   bottom: 0,
@@ -194,13 +195,11 @@ class _EditServiceDataScreenState extends State<EditServiceDataScreen> {
                         shape: BoxShape.circle,
                         border: Border.all(color: white, width: 3)),
                     child: ic_camera.iconImage(size: 14, color: Colors.white),
-                  ).onTap(
+                  ).appOnTap(
                     () {
                       _chooseImage();
                     },
                     borderRadius: radius(65),
-                    splashColor: Colors.transparent,
-                    highlightColor: Colors.transparent,
                   ),
                 )
               ],
@@ -213,6 +212,13 @@ class _EditServiceDataScreenState extends State<EditServiceDataScreen> {
               keyboardType: TextInputType.number,
               textAlign: TextAlign.justify,
               textInputAction: TextInputAction.next,
+              errorThisFieldRequired: locale.lblChargesIsRequired,
+              validator: (value) {
+                if (value.isEmptyOrNull) return locale.lblChargesIsRequired;
+                if (value.toInt().isNegative)
+                  return locale.lblChargesIsNegative;
+                return null;
+              },
               decoration: inputDecoration(
                 context: context,
                 labelText: locale.lblCharges,
@@ -220,7 +226,6 @@ class _EditServiceDataScreenState extends State<EditServiceDataScreen> {
                     .iconImage(size: 10, color: context.iconColor)
                     .paddingAll(14),
               ),
-              onFieldSubmitted: (value) {},
             ),
             16.height,
             DropdownButtonHideUnderline(
@@ -230,6 +235,11 @@ class _EditServiceDataScreenState extends State<EditServiceDataScreen> {
                 value: selectedDuration,
                 icon: SizedBox.shrink(),
                 dropdownColor: context.cardColor,
+                validator: (value) {
+                  if (selectedDuration == null)
+                    return locale.lblDurationIsRequired;
+                  return null;
+                },
                 autovalidateMode: isFirstTime
                     ? AutovalidateMode.disabled
                     : AutovalidateMode.onUserInteraction,
@@ -273,23 +283,30 @@ class _EditServiceDataScreenState extends State<EditServiceDataScreen> {
                   ),
                   4.height,
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      RadioListTile<bool>(
-                        visualDensity: VisualDensity.compact,
-                        value: true,
-                        controlAffinity: ListTileControlAffinity.trailing,
-                        groupValue: isMultiSelection,
-                        title: Text(locale.lblYes, style: primaryTextStyle()),
-                        onChanged: changeMultiSelection,
-                      ).expand(),
-                      RadioListTile<bool>(
-                        visualDensity: VisualDensity.compact,
-                        value: false,
-                        controlAffinity: ListTileControlAffinity.trailing,
-                        groupValue: isMultiSelection,
-                        title: Text(locale.lblNo, style: primaryTextStyle()),
-                        onChanged: changeMultiSelection,
-                      ).expand(),
+                      Wrap(
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        spacing: 0,
+                        children: [
+                          Text(locale.lblYes, style: primaryTextStyle()),
+                          Radio.adaptive(
+                              value: true,
+                              groupValue: isMultiSelection,
+                              onChanged: changeMultiSelection),
+                        ],
+                      ).paddingLeft(38),
+                      Wrap(
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        spacing: 0,
+                        children: [
+                          Text(locale.lblNo, style: primaryTextStyle()),
+                          Radio.adaptive(
+                              value: false,
+                              groupValue: isMultiSelection,
+                              onChanged: changeMultiSelection),
+                        ],
+                      ).paddingRight(38),
                     ],
                   )
                 ],
@@ -309,25 +326,30 @@ class _EditServiceDataScreenState extends State<EditServiceDataScreen> {
                   ),
                   4.height,
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      RadioListTile<bool>(
-                        visualDensity: VisualDensity.compact,
-                        value: true,
-                        controlAffinity: ListTileControlAffinity.trailing,
-                        groupValue: isActive,
-                        title:
-                            Text(locale.lblActive, style: primaryTextStyle()),
-                        onChanged: changeStatus,
-                      ).expand(),
-                      RadioListTile<bool>(
-                        visualDensity: VisualDensity.compact,
-                        value: false,
-                        controlAffinity: ListTileControlAffinity.trailing,
-                        groupValue: isActive,
-                        title:
-                            Text(locale.lblInActive, style: primaryTextStyle()),
-                        onChanged: changeStatus,
-                      ).expand(),
+                      Wrap(
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        spacing: 0,
+                        children: [
+                          Text(locale.lblActive, style: primaryTextStyle()),
+                          Radio.adaptive(
+                              value: true,
+                              groupValue: isActive,
+                              onChanged: changeStatus)
+                        ],
+                      ).paddingLeft(22),
+                      Wrap(
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        spacing: 0,
+                        children: [
+                          Text(locale.lblInActive, style: primaryTextStyle()),
+                          Radio.adaptive(
+                              value: false,
+                              groupValue: isActive,
+                              onChanged: changeStatus)
+                        ],
+                      ).paddingRight(22),
                     ],
                   )
                 ],
@@ -347,23 +369,30 @@ class _EditServiceDataScreenState extends State<EditServiceDataScreen> {
                   ),
                   4.height,
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      RadioListTile<bool>(
-                        visualDensity: VisualDensity.compact,
-                        value: true,
-                        controlAffinity: ListTileControlAffinity.trailing,
-                        groupValue: isTelemed,
-                        title: Text(locale.lblYes, style: primaryTextStyle()),
-                        onChanged: allowTelemed,
-                      ).expand(),
-                      RadioListTile<bool>(
-                        visualDensity: VisualDensity.compact,
-                        value: false,
-                        controlAffinity: ListTileControlAffinity.trailing,
-                        groupValue: isTelemed,
-                        title: Text(locale.lblNo, style: primaryTextStyle()),
-                        onChanged: allowTelemed,
-                      ).expand(),
+                      Wrap(
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        spacing: 0,
+                        children: [
+                          Text(locale.lblYes, style: primaryTextStyle()),
+                          Radio.adaptive(
+                              value: true,
+                              groupValue: isTelemed,
+                              onChanged: allowTelemed)
+                        ],
+                      ).paddingLeft(38),
+                      Wrap(
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        spacing: 0,
+                        children: [
+                          Text(locale.lblNo, style: primaryTextStyle()),
+                          Radio.adaptive(
+                              value: false,
+                              groupValue: isTelemed,
+                              onChanged: allowTelemed)
+                        ],
+                      ).paddingRight(38),
                     ],
                   )
                 ],
@@ -381,9 +410,19 @@ class _EditServiceDataScreenState extends State<EditServiceDataScreen> {
           if (formKey.currentState!.validate()) {
             formKey.currentState!.save();
             ServiceData data = ServiceData(
-              displayName: widget.serviceData!.displayName,
+              displayName: isDoctor()
+                  ? userStore.userDisplayName
+                  : widget.serviceData!.displayName,
+              clinicId: isDoctor()
+                  ? selectedDoctor!.clinicId.validate().toString()
+                  : userStore.userClinicId.toString(),
+              clinicName: isDoctor()
+                  ? selectedDoctor!.clinicName
+                  : userStore.userClinicName,
               id: widget.serviceId.toString(),
-              mappingTableId: widget.serviceData!.mappingTableId.validate(),
+              mappingTableId: isDoctor()
+                  ? ''
+                  : widget.serviceData!.mappingTableId.validate(),
               doctorId: widget.doctorId,
               multiple: isMultiSelection,
               status: isActive.getIntBool().toString(),
@@ -393,9 +432,8 @@ class _EditServiceDataScreenState extends State<EditServiceDataScreen> {
                   ? selectedDuration?.value.toString()
                   : null,
               imageFile: selectedImage,
-              image: widget.serviceData!.serviceImage,
+              image: isDoctor() ? '' : widget.serviceData!.serviceImage,
             );
-
             widget.onSubmit?.call(data);
             finish(context);
           } else {

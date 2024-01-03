@@ -15,7 +15,8 @@ class NewsDashboardWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        FeedDetailsScreen(newsData: newsData).launch(context);
+        FeedDetailsScreen(newsData: newsData).launch(context,
+            pageRouteAnimation: pageAnimation, duration: pageAnimationDuration);
       },
       child: Container(
         width: context.width(),

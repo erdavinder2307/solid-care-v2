@@ -11,10 +11,10 @@ import 'package:solidcare/model/user_model.dart';
 import 'package:solidcare/network/patient_list_repository.dart';
 import 'package:solidcare/screens/shimmer/screen/patient_search_shimmer_screen.dart';
 import 'package:solidcare/utils/app_common.dart';
-import 'package:solidcare/utils/colors.dart';
 import 'package:solidcare/utils/common.dart';
 import 'package:solidcare/utils/constants.dart';
 import 'package:solidcare/utils/extensions/string_extensions.dart';
+import 'package:solidcare/utils/extensions/widget_extentions.dart';
 import 'package:solidcare/utils/images.dart';
 import 'package:nb_utils/nb_utils.dart';
 
@@ -112,14 +112,10 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
                 prefixIcon: ic_search.iconImage().paddingAll(16),
                 suffixIcon: !showClear
                     ? Offstage()
-                    : ic_clear.iconImage().paddingAll(16).onTap(
+                    : ic_clear.iconImage().paddingAll(16).appOnTap(
                         () {
                           _onSearchClear();
                         },
-                        borderRadius: radius(),
-                        splashColor: Colors.transparent,
-                        highlightColor: Colors.transparent,
-                        hoverColor: Colors.transparent,
                       ),
               ),
               onChanged: (newValue) {
@@ -127,7 +123,7 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
                   showClear = false;
                   _onSearchClear();
                 } else {
-                  Timer(Duration(milliseconds: 500), () {
+                  Timer(pageAnimationDuration, () {
                     init(showLoader: true);
                   });
                   showClear = true;
@@ -184,10 +180,6 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
                   },
                   onNextPage: () async {
                     if (!isLastPage) {
-                      setState(() {
-                        page++;
-                      });
-                      init(showLoader: true);
                       await 1.seconds.delay;
                     }
                   },
@@ -201,31 +193,12 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
                           child: RadioListTile<UserModel>(
                             controlAffinity: ListTileControlAffinity.trailing,
                             tileColor: context.cardColor,
-                            secondary: data.profileImage.validate().isNotEmpty
-                                ? ImageBorder(
-                                    src: data.profileImage.validate(),
-                                    height: 30,
-                                  )
-                                : GradientBorder(
-                                    gradient: LinearGradient(colors: [
-                                      primaryColor,
-                                      appSecondaryColor
-                                    ], tileMode: TileMode.mirror),
-                                    strokeWidth: 2,
-                                    borderRadius: 80,
-                                    child: PlaceHolderWidget(
-                                      height: 30,
-                                      width: 30,
-                                      alignment: Alignment.center,
-                                      shape: BoxShape.circle,
-                                      child: Text(
-                                          data.displayName
-                                              .validate(value: 'P')[0]
-                                              .capitalizeFirstLetter(),
-                                          style: boldTextStyle(
-                                              color: Colors.black)),
-                                    ),
-                                  ),
+                            secondary: ImageBorder(
+                              src: data.profileImage.validate(),
+                              height: 30,
+                              nameInitial:
+                                  data.displayName.validate(value: 'P')[0],
+                            ),
                             shape:
                                 RoundedRectangleBorder(borderRadius: radius()),
                             value: data,

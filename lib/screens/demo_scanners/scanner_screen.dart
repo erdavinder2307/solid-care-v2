@@ -68,12 +68,12 @@ class _ScannerScreenState extends State<ScannerScreen> {
 
                   userStore.setFirstName(username);
                   appStore.setBaseUrl("$url/wp-json/", initialize: true);
-                  appStore.setDemoDoctor("doctor_$username@kivicare.com",
+                  appStore.setDemoDoctor("doctor_$username@solidcare.org",
                       initialize: true);
                   appStore.setDemoReceptionist(
-                      "receptionist_$username@kivicare.com",
+                      "receptionist_$username@solidcare.org",
                       initialize: true);
-                  appStore.setDemoPatient("patient_$username@kivicare.com",
+                  appStore.setDemoPatient("patient_$username@solidcare.org",
                       initialize: true);
                 }
                 finish(context, true);

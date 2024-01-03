@@ -25,7 +25,9 @@ class DashboardFragmentDoctorServiceComponent extends StatelessWidget {
           list: service,
           viewAllShowLimit: 3,
           onTap: () {
-            PatientServiceListScreen().launch(context);
+            PatientServiceListScreen().launch(context,
+                pageRouteAnimation: pageAnimation,
+                duration: pageAnimationDuration);
           },
         ).paddingSymmetric(horizontal: 16, vertical: 8),
         HorizontalList(
@@ -37,8 +39,10 @@ class DashboardFragmentDoctorServiceComponent extends StatelessWidget {
 
             return GestureDetector(
               onTap: () {
-                ViewServiceDetailScreen(serviceData: serviceData)
-                    .launch(context);
+                ViewServiceDetailScreen(serviceData: serviceData).launch(
+                    context,
+                    pageRouteAnimation: pageAnimation,
+                    duration: pageAnimationDuration);
               },
               child: CategoryWidget(data: serviceData),
             );

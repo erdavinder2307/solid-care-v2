@@ -7,15 +7,19 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:intl/intl.dart';
 import 'package:solidcare/components/body_widget.dart';
 import 'package:solidcare/components/empty_error_state_component.dart';
+import 'package:solidcare/components/loader_widget.dart';
 import 'package:solidcare/components/no_data_found_widget.dart';
+import 'package:solidcare/config.dart';
 import 'package:solidcare/main.dart';
 import 'package:solidcare/model/upcoming_appointment_model.dart';
 import 'package:solidcare/network/appointment_repository.dart';
 import 'package:solidcare/screens/appointment/appointment_functions.dart';
 import 'package:solidcare/screens/doctor/components/appointment_fragment_appointment_component.dart';
 import 'package:solidcare/screens/shimmer/components/appointment_shimmer_component.dart';
+import 'package:solidcare/utils/app_common.dart';
 import 'package:solidcare/utils/cached_value.dart';
 import 'package:solidcare/utils/colors.dart';
+import 'package:solidcare/utils/common.dart';
 import 'package:solidcare/utils/constants.dart';
 import 'package:solidcare/utils/extensions/date_extensions.dart';
 import 'package:solidcare/utils/images.dart';
@@ -48,7 +52,8 @@ class _AppointmentFragmentState extends State<AppointmentFragment> {
           Utils.lastDayOfMonth(DateTime.now()).day)
       .getFormattedDate(SAVE_DATE_FORMAT);
 
-  DateTime selectedDate = DateTime.now();
+  DateTime selectedDate =
+      DateTime.parse(DateFormat(SAVE_DATE_FORMAT).format(DateTime.now()));
 
   StreamSubscription? updateAppointmentApi;
 
@@ -65,28 +70,56 @@ class _AppointmentFragmentState extends State<AppointmentFragment> {
         endDate: null,
       );
     });
-    setState(() {
-      isRangeSelected = true;
-    });
-    init(startDate: startDate, endDate: endDate, isFirst: true);
+
+    init(startDate: startDate, endDate: endDate, showLoader: false);
+  }
+
+  Map<DateTime, List<UpcomingAppointmentModel>> groupAppointmentByDates(
+      {required List<UpcomingAppointmentModel> appointmentList}) {
+    return groupBy(
+        appointmentList,
+        (UpcomingAppointmentModel appointmentData) =>
+            DateFormat(SAVE_DATE_FORMAT)
+                .parse(appointmentData.appointmentGlobalStartDate.validate()));
   }
 
   Future<void> init(
-      {String? todayDate,
+      {bool showLoader = true,
+      String? todayDate,
       String? startDate,
-      String? endDate,
-      bool isFirst = false}) async {
-    appStore.setLoading(true);
+      String? endDate}) async {
+    if (showLoader) appStore.setLoading(true);
     future = getAppointment(
       pages: page,
-      perPage: 20,
+      perPage: PER_PAGE,
       appointmentList: appointmentList,
       lastPageCallback: (b) => isLastPage = b,
       todayDate: todayDate,
       startDate: startDate,
       endDate: endDate,
     ).then((value) {
-      checkOnSuccess(value);
+      if (todayDate != null && startDate == null && endDate == null) {
+        if (value.isNotEmpty) {
+          groupAppointmentByDates(appointmentList: value).forEach((key, value) {
+            DateTime date = key;
+            _events.putIfAbsent(
+                DateTime(date.year, date.month, date.day), () => value);
+          });
+        } else {
+          DateTime date = DateFormat(SAVE_DATE_FORMAT).parse(todayDate);
+          if (_events.containsKey(DateTime(date.year, date.month, date.day))) {
+            _events.remove(DateTime(date.year, date.month, date.day));
+          }
+        }
+      }
+
+      if (startDate != null && endDate != null)
+        groupAppointmentByDates(appointmentList: value).forEach((key, value) {
+          DateTime date = key;
+          _events.addAll({
+            DateTime(date.year, date.month, date.day): value,
+          });
+        });
       setState(() {});
       appStore.setLoading(false);
       return value;
@@ -94,22 +127,6 @@ class _AppointmentFragmentState extends State<AppointmentFragment> {
       appStore.setLoading(false);
       throw e;
     });
-  }
-
-  Future<void> checkOnSuccess(List<UpcomingAppointmentModel> snap) async {
-    if (isRangeSelected && (snap.isNotEmpty)) {
-      _events.clear();
-      snap.validate().forEachIndexed((element, index) {
-        DateTime date = DateFormat(SAVE_DATE_FORMAT)
-            .parse(element.appointmentGlobalStartDate.validate());
-        _events.addAll({
-          DateTime(date.year, date.month, date.day): [{}]
-        });
-      });
-      setState(() {
-        isRangeSelected = false;
-      });
-    }
   }
 
   Future<void> onSwipeRefresh({bool isFirst = false}) async {
@@ -133,7 +150,8 @@ class _AppointmentFragmentState extends State<AppointmentFragment> {
       return;
     }
     800.milliseconds.delay;
-    selectedDate = dateTime;
+    selectedDate =
+        DateTime.parse(DateFormat(SAVE_DATE_FORMAT).format(dateTime));
     setState(() {});
     init(
       todayDate: dateTime.getFormattedDate(SAVE_DATE_FORMAT),
@@ -150,6 +168,7 @@ class _AppointmentFragmentState extends State<AppointmentFragment> {
         todayDate: selectedDate.getFormattedDate(SAVE_DATE_FORMAT),
         startDate: null,
         endDate: null,
+        showLoader: true,
       );
     }
   }
@@ -227,6 +246,7 @@ class _AppointmentFragmentState extends State<AppointmentFragment> {
               ],
               events: _events,
               onDateSelected: (e) {
+                appStore.setLoading(true);
                 showData(e);
               },
               initialDate: selectedDate,
@@ -272,35 +292,45 @@ class _AppointmentFragmentState extends State<AppointmentFragment> {
             ).paddingSymmetric(horizontal: 16),
             onSuccess: (snap) {
               return AppointmentFragmentAppointmentComponent(
-                data: snap,
+                data:
+                    groupAppointmentByDates(appointmentList: snap)[selectedDate]
+                        .validate(),
                 refreshCallForRefresh: () {
                   onSwipeRefresh(isFirst: true);
                 },
               ).visible(
-                snap.isNotEmpty,
+                groupAppointmentByDates(appointmentList: snap)[selectedDate]
+                    .validate()
+                    .isNotEmpty,
                 defaultWidget: Observer(
                   builder: (context) {
-                    if (snap.isEmpty && !appStore.isLoading)
+                    if (groupAppointmentByDates(
+                                appointmentList: snap)[selectedDate]
+                            .validate()
+                            .isEmpty &&
+                        !appStore.isLoading)
                       return NoDataFoundWidget(
-                              text: selectedDate
-                                          .getFormattedDate(SAVE_DATE_FORMAT) ==
-                                      DateTime.now()
-                                          .getFormattedDate(SAVE_DATE_FORMAT)
-                                  ? locale.lblNoAppointmentForToday
-                                  : locale.lblNoAppointmentForThisDay)
-                          .center();
-                    return AnimatedWrap(
-                      listAnimationType: ListAnimationType.None,
-                      runSpacing: 16,
-                      spacing: 16,
-                      children: [
-                        AppointmentShimmerComponent(),
-                        AppointmentShimmerComponent(),
-                        AppointmentShimmerComponent(),
-                      ],
-                    )
-                        .paddingSymmetric(horizontal: 16)
-                        .visible(appStore.isLoading && snap.isEmpty);
+                        text: selectedDate.getFormattedDate(SAVE_DATE_FORMAT) ==
+                                DateTime.now()
+                                    .getFormattedDate(SAVE_DATE_FORMAT)
+                            ? locale.lblNoAppointmentForToday
+                            : locale.lblNoAppointmentForThisDay,
+                      ).center();
+                    else if (page > 1 && appStore.isLoading)
+                      return LoaderWidget().center();
+                    else
+                      return AnimatedWrap(
+                        listAnimationType: ListAnimationType.None,
+                        runSpacing: 16,
+                        spacing: 16,
+                        children: [
+                          AppointmentShimmerComponent(),
+                          AppointmentShimmerComponent(),
+                          AppointmentShimmerComponent(),
+                        ],
+                      )
+                          .paddingSymmetric(horizontal: 16)
+                          .visible(appStore.isLoading && snap.isEmpty);
                   },
                 ),
               );
@@ -311,13 +341,9 @@ class _AppointmentFragmentState extends State<AppointmentFragment> {
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () async {
-          if (appStore.isConnectedToInternet) {
-            appointmentWidgetNavigation(context);
-          } else {
-            toast(locale.lblNoInternetMsg);
-          }
+          appointmentWidgetNavigation(context);
         },
-      ),
+      ).visible(isVisible(SharedPreferenceKey.solidCareAppointmentAddKey)),
     );
   }
 }

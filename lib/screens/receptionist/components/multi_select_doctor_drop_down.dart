@@ -6,18 +6,20 @@ import 'package:solidcare/components/loader_widget.dart';
 import 'package:solidcare/components/no_data_found_widget.dart';
 import 'package:solidcare/main.dart';
 import 'package:solidcare/model/user_model.dart';
-import 'package:solidcare/network/doctor_list_repository.dart';
 import 'package:solidcare/screens/receptionist/screens/doctor/component/doctor_list_component.dart';
 import 'package:solidcare/screens/shimmer/components/doctor_shimmer_component.dart';
 import 'package:solidcare/utils/app_common.dart';
 import 'package:solidcare/utils/common.dart';
 import 'package:solidcare/utils/extensions/string_extensions.dart';
+import 'package:solidcare/utils/extensions/widget_extentions.dart';
 import 'package:solidcare/utils/images.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:solidcare/network/doctor_repository.dart';
 
 class MultiSelectDoctorDropDown extends StatefulWidget {
   final int? clinicId;
   final List<int>? selectedDoctorsId;
+
   final Function(int)? refreshMappingTableIdsList;
 
   final Function(List<UserModel> selectedDoctor)? onSubmit;
@@ -73,7 +75,6 @@ class _MultiSelectDoctorDropDownState extends State<MultiSelectDoctorDropDown> {
         showClear = false;
       }
       appStore.setLoading(false);
-
       setState(() {});
     }).catchError((e) {
       appStore.setLoading(false);
@@ -86,7 +87,7 @@ class _MultiSelectDoctorDropDownState extends State<MultiSelectDoctorDropDown> {
     hideKeyboard(context);
 
     searchCont.clear();
-    init(showLoader: true);
+    init();
   }
 
   @override
@@ -117,13 +118,10 @@ class _MultiSelectDoctorDropDownState extends State<MultiSelectDoctorDropDown> {
                 prefixIcon: ic_search.iconImage().paddingAll(16),
                 suffixIcon: !showClear
                     ? Offstage()
-                    : ic_clear.iconImage().paddingAll(16).onTap(
+                    : ic_clear.iconImage().paddingAll(16).appOnTap(
                         () async {
                           _onSearchClear();
                         },
-                        borderRadius: radius(),
-                        splashColor: Colors.transparent,
-                        highlightColor: Colors.transparent,
                       ),
               ),
               onChanged: (newValue) {
@@ -131,8 +129,8 @@ class _MultiSelectDoctorDropDownState extends State<MultiSelectDoctorDropDown> {
                   showClear = false;
                   _onSearchClear();
                 } else {
-                  Timer(Duration(milliseconds: 500), () {
-                    init(showLoader: true);
+                  Timer(pageAnimationDuration, () {
+                    init();
                   });
                   showClear = true;
                 }
@@ -140,7 +138,7 @@ class _MultiSelectDoctorDropDownState extends State<MultiSelectDoctorDropDown> {
               },
               onFieldSubmitted: (searchString) {
                 hideKeyboard(context);
-                init(showLoader: true);
+                init();
               },
             ).paddingOnly(left: 16, right: 16, top: 16),
             SnapHelperWidget<List<UserModel>>(
@@ -184,23 +182,33 @@ class _MultiSelectDoctorDropDownState extends State<MultiSelectDoctorDropDown> {
                 return AnimatedListView(
                   itemCount: snap.length,
                   shrinkWrap: true,
+                  physics: AlwaysScrollableScrollPhysics(),
                   padding: EdgeInsets.only(bottom: 90),
                   onNextPage: () {
                     if (!isLastPage) {
                       setState(() {
                         page++;
-                        isFirst = true;
                       });
                       init();
                     }
+                  },
+                  onSwipeRefresh: () async {
+                    setState(() {
+                      page = 1;
+                      isFirst = true;
+                    });
+                    init(showLoader: false);
+
+                    await 1.seconds.delay;
                   },
                   itemBuilder: (context, index) {
                     UserModel userData = snap[index];
 
                     return GestureDetector(
                       onTap: () {
-                        userData.isCheck = !userData.isCheck;
-                        setState(() {});
+                        setState(() {
+                          userData.isCheck = !userData.isCheck;
+                        });
                         if (userData.isCheck == false) {
                           widget.refreshMappingTableIdsList
                               ?.call(userData.doctorId.toInt());
@@ -224,7 +232,6 @@ class _MultiSelectDoctorDropDownState extends State<MultiSelectDoctorDropDown> {
         onPressed: () async {
           widget.onSubmit!.call(
               doctorList.where((element) => element.isCheck == true).toList());
-
           finish(context);
         },
       ),

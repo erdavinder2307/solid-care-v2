@@ -75,21 +75,21 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
               launchMail(MAIL_TO);
             },
           ),
-          AppButton(
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ic_purchase.iconImage(color: Colors.white, size: 24),
-                8.width,
-                Text(locale.lblPurchase,
-                    style: primaryTextStyle(color: Colors.white)),
-              ],
-            ),
-            padding: EdgeInsets.symmetric(vertical: 8, horizontal: 20),
-            onTap: () {
-              launchUrlCustomTab(CODE_CANYON_URL);
-            },
-          ),
+          // AppButton(
+          //   child: Row(
+          //     mainAxisSize: MainAxisSize.min,
+          //     children: [
+          //       ic_purchase.iconImage(color: Colors.white, size: 24),
+          //       8.width,
+          //       Text(locale.lblPurchase,
+          //           style: primaryTextStyle(color: Colors.white)),
+          //     ],
+          //   ),
+          //   padding: EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+          //   onTap: () {
+          //     launchUrlCustomTab(CODE_CANYON_URL);
+          //   },
+          // ),
         ],
       ),
     );

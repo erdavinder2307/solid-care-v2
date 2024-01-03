@@ -1,22 +1,28 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:solidcare/components/body_widget.dart';
-import 'package:solidcare/components/gender_selection_component.dart';
 import 'package:solidcare/components/loader_widget.dart';
 import 'package:solidcare/config.dart';
 import 'package:solidcare/main.dart';
-import 'package:solidcare/model/gender_model.dart';
+import 'package:solidcare/model/clinic_list_model.dart';
+import 'package:solidcare/network/google_repository.dart';
 import 'package:solidcare/network/patient_list_repository.dart';
 import 'package:solidcare/screens/auth/components/login_register_widget.dart';
+import 'package:solidcare/screens/dashboard/screens/doctor_dashboard_screen.dart';
+import 'package:solidcare/screens/dashboard/screens/patient_dashboard_screen.dart';
+import 'package:solidcare/screens/dashboard/screens/receptionist_dashboard_screen.dart';
+import 'package:solidcare/screens/patient/screens/patient_clinic_selection_screen.dart';
+import 'package:solidcare/utils/app_widgets.dart';
 import 'package:solidcare/utils/colors.dart';
 import 'package:solidcare/utils/common.dart';
 import 'package:solidcare/utils/constants.dart';
 import 'package:solidcare/utils/extensions/date_extensions.dart';
 import 'package:solidcare/utils/extensions/string_extensions.dart';
 import 'package:solidcare/utils/images.dart';
+import 'package:solidcare/utils/one_signal_notifications.dart';
 import 'package:nb_utils/nb_utils.dart';
+
+import '../../../network/auth_repository.dart';
 
 class SignUpScreen extends StatefulWidget {
   @override
@@ -25,38 +31,38 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
   GlobalKey<FormState> formKey = GlobalKey();
-
-  List<String> bloodGroupList = [
-    'A+',
-    'B+',
-    'AB+',
-    'O+',
-    'A-',
-    'B-',
-    'AB-',
-    'O-'
-  ];
-  List<GenderModel> genderList = [];
+  GlobalKey<FormState> passwordFormKey = GlobalKey();
 
   TextEditingController emailCont = TextEditingController();
   TextEditingController firstNameCont = TextEditingController();
   TextEditingController lastNameCont = TextEditingController();
   TextEditingController contactNumberCont = TextEditingController();
   TextEditingController dOBCont = TextEditingController();
-  String? genderValue;
-  String? bloodGroup;
+  TextEditingController passwordCont = TextEditingController();
+  TextEditingController confirmPasswordCont = TextEditingController();
+  TextEditingController selectedClinicCont = TextEditingController();
+
+  String? genderValue = "male";
+  String? bloodGroup = "A+";
+  String? selectedClinic;
+  String? selectedRole;
+
+  Clinic? selectedClinicData;
 
   FocusNode emailFocus = FocusNode();
   FocusNode passwordFocus = FocusNode();
+  FocusNode confirmPasswordFocus = FocusNode();
   FocusNode firstNameFocus = FocusNode();
   FocusNode lastNameFocus = FocusNode();
   FocusNode contactNumberFocus = FocusNode();
   FocusNode dOBFocus = FocusNode();
   FocusNode bloodGroupFocus = FocusNode();
+  FocusNode roleFocus = FocusNode();
+  FocusNode clinicFocus = FocusNode();
 
-  late DateTime birthDate;
+  FocusNode genderFocus = FocusNode();
 
-  int selectedGender = -1;
+  late DateTime birthDate = DateTime.now();
 
   bool isFirstTime = true;
 
@@ -64,18 +70,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
   void initState() {
     super.initState();
 
+    afterBuildCreated(() => () {
+          setStatusBarColor(
+            appStore.isDarkModeOn
+                ? context.scaffoldBackgroundColor
+                : appPrimaryColor.withOpacity(0.02),
+            statusBarIconBrightness:
+                appStore.isDarkModeOn ? Brightness.light : Brightness.dark,
+          );
+        });
+
     init();
   }
 
-  void init() async {
-    setStatusBarColor(
-      appStore.isDarkModeOn
-          ? context.scaffoldBackgroundColor
-          : appPrimaryColor.withOpacity(0.02),
-      statusBarIconBrightness:
-          appStore.isDarkModeOn ? Brightness.light : Brightness.dark,
-    );
-  }
+  void init() async {}
 
   @override
   void setState(fn) {
@@ -83,6 +91,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   void signUp() async {
+    hideKeyboard(context);
+    if (passwordFormKey.currentState!.validate()) {
+      passwordFormKey.currentState!.save();
+    }
     if (formKey.currentState!.validate()) {
       formKey.currentState!.save();
 
@@ -95,95 +107,79 @@ class _SignUpScreenState extends State<SignUpScreen> {
         "mobile_number": contactNumberCont.text.validate(),
         "gender": genderValue.validate().toLowerCase(),
         "dob": birthDate.getFormattedDate(SAVE_DATE_FORMAT).validate(),
-        "blood_group": bloodGroup.validate(),
+        "user_pass": passwordCont.text,
+        'role': selectedRole,
       };
+      if (selectedRole == UserRolePatient && bloodGroup.validate().isNotEmpty) {
+        request.putIfAbsent("blood_group", () => bloodGroup.validate());
+      }
+      if (selectedClinicData != null) {
+        request.putIfAbsent(
+            'clinic_id', () => selectedClinicData!.id.validate());
+      }
 
-      await addNewPatientDataAPI(request).then((value) {
-        appStore.setLoading(false);
-        finish(context, true);
-        toast(locale.lblRegisteredSuccessfully);
+      log('request : $request');
+      await addNewUserAPI(request).then((value) async {
+        toast(value.message.capitalizeFirstLetter().validate());
+      }).whenComplete(() async {
+        initializeOneSignal();
+        Map<String, dynamic> req = {
+          'username': emailCont.text,
+          'password': passwordCont.text,
+          'player_id': appStore.playerId,
+        };
 
-        toast(locale.lblPleaseCheckYourEmailInboxToSetNewPassword);
+        log(req.toString());
+
+        await loginAPI(req).then((value) async {
+          setValue(USER_NAME, emailCont.text);
+          setValue(USER_PASSWORD, passwordCont.text);
+          setValue(IS_REMEMBER_ME, true);
+
+          getConfigurationAPI().whenComplete(() {
+            if (userStore.userRole!.toLowerCase() == UserRoleDoctor) {
+              doctorAppStore.setBottomNavIndex(0);
+              toast(locale.lblLoginSuccessfullyAsADoctor + '!! 🎉');
+              setValue(SELECTED_PROFILE_INDEX, 2);
+              DoctorDashboardScreen().launch(context,
+                  isNewTask: true,
+                  duration: pageAnimationDuration,
+                  pageRouteAnimation: PageRouteAnimation.Slide);
+            } else if (userStore.userRole!.toLowerCase() == UserRolePatient) {
+              toast(locale.lblLoginSuccessfullyAsAPatient + '!! 🎉');
+              patientStore.setBottomNavIndex(0);
+              setValue(SELECTED_PROFILE_INDEX, 0);
+              PatientDashBoardScreen().launch(context,
+                  isNewTask: true,
+                  pageRouteAnimation: PageRouteAnimation.Slide,
+                  duration: pageAnimationDuration);
+            } else if (userStore.userRole!.toLowerCase() ==
+                UserRoleReceptionist) {
+              setValue(SELECTED_PROFILE_INDEX, 1);
+              receptionistAppStore.setBottomNavIndex(0);
+              toast(locale.lblLoginSuccessfullyAsAReceptionist + '!! 🎉');
+              RDashBoardScreen().launch(context,
+                  isNewTask: true,
+                  pageRouteAnimation: PageRouteAnimation.Slide,
+                  duration: pageAnimationDuration);
+            } else {
+              toast(locale.lblWrongUser);
+            }
+            appStore.setLoading(false);
+          }).catchError((e) {
+            appStore.setLoading(false);
+
+            throw e;
+          });
+        });
       }).catchError((e) {
         appStore.setLoading(false);
-        toast(e.toString());
+        toast(e.toString().capitalizeFirstLetter());
       });
     } else {
       isFirstTime = !isFirstTime;
       setState(() {});
     }
-  }
-
-  Future<void> dateBottomSheet(context, {DateTime? bDate}) async {
-    await showModalBottomSheet(
-      context: context,
-      shape: RoundedRectangleBorder(borderRadius: radius()),
-      builder: (BuildContext e) {
-        return Container(
-          height: e.height() / 2 - 180,
-          color: e.cardColor,
-          child: Column(
-            children: [
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(locale.lblCancel, style: boldTextStyle()).onTap(
-                      () {
-                        finish(context);
-                      },
-                      splashColor: Colors.transparent,
-                      highlightColor: Colors.transparent,
-                      hoverColor: Colors.transparent,
-                    ),
-                    Text(locale.lblDone, style: boldTextStyle()).onTap(
-                      () {
-                        if (DateTime.now().year - birthDate.year < 18) {
-                          toast(
-                            locale.lblMinimumAgeRequired +
-                                locale.lblCurrentAgeIs +
-                                ' ${DateTime.now().year - birthDate.year}',
-                            bgColor: errorBackGroundColor,
-                            textColor: errorTextColor,
-                          );
-                        } else {
-                          finish(context);
-                          dOBCont.text = birthDate
-                              .getFormattedDate(SAVE_DATE_FORMAT)
-                              .toString();
-                        }
-                      },
-                      splashColor: Colors.transparent,
-                      highlightColor: Colors.transparent,
-                    )
-                  ],
-                ).paddingOnly(top: 8, left: 8, right: 8, bottom: 8),
-              ),
-              Container(
-                height: e.height() / 2 - 240,
-                child: CupertinoTheme(
-                  data: CupertinoThemeData(
-                    textTheme: CupertinoTextThemeData(
-                        dateTimePickerTextStyle: primaryTextStyle(size: 20)),
-                  ),
-                  child: CupertinoDatePicker(
-                    minimumDate: DateTime(1900, 1, 1),
-                    minuteInterval: 1,
-                    initialDateTime: bDate == null ? DateTime.now() : bDate,
-                    mode: CupertinoDatePickerMode.date,
-                    onDateTimeChanged: (DateTime dateTime) {
-                      birthDate = dateTime;
-                      setState(() {});
-                    },
-                  ),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
   }
 
   @override
@@ -225,34 +221,45 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     Text(locale.lblSignUpAsPatient,
                         style: secondaryTextStyle(size: 14)),
                     24.height,
-                    AppTextField(
-                      textStyle: primaryTextStyle(),
-                      controller: firstNameCont,
-                      textFieldType: TextFieldType.NAME,
-                      focus: firstNameFocus,
-                      errorThisFieldRequired: locale.lblFirstNameIsRequired,
-                      nextFocus: lastNameFocus,
-                      decoration: inputDecoration(
-                          context: context,
-                          labelText: locale.lblFirstName,
-                          suffixIcon: ic_user
-                              .iconImage(size: 10, color: context.iconColor)
-                              .paddingAll(14)),
-                    ),
-                    16.height,
-                    AppTextField(
-                      textStyle: primaryTextStyle(),
-                      controller: lastNameCont,
-                      textFieldType: TextFieldType.NAME,
-                      focus: lastNameFocus,
-                      nextFocus: emailFocus,
-                      errorThisFieldRequired: locale.lblLastNameIsRequired,
-                      decoration: inputDecoration(
-                          context: context,
-                          labelText: locale.lblLastName,
-                          suffixIcon: ic_user
-                              .iconImage(size: 10, color: context.iconColor)
-                              .paddingAll(14)),
+                    Row(
+                      children: [
+                        AppTextField(
+                          textStyle: primaryTextStyle(),
+                          controller: firstNameCont,
+                          textFieldType: TextFieldType.NAME,
+                          focus: firstNameFocus,
+                          errorThisFieldRequired: locale.lblFirstNameIsRequired,
+                          nextFocus: lastNameFocus,
+                          decoration: inputDecoration(
+                              context: context,
+                              labelText: locale.lblFirstName,
+                              suffixIcon: ic_user
+                                  .iconImage(size: 10, color: context.iconColor)
+                                  .paddingAll(14)),
+                          onFieldSubmitted: (value) {
+                            lastNameFocus.requestFocus();
+                          },
+                        ).expand(),
+                        16.width,
+                        AppTextField(
+                            textStyle: primaryTextStyle(),
+                            controller: lastNameCont,
+                            textFieldType: TextFieldType.NAME,
+                            focus: lastNameFocus,
+                            nextFocus: emailFocus,
+                            errorThisFieldRequired:
+                                locale.lblLastNameIsRequired,
+                            decoration: inputDecoration(
+                                context: context,
+                                labelText: locale.lblLastName,
+                                suffixIcon: ic_user
+                                    .iconImage(
+                                        size: 10, color: context.iconColor)
+                                    .paddingAll(14)),
+                            onFieldSubmitted: (value) {
+                              emailFocus.requestFocus();
+                            }).expand(),
+                      ],
                     ),
                     16.height,
                     AppTextField(
@@ -260,13 +267,78 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       controller: emailCont,
                       textFieldType: TextFieldType.EMAIL,
                       focus: emailFocus,
-                      nextFocus: contactNumberFocus,
+                      nextFocus: passwordFocus,
+                      errorThisFieldRequired: locale.lblEmailIsRequired,
+                      onFieldSubmitted: (value) {
+                        passwordFocus.requestFocus();
+                      },
                       decoration: inputDecoration(
                           context: context,
                           labelText: locale.lblEmail,
                           suffixIcon: ic_message
                               .iconImage(size: 10, color: context.iconColor)
                               .paddingAll(14)),
+                    ),
+                    16.height,
+                    Form(
+                      key: passwordFormKey,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      child: Column(
+                        children: [
+                          AppTextField(
+                            controller: passwordCont,
+                            focus: passwordFocus,
+                            nextFocus: confirmPasswordFocus,
+                            textStyle: primaryTextStyle(),
+                            errorThisFieldRequired: locale.passwordIsRequired,
+                            textFieldType: TextFieldType.PASSWORD,
+                            suffixPasswordVisibleWidget: ic_showPassword
+                                .iconImage(size: 10, color: context.iconColor)
+                                .paddingAll(14),
+                            suffixPasswordInvisibleWidget: ic_hidePassword
+                                .iconImage(size: 10, color: context.iconColor)
+                                .paddingAll(14),
+                            decoration: inputDecoration(
+                                context: context,
+                                labelText: locale.lblPassword),
+                            onFieldSubmitted: (value) {
+                              confirmPasswordFocus.requestFocus();
+                            },
+                          ),
+                          16.height,
+                          AppTextField(
+                            controller: confirmPasswordCont,
+                            focus: confirmPasswordFocus,
+                            textStyle: primaryTextStyle(),
+                            nextFocus: contactNumberFocus,
+                            errorThisFieldRequired:
+                                locale.confirmPasswordIsRequired,
+                            textFieldType: TextFieldType.PASSWORD,
+                            validator: (value) {
+                              if (confirmPasswordCont.text.isEmpty)
+                                return locale.confirmPasswordIsRequired;
+                              if (passwordCont.text !=
+                                  confirmPasswordCont.text) {
+                                return locale.lblPwdDoesNotMatch;
+                              } else {
+                                return null;
+                              }
+                            },
+                            onFieldSubmitted: (value) {
+                              contactNumberFocus.requestFocus();
+                            },
+                            suffixPasswordVisibleWidget: ic_showPassword
+                                .iconImage(size: 10, color: context.iconColor)
+                                .paddingAll(14),
+                            suffixPasswordInvisibleWidget: ic_hidePassword
+                                .iconImage(size: 10, color: context.iconColor)
+                                .paddingAll(14),
+                            decoration: inputDecoration(
+                                context: context,
+                                labelText: locale.lblConfirmPassword),
+                          ),
+                        ],
+                      ),
                     ),
                     16.height,
                     AppTextField(
@@ -277,64 +349,176 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       textFieldType: TextFieldType.PHONE,
                       inputFormatters: [LengthLimitingTextInputFormatter(10)],
                       isValidationRequired: true,
+                      errorThisFieldRequired: locale.contactNumberIsRequired,
                       decoration: inputDecoration(
                           context: context,
                           labelText: locale.lblContactNumber,
                           suffixIcon: ic_phone
                               .iconImage(size: 10, color: context.iconColor)
                               .paddingAll(14)),
+                      onFieldSubmitted: (value) {
+                        dOBFocus.requestFocus();
+                      },
+                    ),
+                    16.height,
+                    // AppTextField(
+                    //   textStyle: primaryTextStyle(),
+                    //   controller: dOBCont,
+                    //   nextFocus: bloodGroupFocus,
+                    //   focus: dOBFocus,
+                    //   textFieldType: TextFieldType.OTHER,
+                    //   validator: null,
+                    //   errorThisFieldRequired: locale.lblBirthDateIsRequired,
+                    //   readOnly: true,
+                    //   onFieldSubmitted: (value) {
+                    //     if (selectedRole == UserRolePatient)
+                    //       bloodGroupFocus.requestFocus();
+                    //   },
+                    //   onTap: () {
+                    //     dateBottomSheet(
+                    //       context,
+                    //       onBirthDateSelected: (selectedBirthDate) {
+                    //         if (selectedBirthDate != null) {
+                    //           dOBCont.text = DateFormat(SAVE_DATE_FORMAT)
+                    //               .format(selectedBirthDate);
+                    //           birthDate = selectedBirthDate;
+                    //           setState(() {});
+                    //         }
+                    //       },
+                    //     );
+                    //   },
+                    //   decoration: inputDecoration(
+                    //       context: context,
+                    //       labelText: locale.lblDOB,
+                    //       suffixIcon: ic_calendar
+                    //           .iconImage(size: 10, color: context.iconColor)
+                    //           .paddingAll(14)),
+                    // ),
+                    //16.height,
+                    Row(
+                      children: [
+                        DropdownButtonFormField(
+                          icon: SizedBox.shrink(),
+                          isExpanded: true,
+                          borderRadius: radius(),
+                          focusColor: primaryColor,
+                          dropdownColor: context.cardColor,
+                          focusNode: roleFocus,
+                          autovalidateMode: isFirstTime
+                              ? AutovalidateMode.disabled
+                              : AutovalidateMode.onUserInteraction,
+                          validator: (value) {
+                            if (value.isEmptyOrNull)
+                              return locale.roleIsRequired;
+                            else
+                              return null;
+                          },
+                          decoration: inputDecoration(
+                              context: context,
+                              labelText: locale.lblSelectRole,
+                              suffixIcon: ic_user
+                                  .iconImage(size: 10, color: context.iconColor)
+                                  .paddingAll(14)),
+                          onChanged: (dynamic role) {
+                            selectedRole = role;
+                            setState(() {});
+                          },
+                          items: userRoleList.map((role) {
+                            return DropdownMenuItem<String>(
+                              value: role,
+                              onTap: () {
+                                selectedRole = role;
+                                if (selectedRole == UserRolePatient)
+                                  bloodGroupFocus.requestFocus();
+                                else
+                                  clinicFocus.requestFocus();
+                                setState(() {});
+                              },
+                              child: Text(role.capitalizeEachWord(),
+                                  style: primaryTextStyle()),
+                            );
+                          }).toList(),
+                        ).expand(),
+                        if (selectedRole == UserRolePatient) 16.width,
+                        // if (selectedRole == UserRolePatient)
+                        //   DropdownButtonFormField(
+                        //     icon: SizedBox.shrink(),
+                        //     isExpanded: true,
+                        //     borderRadius: radius(),
+                        //     focusColor: primaryColor,
+                        //     dropdownColor: context.cardColor,
+                        //     focusNode: bloodGroupFocus,
+                        //     decoration: inputDecoration(
+                        //         context: context,
+                        //         labelText: locale.lblBloodGroup,
+                        //         suffixIcon: ic_arrow_down
+                        //             .iconImage(
+                        //                 size: 10, color: context.iconColor)
+                        //             .paddingAll(14)),
+                        //     onChanged: (dynamic value) {
+                        //       bloodGroup = value;
+                        //     },
+                        //     items: bloodGroupList
+                        //         .map((bloodGroup) => DropdownMenuItem(
+                        //             value: bloodGroup,
+                        //             child: Text("$bloodGroup",
+                        //                 style: primaryTextStyle())))
+                        //         .toList(),
+                        //   ).expand()
+                      ],
                     ),
                     16.height,
                     AppTextField(
-                      textStyle: primaryTextStyle(),
-                      controller: dOBCont,
-                      nextFocus: bloodGroupFocus,
-                      focus: dOBFocus,
                       textFieldType: TextFieldType.NAME,
-                      errorThisFieldRequired: locale.lblBirthDateIsRequired,
+                      focus: clinicFocus,
+                      controller: selectedClinicCont,
+                      isValidationRequired: true,
                       readOnly: true,
+                      errorThisFieldRequired: locale.clinicIdRequired,
+                      selectionControls: EmptyTextSelectionControls(),
+                      decoration: inputDecoration(
+                        context: context,
+                        labelText: locale.lblSelectClinic,
+                        suffixIcon: ic_clinic
+                            .iconImage(size: 18, color: context.iconColor)
+                            .paddingAll(14),
+                      ),
+                      validator: (value) {
+                        if (selectedClinicData == null)
+                          return locale.clinicIdRequired;
+                        return null;
+                      },
+                      maxLines: 1,
                       onTap: () {
-                        birthDate = DateTime.now();
-                        dateBottomSheet(context);
-                      },
-                      decoration: inputDecoration(
-                          context: context,
-                          labelText: locale.lblDOB,
-                          suffixIcon: ic_calendar
-                              .iconImage(size: 10, color: context.iconColor)
-                              .paddingAll(14)),
-                    ),
-                    16.height,
-                    DropdownButtonFormField(
-                      icon: SizedBox.shrink(),
-                      isExpanded: true,
-                      borderRadius: radius(),
-                      focusColor: primaryColor,
-                      dropdownColor: context.cardColor,
-                      focusNode: bloodGroupFocus,
-                      decoration: inputDecoration(
-                          context: context,
-                          labelText: locale.lblSelectBloodGroup,
-                          suffixIcon: ic_arrow_down
-                              .iconImage(size: 10, color: context.iconColor)
-                              .paddingAll(14)),
-                      onChanged: (dynamic value) {
-                        bloodGroup = value;
-                      },
-                      items: bloodGroupList
-                          .map((bloodGroup) => DropdownMenuItem(
-                              value: bloodGroup,
-                              child: Text("$bloodGroup",
-                                  style: primaryTextStyle())))
-                          .toList(),
-                    ),
-                    16.height,
-                    GenderSelectionComponent(
-                      onTap: (value) {
-                        genderValue = value;
-                        setState(() {});
+                        hideKeyboard(context);
+                        PatientClinicSelectionScreen(
+                          isForRegistration: true,
+                          clinicId: selectedClinicData != null
+                              ? selectedClinicData!.id.toInt()
+                              : null,
+                        )
+                            .launch(context,
+                                pageRouteAnimation: pageAnimation,
+                                duration: pageAnimationDuration)
+                            .then((value) {
+                          if (value != null) {
+                            selectedClinicData = value;
+                            selectedClinicCont.text =
+                                selectedClinicData!.name.validate();
+
+                            setState(() {});
+                          } else {}
+                          init();
+                        });
                       },
                     ),
+                    //16.height,
+                    // GenderSelectionComponent(
+                    //   onTap: (value) {
+                    //     genderValue = value;
+                    //     setState(() {});
+                    //   },
+                    // ),
                     60.height,
                     AppButton(
                       width: context.width(),

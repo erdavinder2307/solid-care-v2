@@ -1,23 +1,37 @@
-import 'package:http/http.dart';
+import 'package:http/http.dart' as http;
 import 'package:solidcare/main.dart';
 import 'package:solidcare/model/base_response.dart';
 import 'package:solidcare/model/bill_list_model.dart';
 import 'package:solidcare/model/patient_bill_model.dart';
+import 'package:solidcare/model/tax_model.dart';
 import 'package:solidcare/network/network_utils.dart';
 import 'package:solidcare/utils/app_common.dart';
+import 'package:solidcare/utils/constants.dart';
 import 'package:nb_utils/nb_utils.dart';
 
-Future<PatientBillModule?>? getBillDetailsAPI({int? encounterId}) async {
-  Response response = await buildHttpResponse(
-      'kivicare/api/v1/bill/bill-details?encounter_id=$encounterId');
-  if (response.statusCode == 200 && response.body.isNotEmpty)
-    return PatientBillModule.fromJson(await handleResponse(response));
-  return null;
+Future<PatientBillModule> getBillDetailsAPI(
+    {int? encounterId, int? billId}) async {
+  List<String> params = [];
+
+  if (encounterId != null)
+    params.add('${ConstantKeys.encounterIdKey}=$encounterId');
+  http.Response response = await buildHttpResponse(getEndPoint(
+      endPoint:
+          '${ApiEndPoints.billEndPoint}/${EndPointKeys.billDetailEndPointKey}',
+      params: params));
+  return PatientBillModule.fromJson(await handleResponse(response));
+}
+
+Future<TaxModel> getTaxData(Map req) async {
+  return TaxModel.fromJson(await handleResponse(await buildHttpResponse(
+      '${ApiEndPoints.taxEndPoint}',
+      request: req,
+      method: HttpMethod.POST)));
 }
 
 Future<BaseResponses> addPatientBillAPI(Map request) async {
   return BaseResponses.fromJson(await handleResponse(await buildHttpResponse(
-      'kivicare/api/v1/bill/add-bill',
+      '${ApiEndPoints.billEndPoint}/${EndPointKeys.addBillEndPointKey}',
       request: request,
       method: HttpMethod.POST)));
 }
@@ -34,10 +48,11 @@ Future<List<BillListData>> getBillListApi({
 
   BillListModel res = BillListModel.fromJson(
     await handleResponse(await buildHttpResponse(getEndPoint(
-        endPoint: 'kivicare/api/v1/bill/list', page: page, params: param))),
+        endPoint:
+            '${ApiEndPoints.billEndPoint}/${EndPointKeys.listEndPointKey}',
+        page: page,
+        params: param))),
   );
-
-  cachedBillRecordList = res.billListData.validate();
 
   if (page == 1) billList.clear();
 
@@ -48,3 +63,22 @@ Future<List<BillListData>> getBillListApi({
   appStore.setLoading(false);
   return billList;
 }
+
+//ORDERS
+
+//RAZOR
+
+Future<void> savePayment({required Map paymentResponse}) async {
+  await handleResponse(await buildHttpResponse(ApiEndPoints.savePaymentEndPoint,
+      request: paymentResponse, method: HttpMethod.POST));
+}
+
+Future<BaseResponses> deleteBillApi(String id) async {
+  List<String> params = [];
+  params.add('${ConstantKeys.billIdKey}=$id');
+  return BaseResponses.fromJson(await handleResponse(await buildHttpResponse(
+      getEndPoint(endPoint: ApiEndPoints.billDeleteEndPoint, params: params),
+      method: HttpMethod.DELETE)));
+}
+
+//End Region

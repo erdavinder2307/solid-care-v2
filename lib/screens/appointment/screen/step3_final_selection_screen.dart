@@ -2,7 +2,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:intl/intl.dart';
-import 'package:solidcare/components/multi_select.dart';
+import 'package:solidcare/components/multi_select_service_component.dart';
 import 'package:solidcare/components/price_widget.dart';
 import 'package:solidcare/components/role_widget.dart';
 import 'package:solidcare/main.dart';
@@ -12,7 +12,7 @@ import 'package:solidcare/model/user_model.dart';
 import 'package:solidcare/screens/appointment/appointment_functions.dart';
 import 'package:solidcare/screens/appointment/components/appointment_date_component.dart';
 import 'package:solidcare/screens/appointment/components/appointment_slots.dart';
-import 'package:solidcare/screens/appointment/components/confirm_appointment_screen.dart';
+import 'package:solidcare/screens/appointment/components/confirm_appointment_component.dart';
 import 'package:solidcare/screens/appointment/components/file_upload_component.dart';
 import 'package:solidcare/screens/appointment/screen/patient_search_screen.dart';
 import 'package:solidcare/screens/doctor/screens/service/add_service_screen.dart';
@@ -24,6 +24,7 @@ import 'package:solidcare/utils/colors.dart';
 import 'package:solidcare/utils/common.dart';
 import 'package:solidcare/utils/constants.dart';
 import 'package:solidcare/utils/extensions/string_extensions.dart';
+import 'package:solidcare/utils/extensions/widget_extentions.dart';
 import 'package:solidcare/utils/images.dart';
 import 'package:nb_utils/nb_utils.dart';
 
@@ -69,6 +70,7 @@ class _Step3FinalSelectionScreenState extends State<Step3FinalSelectionScreen> {
 
   void init() async {
     multiSelectStore.clearList();
+    multiSelectStore.setTaxData(null);
 
     isUpdate = widget.data != null;
 
@@ -97,7 +99,13 @@ class _Step3FinalSelectionScreenState extends State<Step3FinalSelectionScreen> {
             locale.lblServicesSelected;
       }
 
+      if (widget.data!.taxData != null)
+        multiSelectStore.setTaxData(widget.data!.taxData);
+
       descriptionCont.text = widget.data!.description.validate();
+      if (widget.data!.paymentMethod.validate().isNotEmpty)
+        appointmentAppStore
+            .setPaymentMethod(widget.data!.paymentMethod.validate());
 
       if (widget.data!.appointmentReport.validate().isNotEmpty) {
         appointmentAppStore.addReportListString(
@@ -113,14 +121,15 @@ class _Step3FinalSelectionScreenState extends State<Step3FinalSelectionScreen> {
   }
 
   void selectServices() async {
-    await MultiSelectWidget(
+    await MultiSelectServiceComponent(
       clinicId: isPatient() || isDoctor()
           ? appointmentAppStore.mClinicSelected?.id.toInt()
           : userStore.userClinicId.toInt(),
       selectedServicesId: multiSelectStore.selectedService
           .map((element) => element.serviceId.validate())
           .toList(),
-    ).launch(context, pageRouteAnimation: PageRouteAnimation.Fade);
+    ).launch(context,
+        pageRouteAnimation: pageAnimation, duration: pageAnimationDuration);
     if (multiSelectStore.selectedService.length > 0)
       servicesCont.text =
           '${multiSelectStore.selectedService.length} ${locale.lblServicesSelected}';
@@ -149,6 +158,7 @@ class _Step3FinalSelectionScreenState extends State<Step3FinalSelectionScreen> {
           padding: EdgeInsets.fromLTRB(16, 16, 16, 60),
           listAnimationType: ListAnimationType.None,
           onSwipeRefresh: () {
+            LiveStream().emit(CHANGE_DATE, true);
             setState(() {});
             return 1.seconds.delay;
           },
@@ -201,7 +211,9 @@ class _Step3FinalSelectionScreenState extends State<Step3FinalSelectionScreen> {
                     readOnly: true,
                     onTap: () async {
                       PatientSearchScreen(selectedData: user)
-                          .launch(context)
+                          .launch(context,
+                              pageRouteAnimation: pageAnimation,
+                              duration: pageAnimationDuration)
                           .then((value) {
                         if (value != null) {
                           user = value as UserModel;
@@ -221,8 +233,12 @@ class _Step3FinalSelectionScreenState extends State<Step3FinalSelectionScreen> {
                               style: secondaryTextStyle(
                                   color: appPrimaryColor, size: 10))
                           .paddingOnly(top: 10)
-                          .onTap(
-                            () => AddPatientScreen().launch(context).then(
+                          .appOnTap(
+                            () => AddPatientScreen()
+                                .launch(context,
+                                    pageRouteAnimation: pageAnimation,
+                                    duration: pageAnimationDuration)
+                                .then(
                               (value) {
                                 if (value ?? false) {
                                   init();
@@ -296,59 +312,179 @@ class _Step3FinalSelectionScreenState extends State<Step3FinalSelectionScreen> {
                         }
                       },
                     ),
-                    if (multiSelectStore.selectedService.isNotEmpty)
+                    Container(
+                      padding:
+                          EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                      decoration: boxDecorationDefault(
+                          color: context.cardColor,
+                          borderRadius: radiusOnly(
+                              bottomLeft: defaultRadius,
+                              bottomRight: defaultRadius)),
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                      locale.lblService.getApostropheString(
+                                          count: multiSelectStore
+                                              .selectedService.length,
+                                          apostrophe: false),
+                                      style: boldTextStyle(size: 12))
+                                  .expand(),
+                              Text(
+                                  locale.lblCharges.getApostropheString(
+                                      count: multiSelectStore
+                                          .selectedService.length,
+                                      apostrophe: false),
+                                  style: boldTextStyle(size: 12)),
+                            ],
+                          ),
+                          Divider(),
+                          Column(
+                            children: List.generate(
+                              multiSelectStore.selectedService.length,
+                              (index) {
+                                ServiceData data =
+                                    multiSelectStore.selectedService[index];
+                                return Row(
+                                  children: [
+                                    Marquee(
+                                            child: Text(data.name.validate(),
+                                                style:
+                                                    primaryTextStyle(size: 14)))
+                                        .expand(),
+                                    PriceWidget(
+                                      price: data.charges
+                                          .validate()
+                                          .toDouble()
+                                          .toStringAsFixed(2),
+                                      textStyle: primaryTextStyle(size: 14),
+                                    ),
+                                  ],
+                                ).paddingBottom(2);
+                              },
+                            ),
+                          ),
+                          Divider(),
+                          Row(
+                            children: [
+                              Text(
+                                      (multiSelectStore.taxData != null &&
+                                              multiSelectStore.taxData!.taxList
+                                                  .validate()
+                                                  .isNotEmpty)
+                                          ? locale.lblSubTotal
+                                          : locale.lblTotal,
+                                      style: primaryTextStyle(size: 14))
+                                  .expand(),
+                              PriceWidget(
+                                  price: multiSelectStore.selectedService
+                                      .sumByDouble(
+                                          (p0) => p0.charges.toDouble())
+                                      .toStringAsFixed(2),
+                                  textSize: 14),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ).visible(multiSelectStore.selectedService.isNotEmpty),
+                    if (isVisible(SharedPreferenceKey.solidCareServiceAddKey))
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Text(locale.lblAddService,
+                                style: secondaryTextStyle(
+                                    color: appPrimaryColor, size: 10))
+                            .paddingOnly(top: 10)
+                            .appOnTap(
+                              () => AddServiceScreen().launch(context,
+                                  pageRouteAnimation: pageAnimation,
+                                  duration: pageAnimationDuration),
+                            ),
+                      ).visible((multiSelectStore.selectedService.isEmpty) &&
+                          (isDoctor() || isReceptionist())),
+                    if (multiSelectStore.taxData != null) 16.height,
+                    if (multiSelectStore.taxData != null)
                       Container(
                         padding:
-                            EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                            EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                         decoration: boxDecorationDefault(
-                            color: context.cardColor,
-                            borderRadius: radiusOnly(
-                                bottomLeft: defaultRadius,
-                                bottomRight: defaultRadius)),
+                            color: context.cardColor, borderRadius: radius()),
                         child: Column(
                           children: [
                             Row(
                               children: [
-                                Text(
-                                        locale.lblService.getApostropheString(
-                                            count: multiSelectStore
-                                                .selectedService.length,
-                                            apostrophe: false),
+                                Text(locale.lblTax,
                                         style: boldTextStyle(size: 12))
                                     .expand(),
+                                16.width,
                                 Text(
-                                    locale.lblCharges.getApostropheString(
-                                        count: multiSelectStore
-                                            .selectedService.length,
-                                        apostrophe: false),
-                                    style: boldTextStyle(size: 12)),
+                                  locale.lblTaxRate,
+                                  style: boldTextStyle(size: 12),
+                                  textAlign: TextAlign.center,
+                                ).expand(flex: 2),
+                                16.width,
+                                Text(
+                                  locale.lblCharges,
+                                  style: boldTextStyle(size: 12),
+                                  textAlign: TextAlign.end,
+                                ).expand(),
                               ],
                             ),
                             Divider(),
-                            Column(
-                              children: List.generate(
-                                multiSelectStore.selectedService.length,
-                                (index) {
-                                  ServiceData data =
-                                      multiSelectStore.selectedService[index];
-                                  return Row(
-                                    children: [
-                                      Marquee(
-                                              child: Text(data.name.validate(),
-                                                  style: primaryTextStyle(
-                                                      size: 14)))
-                                          .expand(),
-                                      PriceWidget(
-                                          price: data.charges
-                                              .validate()
-                                              .toDouble()
-                                              .toStringAsFixed(1),
-                                          textSize: 14),
-                                    ],
-                                  ).paddingBottom(2);
-                                },
+                            ...multiSelectStore.taxData!.taxList
+                                .validate()
+                                .map<Widget>((data) {
+                              return Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                          data.taxName.validate().replaceAll(
+                                              RegExp(r'[^a-zA-Z]'), ''),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: secondaryTextStyle(size: 14))
+                                      .expand(),
+                                  if (data.taxName.validate().contains('%'))
+                                    Text(
+                                      data.taxRate
+                                          .validate()
+                                          .toString()
+                                          .suffixText(value: '%'),
+                                      style: primaryTextStyle(size: 14),
+                                      textAlign: TextAlign.center,
+                                    ).expand(flex: 2)
+                                  else
+                                    PriceWidget(
+                                      price: data.taxRate
+                                          .validate()
+                                          .toStringAsFixed(2),
+                                      textStyle: primaryTextStyle(size: 14),
+                                      textAlign: TextAlign.center,
+                                    ).paddingLeft(4).expand(flex: 2),
+                                  PriceWidget(
+                                    price: data.charges
+                                        .validate()
+                                        .toStringAsFixed(2),
+                                    textStyle: primaryTextStyle(size: 14),
+                                    textAlign: TextAlign.end,
+                                  ).paddingLeft(4).expand(),
+                                ],
+                              );
+                            }).toList(),
+                            if (multiSelectStore.taxData != null) Divider(),
+                            if (multiSelectStore.taxData != null)
+                              Row(
+                                children: [
+                                  Text(locale.lblTotalTax,
+                                          style: primaryTextStyle(size: 14))
+                                      .expand(),
+                                  PriceWidget(
+                                      price: multiSelectStore.taxData!.totalTax
+                                          .validate()
+                                          .toStringAsFixed(2),
+                                      textStyle: boldTextStyle(size: 14)),
+                                ],
                               ),
-                            ),
                             Divider(),
                             Row(
                               children: [
@@ -356,30 +492,16 @@ class _Step3FinalSelectionScreenState extends State<Step3FinalSelectionScreen> {
                                         style: boldTextStyle(size: 14))
                                     .expand(),
                                 PriceWidget(
-                                    price: multiSelectStore.selectedService
-                                        .sumByDouble(
-                                            (p0) => p0.charges.toDouble())
-                                        .toString(),
-                                    textSize: 14),
+                                    price: getTotalText().toStringAsFixed(2),
+                                    textStyle: boldTextStyle(
+                                        size: 14, color: appPrimaryColor)),
                               ],
                             ),
                           ],
                         ),
-                      ),
-                    if ((multiSelectStore.selectedService.isEmpty) &&
-                        (isDoctor() || isReceptionist()))
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: Text(locale.lblAddService,
-                                style: secondaryTextStyle(
-                                    color: appPrimaryColor, size: 10))
-                            .paddingOnly(top: 10)
-                            .onTap(
-                              () => AddServiceScreen().launch(context),
-                              splashColor: Colors.transparent,
-                              highlightColor: Colors.transparent,
-                            ),
-                      )
+                      ).visible(multiSelectStore.taxData!.taxList
+                          .validate()
+                          .isNotEmpty),
                   ],
                 );
               },
@@ -427,12 +549,14 @@ class _Step3FinalSelectionScreenState extends State<Step3FinalSelectionScreen> {
           appointmentAppStore.setDescription(descriptionCont.text);
           if (formKey.currentState!.validate()) {
             formKey.currentState!.save();
+
             bool? res = await showInDialog(
               context,
-              barrierDismissible: false,
+              contentPadding: EdgeInsets.zero,
               backgroundColor: context.cardColor,
+              barrierDismissible: !isPatient(),
               builder: (p0) {
-                return ConfirmAppointmentScreen(
+                return ConfirmAppointmentComponent(
                     appointmentId: widget.data?.id.toInt() ?? null);
               },
             );
@@ -444,5 +568,17 @@ class _Step3FinalSelectionScreenState extends State<Step3FinalSelectionScreen> {
         },
       ).paddingAll(16),
     );
+  }
+
+  num getTotalText() {
+    num total = 0.0;
+    if (multiSelectStore.taxData != null) {
+      total = (multiSelectStore.selectedService
+              .sumByDouble((p0) => p0.charges.toDouble()) +
+          multiSelectStore.taxData!.totalTax.validate());
+    } else
+      total = multiSelectStore.selectedService
+          .sumByDouble((p0) => p0.charges.toDouble());
+    return total;
   }
 }

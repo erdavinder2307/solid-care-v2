@@ -5,11 +5,14 @@ import 'package:solidcare/components/theme_selection_dialog.dart';
 import 'package:solidcare/main.dart';
 import 'package:solidcare/screens/auth/screens/change_password_screen.dart';
 import 'package:solidcare/screens/language_screen.dart';
+import 'package:solidcare/utils/common.dart';
+import 'package:solidcare/utils/constants.dart';
 import 'package:solidcare/utils/images.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class AppSettingComponent extends StatelessWidget {
   final VoidCallback? callSetState;
+
   AppSettingComponent({this.callSetState});
 
   @override
@@ -33,22 +36,28 @@ class AppSettingComponent extends StatelessWidget {
                   child: ThemeSelectionDialog(),
                 );
               },
-            );
+            ).then((value) {
+              callSetState?.call();
+            });
           },
         ),
-        AppSettingWidget(
-          name: locale.lblChangePassword,
-          image: ic_unlock,
-          widget: ChangePasswordScreen(),
-          subTitle: locale.lblChangePasswordSubtitle,
-        ),
+        if (isVisible(SharedPreferenceKey.solidCareChangePasswordKey))
+          AppSettingWidget(
+            name: locale.lblChangePassword,
+            image: ic_unlock,
+            widget: ChangePasswordScreen(),
+            subTitle: locale.lblChangePasswordSubtitle,
+          ),
         AppSettingWidget(
           name: locale.lblLanguage,
           isLanguage: true,
           subTitle: selectedLanguageDataModel!.name.validate(),
           image: selectedLanguageDataModel!.flag.validate(),
-          onTap: () async =>
-              await LanguageScreen().launch(context).then((value) {
+          onTap: () async => await LanguageScreen()
+              .launch(context,
+                  pageRouteAnimation: pageAnimation,
+                  duration: pageAnimationDuration)
+              .then((value) {
             callSetState?.call();
           }),
         ),

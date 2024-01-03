@@ -27,21 +27,21 @@ List<EncounterType> getEncounterOtherTypeList(
       return (
         encounterData.problem.validate(),
         emptyText: encounterData.problem.validate().isEmpty
-            ? locale.lblNoProblemFound
+            ? locale.lblNoProblemFound.capitalizeEachWord()
             : null
       );
     case OBSERVATION:
       return (
         encounterData.observation.validate(),
         emptyText: encounterData.observation.validate().isEmpty
-            ? locale.lblNoObservationsFound
+            ? locale.lblNoObservationsFound.capitalizeEachWord()
             : null
       );
     case NOTE:
       return (
         encounterData.note.validate(),
         emptyText: encounterData.note.validate().isEmpty
-            ? locale.lblNoNotesFound
+            ? locale.lblNoNotesFound.capitalizeEachWord()
             : null
       );
     default:

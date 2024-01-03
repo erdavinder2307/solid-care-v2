@@ -8,6 +8,7 @@ import 'package:solidcare/utils/app_common.dart';
 import 'package:solidcare/utils/colors.dart';
 import 'package:solidcare/utils/common.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:solidcare/utils/extensions/widget_extentions.dart';
 
 // ignore: must_be_immutable
 class MultiSelectSpecialization extends StatefulWidget {
@@ -117,7 +118,7 @@ class _MultiSelectSpecializationState extends State<MultiSelectSpecialization> {
                 Icons.search,
                 color: appStore.isDarkModeOn ? Colors.grey : Colors.black,
                 size: 25,
-              ).onTap(
+              ).appOnTap(
                 () {},
                 splashColor: Colors.transparent,
                 highlightColor: Colors.transparent,

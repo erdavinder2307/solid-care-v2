@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:solidcare/main.dart';
+import 'package:solidcare/utils/colors.dart';
 import 'package:solidcare/utils/constants.dart';
 import 'package:nb_utils/nb_utils.dart';
 
@@ -50,6 +51,7 @@ class ThemeSelectionDialogState extends State<ThemeSelectionDialog> {
             child: RadioListTile(
               value: index,
               dense: true,
+              fillColor: MaterialStatePropertyAll(appPrimaryColor),
               groupValue: currentIndex,
               title: Text(themeModeList[index], style: primaryTextStyle()),
               onChanged: (dynamic val) {

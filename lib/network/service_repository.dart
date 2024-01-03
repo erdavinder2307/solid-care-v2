@@ -159,4 +159,32 @@ Future<List<ServiceData>> getServiceListWithPaginationAPI(
   return serviceList;
 }
 
+Future<List<ServiceData>> getClinicWiseDoctorsServiceData(
+    {String? serviceId,
+    required String serviceName,
+    String? doctorId,
+    required List<ServiceData> serviceList,
+    required int page,
+    Function(bool)? lastPageCallback}) async {
+  if (!appStore.isConnectedToInternet) return [];
+  List<String> param = [];
+  param.add('?limit=$PER_PAGE');
+  param.add('page=$page');
+  param.add('doctor_id=$doctorId');
+  param.add('s=$serviceName');
+
+  ServiceListModel res = ServiceListModel.fromJson(await handleResponse(
+      await buildHttpResponse(
+          'kivicare/api/v1/service/get-list${param.validate().join('&')}')));
+
+  if (page == 1) serviceList.clear();
+
+  lastPageCallback?.call(res.serviceData.validate().length != PER_PAGE);
+
+  serviceList.addAll(res.serviceData.validate());
+
+  appStore.setLoading(false);
+  return serviceList;
+}
+
 //End Service API

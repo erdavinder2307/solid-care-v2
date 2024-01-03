@@ -5,6 +5,7 @@ import 'package:solidcare/model/static_data_model.dart';
 import 'package:solidcare/model/upcoming_appointment_model.dart';
 import 'package:solidcare/network/network_utils.dart';
 import 'package:solidcare/utils/cached_value.dart';
+import 'package:solidcare/utils/constants.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 Future<DashboardModel> getUserDashBoardAPI() async {
@@ -15,9 +16,10 @@ Future<DashboardModel> getUserDashBoardAPI() async {
 
   DashboardModel res = DashboardModel.fromJson(await (handleResponse(
       await buildHttpResponse(
-          'kivicare/api/v1/user/get-dashboard?page=1&limit=5'))));
+          '${ApiEndPoints.userEndpoint}/${EndPointKeys.getDashboardKey}?${ConstantKeys.pageKey}=1&${ConstantKeys.limitKey}=5'))));
   appStore.setLoading(false);
-  cachedDashboardModel = res;
+  setValue(SharedPreferenceKey.cachedDashboardDataKey, res.toJson());
+
   appStore.setCurrencyPostfix(res.currencyPostfix.validate());
   appStore.setCurrencyPrefix(res.currencyPrefix.validate());
 
@@ -30,8 +32,10 @@ Future<EncounterModel> getEncounterDetailsDashBoardAPI(
   if (!appStore.isConnectedToInternet) {
     return EncounterModel();
   }
-  return EncounterModel.fromJson(await (handleResponse(await buildHttpResponse(
-      'kivicare/api/v1/encounter/get-encounter-detail?id=$encounterId'))));
+  return EncounterModel.fromJson(await (handleResponse(
+    await buildHttpResponse(
+        '${ApiEndPoints.encounterEndPoint}/${EndPointKeys.getEncounterDetailEndPointKey}?${ConstantKeys.lowerIdKey}=$encounterId'),
+  )));
 }
 
 Future<StaticDataModel> getStaticDataResponseAPI(String req,
@@ -40,7 +44,7 @@ Future<StaticDataModel> getStaticDataResponseAPI(String req,
   if (searchString.validate().isNotEmpty) param.add('s=$searchString');
   StaticDataModel data = StaticDataModel.fromJson(await (handleResponse(
       await buildHttpResponse(
-          'kivicare/api/v1/staticdata/get-list?type=$req&${param.validate().join('&')}'))));
+          '${ApiEndPoints.staticDataEndPoint}/${EndPointKeys.getListEndPointKey}?${ConstantKeys.typeKey}=$req&${param.validate().join('&')}'))));
   if (data.staticData != null) cachedStaticData = data.staticData;
   return data;
 }
@@ -51,7 +55,7 @@ Future<List<WeeklyAppointment>> getAppointmentCountAPI(
   Iterable it = Iterable.empty();
 
   it = await handleResponse(await buildHttpResponse(
-      'kivicare/api/v1/doctor/get-appointment-count',
+      '${ApiEndPoints.doctorEndPoint}/${EndPointKeys.getAppointmentCountEndPointKey}',
       request: request,
       method: HttpMethod.POST));
 

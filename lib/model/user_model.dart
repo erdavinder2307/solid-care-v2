@@ -20,12 +20,11 @@ class UserModel {
   List<Clinic>? clinic;
   String? country;
   String? dob;
+  String? apiResponseMessage;
 
   List<EncounterModule>? encounterModules;
   String? firstName;
   String? gender;
-
-  bool? isKivicareProOnName;
 
   String? isPatientEnable;
   String? lastName;
@@ -67,7 +66,8 @@ class UserModel {
 
   //New
   String? available;
-  List<String>? clinicId;
+  String? clinicId;
+
   String? clinicName;
   String? displayName;
   int? iD;
@@ -95,20 +95,23 @@ class UserModel {
   File? imageFile;
   String? utc;
 
+  String? serviceId;
+
   UserModel({
     this.address,
     this.apiKey,
     this.apiSecret,
     this.city,
     this.clinic,
+    this.clinicId,
     this.country,
     this.dob,
     this.imageFile,
     this.doctorName,
     this.encounterModules,
     this.firstName,
+    this.apiResponseMessage,
     this.gender,
-    this.isKivicareProOnName,
     this.isPatientEnable,
     this.lastName,
     this.mobileNumber,
@@ -140,12 +143,12 @@ class UserModel {
     this.message,
     this.globalDateFormat,
     this.available,
-    this.clinicId,
     this.clinicName,
     this.displayName,
     this.avgRating,
     this.ratingList,
     this.iD,
+    this.serviceId,
     this.userStatus,
     this.patientAddedBy,
     this.totalEncounter,
@@ -174,6 +177,7 @@ class UserModel {
       totalEncounter: json['total_encounter'],
       userRegistered: json['user_registered'],
       city: json['city'],
+      apiResponseMessage: json['message'],
       clinic: json['clinic'] != null
           ? (json['clinic'] as List).map((i) => Clinic.fromJson(i)).toList()
           : null,
@@ -189,7 +193,6 @@ class UserModel {
           : json['display_name'].toString().split(' ').first,
       gender: json['gender'],
       utc: json['UTC'],
-      isKivicareProOnName: json['isSolidCareProOnName'],
       isPatientEnable: json['is_patient_enable'],
       lastName: json['last_name'] != null
           ? json['last_name']
@@ -249,28 +252,36 @@ class UserModel {
           : null,
       available: json['available'],
       avgRating: json['avgRating'],
-      clinicId: json['clinic_id'] != null
-          ? new List<String>.from(json['clinic_id'])
-          : null,
       clinicName: json['clinic_name'],
       displayName: json['display_name'],
       iD: json['ID'],
       ratingList: json['review'] != null
           ? (json['review'] as List).map((i) => RatingData.fromJson(i)).toList()
-          : null,
+          : json['reviews'] != null
+              ? (json['reviews'] as List)
+                  .map((i) => RatingData.fromJson(i))
+                  .toList()
+              : null,
       userStatus: json['user_status'],
       charges: json['charges'],
+      serviceId: json['service_id'],
       duration: json['duration'],
       serviceImage: json['image'],
       isTelemed: json['is_telemed'],
       mappingTableId: json['mapping_table_id'],
       multiple: json['is_multiple_selection'],
-      status: json['status'],
+      status: json['status'].runtimeType == int
+          ? (json['status'] as int).toString()
+          : json['status'],
     );
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.clinicId != null) {
+      data['clinic_Id'] = this.clinicId;
+    }
+
     data['address'] = this.address;
     data['api_key'] = this.apiKey;
     data['api_secret'] = this.apiSecret;
@@ -281,8 +292,6 @@ class UserModel {
     data['gender'] = this.gender;
     data['doctor_name'] = this.doctorName;
     data['UTC'] = this.utc;
-
-    data['isSolidCareProOnName'] = this.isKivicareProOnName;
     data['is_patient_enable'] = this.isPatientEnable;
     data['last_name'] = this.lastName;
     data['mobile_number'] = this.mobileNumber;
@@ -305,6 +314,7 @@ class UserModel {
     data['charges'] = this.charges;
     data['doctor_id'] = this.doctorId;
     data['duration'] = this.duration;
+    data['service_id'] = this.serviceId;
 
     data['image'] = this.serviceImage;
     data['mapping_table_id'] = this.mappingTableId;
@@ -312,6 +322,7 @@ class UserModel {
 
     data['status'] = this.status;
     data['is_telemed'] = this.isTelemed;
+
     if (this.clinic != null) {
       data['clinic'] = this.clinic!.map((v) => v.toJson()).toList();
     }

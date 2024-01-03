@@ -14,6 +14,8 @@ import 'package:solidcare/screens/doctor/fragments/appointment_fragment.dart';
 import 'package:solidcare/components/appointment_fragment_status_compoent.dart';
 import 'package:solidcare/screens/shimmer/screen/appointment_fragment_shimmer.dart';
 import 'package:solidcare/utils/cached_value.dart';
+import 'package:solidcare/utils/common.dart';
+import 'package:solidcare/utils/constants.dart';
 import 'package:solidcare/utils/images.dart';
 import 'package:nb_utils/nb_utils.dart';
 
@@ -75,6 +77,24 @@ class _PatientAppointmentFragmentState
       appStore.setLoading(false);
       throw e;
     });
+  }
+
+  String getEmptyText() {
+    if (selectIndex == 0) {
+      return locale.lblNoAppointmentsFound;
+    } else if (selectIndex == 1) {
+      return locale.lblNoLatestAppointmentFound;
+    } else if (selectIndex == 2) {
+      return locale.lblNoPendingAppointmentFound;
+    } else if (selectIndex == 3) {
+      return locale.lblNoCompletedAppointmentFound;
+    } else if (selectIndex == 4) {
+      return locale.lblNoCancelledAppointmentFound;
+    } else if (selectIndex == 5) {
+      return locale.lblNoAppointmentsFound;
+    } else {
+      return locale.lblNoAppointmentsFound;
+    }
   }
 
   Future<void> changeStatus(int index) async {
@@ -186,9 +206,7 @@ class _PatientAppointmentFragmentState
                         })
                     .visible(snap.isNotEmpty,
                         defaultWidget: snap.isEmpty && !appStore.isLoading
-                            ? NoDataFoundWidget(
-                                    text: locale.lblNoAppointmentsFound)
-                                .center()
+                            ? NoDataFoundWidget(text: getEmptyText()).center()
                             : Offstage());
               },
             ).paddingTop(100),
@@ -201,12 +219,9 @@ class _PatientAppointmentFragmentState
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () {
-          if (appStore.isConnectedToInternet)
-            appointmentWidgetNavigation(context);
-          else
-            toast(locale.lblNoInternetMsg);
+          appointmentWidgetNavigation(context);
         },
-      ),
+      ).visible(isVisible(SharedPreferenceKey.solidCareAppointmentAddKey)),
     );
   }
 }

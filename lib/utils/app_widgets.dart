@@ -1,43 +1,7 @@
 import 'package:solidcare/main.dart';
 import 'package:solidcare/model/demo_login_model.dart';
 import 'package:solidcare/model/upcoming_appointment_model.dart';
-import 'package:solidcare/utils/images.dart';
-import 'package:nb_utils/nb_utils.dart';
-
-List<LanguageDataModel> languageList() {
-  return [
-    LanguageDataModel(
-        id: 0,
-        name: locale.lblEnglish,
-        languageCode: 'en',
-        fullLanguageCode: 'en-US',
-        flag: flagsIcUs),
-    LanguageDataModel(
-        id: 1,
-        name: locale.lblArabic,
-        languageCode: 'ar',
-        fullLanguageCode: 'ar-AR',
-        flag: flagsIcAr),
-    LanguageDataModel(
-        id: 2,
-        name: locale.lblHindi,
-        languageCode: 'hi',
-        fullLanguageCode: 'hi-IN',
-        flag: flagsIcIndia),
-    LanguageDataModel(
-        id: 3,
-        name: locale.lblGerman,
-        languageCode: 'de',
-        fullLanguageCode: 'de-DE',
-        flag: flagsIcGermany),
-    LanguageDataModel(
-        id: 4,
-        name: locale.lblFrench,
-        languageCode: 'fr',
-        fullLanguageCode: 'fr-FR',
-        flag: flagsIcFrench),
-  ];
-}
+import 'package:solidcare/utils/constants.dart';
 
 List<DemoLoginModel> demoLoginList() {
   List<DemoLoginModel> demoLoginListData = [];
@@ -50,6 +14,22 @@ List<DemoLoginModel> demoLoginList() {
 
   return demoLoginListData;
 }
+
+List<String> bloodGroupList = [
+  'A+',
+  'B+',
+  'AB+',
+  'O+',
+  'A-',
+  'B-',
+  'AB-',
+  'O-'
+];
+List<String> userRoleList = [
+  UserRoleDoctor,
+  UserRolePatient,
+  UserRoleReceptionist
+];
 
 List<WeeklyAppointment> emptyGraphListMonthly = [
   WeeklyAppointment(x: "W1", y: 0),

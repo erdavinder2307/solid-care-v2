@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:solidcare/main.dart';
 import 'package:solidcare/model/encounter_type_model.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:solidcare/utils/extensions/widget_extentions.dart';
 
 class EncounterTypeComponent extends StatelessWidget {
   final EncounterType data;
@@ -26,10 +27,8 @@ class EncounterTypeComponent extends StatelessWidget {
               .expand(),
           10.width.visible(isDeleteOn),
           Icon(Icons.delete, color: Colors.red, size: 20)
-              .onTap(
+              .appOnTap(
                 () => onTap?.call(),
-                splashColor: Colors.transparent,
-                highlightColor: Colors.transparent,
               )
               .visible(isDeleteOn),
         ],

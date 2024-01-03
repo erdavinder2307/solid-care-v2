@@ -9,6 +9,22 @@ part of 'UserStore.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
 mixin _$UserStore on UserStoreBase, Store {
+  late final _$userDataAtom =
+      Atom(name: 'UserStoreBase.userData', context: context);
+
+  @override
+  UserModel? get userData {
+    _$userDataAtom.reportRead();
+    return super.userData;
+  }
+
+  @override
+  set userData(UserModel? value) {
+    _$userDataAtom.reportWrite(value, super.userData, () {
+      super.userData = value;
+    });
+  }
+
   late final _$userEmailAtom =
       Atom(name: 'UserStoreBase.userEmail', context: context);
 
@@ -22,6 +38,23 @@ mixin _$UserStore on UserStoreBase, Store {
   set userEmail(String? value) {
     _$userEmailAtom.reportWrite(value, super.userEmail, () {
       super.userEmail = value;
+    });
+  }
+
+  late final _$termsEndConditionUrlAtom =
+      Atom(name: 'UserStoreBase.termsEndConditionUrl', context: context);
+
+  @override
+  String? get termsEndConditionUrl {
+    _$termsEndConditionUrlAtom.reportRead();
+    return super.termsEndConditionUrl;
+  }
+
+  @override
+  set termsEndConditionUrl(String? value) {
+    _$termsEndConditionUrlAtom.reportWrite(value, super.termsEndConditionUrl,
+        () {
+      super.termsEndConditionUrl = value;
     });
   }
 
@@ -249,6 +282,47 @@ mixin _$UserStore on UserStoreBase, Store {
     });
   }
 
+  late final _$userClinicAtom =
+      Atom(name: 'UserStoreBase.userClinic', context: context);
+
+  @override
+  Clinic? get userClinic {
+    _$userClinicAtom.reportRead();
+    return super.userClinic;
+  }
+
+  @override
+  set userClinic(Clinic? value) {
+    _$userClinicAtom.reportWrite(value, super.userClinic, () {
+      super.userClinic = value;
+    });
+  }
+
+  late final _$oneSignalTagAtom =
+      Atom(name: 'UserStoreBase.oneSignalTag', context: context);
+
+  @override
+  Map<String, String> get oneSignalTag {
+    _$oneSignalTagAtom.reportRead();
+    return super.oneSignalTag;
+  }
+
+  @override
+  set oneSignalTag(Map<String, String> value) {
+    _$oneSignalTagAtom.reportWrite(value, super.oneSignalTag, () {
+      super.oneSignalTag = value;
+    });
+  }
+
+  late final _$setUserDataAsyncAction =
+      AsyncAction('UserStoreBase.setUserData', context: context);
+
+  @override
+  Future<void> setUserData(UserModel value, {bool initialize = false}) {
+    return _$setUserDataAsyncAction
+        .run(() => super.setUserData(value, initialize: initialize));
+  }
+
   late final _$setUserEmailAsyncAction =
       AsyncAction('UserStoreBase.setUserEmail', context: context);
 
@@ -265,6 +339,15 @@ mixin _$UserStore on UserStoreBase, Store {
   Future<void> setUserClinicName(String value, {bool initialize = false}) {
     return _$setUserClinicNameAsyncAction
         .run(() => super.setUserClinicName(value, initialize: initialize));
+  }
+
+  late final _$setTermsAndConditionAsyncAction =
+      AsyncAction('UserStoreBase.setTermsAndCondition', context: context);
+
+  @override
+  Future<void> setTermsAndCondition(String value) {
+    return _$setTermsAndConditionAsyncAction
+        .run(() => super.setTermsAndCondition(value));
   }
 
   late final _$setUserClinicAddressAsyncAction =
@@ -387,7 +470,9 @@ mixin _$UserStore on UserStoreBase, Store {
   @override
   String toString() {
     return '''
+userData: ${userData},
 userEmail: ${userEmail},
+termsEndConditionUrl: ${termsEndConditionUrl},
 profileImage: ${profileImage},
 userId: ${userId},
 firstName: ${firstName},
@@ -401,7 +486,9 @@ userClinicName: ${userClinicName},
 userClinicImage: ${userClinicImage},
 userClinicAddress: ${userClinicAddress},
 userClinicStatus: ${userClinicStatus},
-userDob: ${userDob}
+userDob: ${userDob},
+userClinic: ${userClinic},
+oneSignalTag: ${oneSignalTag}
     ''';
   }
 }

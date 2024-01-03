@@ -9,6 +9,7 @@ import 'package:nb_utils/nb_utils.dart';
 
 class DashboardFragmentChartComponent extends StatelessWidget {
   final DashboardModel data;
+
   DashboardFragmentChartComponent({required this.data});
 
   @override
@@ -28,10 +29,10 @@ class DashboardFragmentChartComponent extends StatelessWidget {
                     style: secondaryTextStyle(color: appSecondaryColor))
                 .onTap(
               () {
-                ShowAppointmentChartScreen().launch(context);
+                ShowAppointmentChartScreen().launch(context,
+                    pageRouteAnimation: pageAnimation,
+                    duration: pageAnimationDuration);
               },
-              splashColor: Colors.transparent,
-              highlightColor: Colors.transparent,
             ),
             16.width,
           ],

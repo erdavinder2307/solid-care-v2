@@ -14,6 +14,7 @@ import 'package:firebase_remote_config_web/firebase_remote_config_web.dart';
 import 'package:flutter_custom_tabs_web/flutter_custom_tabs_web.dart';
 import 'package:fluttertoast/fluttertoast_web.dart';
 import 'package:image_picker_for_web/image_picker_for_web.dart';
+import 'package:package_info_plus/src/package_info_plus_web.dart';
 import 'package:shared_preferences_web/shared_preferences_web.dart';
 import 'package:url_launcher_web/url_launcher_web.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
@@ -28,6 +29,7 @@ void registerPlugins([final Registrar? pluginRegistrar]) {
   CustomTabsPlugin.registerWith(registrar);
   FluttertoastWebPlugin.registerWith(registrar);
   ImagePickerPlugin.registerWith(registrar);
+  PackageInfoPlusWebPlugin.registerWith(registrar);
   SharedPreferencesPlugin.registerWith(registrar);
   UrlLauncherPlugin.registerWith(registrar);
   registrar.registerMessageHandler();

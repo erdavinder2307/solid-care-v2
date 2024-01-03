@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:solidcare/main.dart';
-import 'package:solidcare/utils/app_common.dart';
 import 'package:solidcare/utils/colors.dart';
 import 'package:solidcare/utils/extensions/string_extensions.dart';
+import 'package:solidcare/utils/extensions/widget_extentions.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class AppSettingWidget extends StatelessWidget {
@@ -27,7 +27,11 @@ class AppSettingWidget extends StatelessWidget {
       onTap: widget == null
           ? onTap as void Function()?
           : () {
-              widget.launch(context).then((value) {
+              widget
+                  .launch(context,
+                      pageRouteAnimation: pageAnimation,
+                      duration: pageAnimationDuration)
+                  .then((value) {
                 setStatusBarColor(
                   appStore.isDarkModeOn
                       ? context.scaffoldBackgroundColor
@@ -53,15 +57,14 @@ class AppSettingWidget extends StatelessWidget {
                   Icons.arrow_forward_ios_rounded,
                   color: iconColor.withOpacity(0.5),
                   size: 16,
-                ).paddingOnly(left: 16, right: 4, top: 8, bottom: 8).onTap(
+                ).paddingOnly(left: 16, right: 4, top: 8, bottom: 8).appOnTap(
                     widget == null
                         ? onTap as void Function()?
                         : () {
-                            widget.launch(context);
+                            widget.launch(context,
+                                pageRouteAnimation: pageAnimation,
+                                duration: pageAnimationDuration);
                           },
-                    borderRadius: radius(),
-                    splashColor: Colors.transparent,
-                    highlightColor: Colors.transparent,
                   )
               : Offstage()),
     );

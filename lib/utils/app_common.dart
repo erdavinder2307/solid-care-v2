@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
@@ -11,6 +12,7 @@ import 'package:solidcare/utils/colors.dart';
 import 'package:solidcare/utils/common.dart';
 import 'package:solidcare/utils/constants.dart';
 import 'package:solidcare/utils/extensions/string_extensions.dart';
+import 'package:solidcare/utils/extensions/widget_extentions.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 Future<void> defaultValue() async {
@@ -204,7 +206,7 @@ void datePickerComponent(
         locale.lblMinimumAgeRequired +
             locale.lblCurrentAgeIs +
             ' ${DateTime.now().year - value.year}',
-        bgColor: errorBackGroundColor,
+        bgColor: context.cardColor,
         textColor: errorTextColor,
       );
       datePickerComponent(context,
@@ -215,4 +217,74 @@ void datePickerComponent(
       onDateSelected?.call(value);
     }
   });
+}
+
+Future<void> dateBottomSheet(context,
+    {DateTime? bDate, Function(DateTime?)? onBirthDateSelected}) async {
+  hideKeyboard(context);
+  if (bDate == null) {
+    bDate = DateTime.now();
+  }
+  await showModalBottomSheet(
+    context: context,
+    shape: RoundedRectangleBorder(borderRadius: radius()),
+    builder: (BuildContext e) {
+      DateTime? birthDate;
+      return Container(
+        height: e.height() / 2 - 180,
+        color: e.cardColor,
+        child: Column(
+          children: [
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(locale.lblCancel, style: boldTextStyle()).appOnTap(
+                    () {
+                      finish(context);
+                    },
+                  ),
+                  Text(locale.lblDone, style: boldTextStyle()).appOnTap(
+                    () {
+                      if (DateTime.now().year - bDate!.year < 18) {
+                        toast(
+                          locale.lblMinimumAgeRequired +
+                              locale.lblCurrentAgeIs +
+                              ' ${DateTime.now().year - bDate!.year}',
+                          bgColor: context.cardColor,
+                          textColor: errorTextColor,
+                        );
+                      } else {
+                        onBirthDateSelected?.call(bDate);
+                        finish(context);
+                      }
+                    },
+                  )
+                ],
+              ).paddingOnly(top: 8, left: 8, right: 8, bottom: 8),
+            ),
+            Container(
+              height: e.height() / 2 - 240,
+              child: CupertinoTheme(
+                data: CupertinoThemeData(
+                  textTheme: CupertinoTextThemeData(
+                      dateTimePickerTextStyle: primaryTextStyle(size: 20)),
+                ),
+                child: CupertinoDatePicker(
+                  minimumDate: DateTime(1900, 1, 1),
+                  minuteInterval: 1,
+                  initialDateTime: bDate,
+                  mode: CupertinoDatePickerMode.date,
+                  onDateTimeChanged: (DateTime selectedDate) {
+                    bDate = selectedDate;
+                  },
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    },
+  );
 }

@@ -15,8 +15,13 @@ class CommonRowComponent extends StatelessWidget {
   final Widget? leading;
   final paddingAfterLeading;
   final paddingBeforeTrailing;
+  final Color? backgroundColor;
+  final double? borderRadius;
+  final double? padding;
   CommonRowComponent(
       {required this.title,
+      this.borderRadius,
+      this.padding,
       this.paddingBeforeTrailing,
       this.paddingAfterLeading,
       this.trailing,
@@ -28,18 +33,24 @@ class CommonRowComponent extends StatelessWidget {
       this.valueColor,
       this.titleColor,
       this.valueSize,
-      this.titleSize});
+      this.titleSize,
+      this.backgroundColor});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: boxDecorationDefault(color: context.cardColor),
-      padding: EdgeInsets.all(16),
+      decoration: boxDecorationDefault(
+        color: backgroundColor ?? context.cardColor,
+        borderRadius: radius(
+          borderRadius ?? defaultRadius,
+        ),
+      ),
+      padding: EdgeInsets.all(padding ?? 16),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           leading.paddingOnly(right: paddingAfterLeading ?? 4, top: 4),
-          16.width,
+          if (paddingAfterLeading != 0) 16.width,
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

@@ -3,10 +3,12 @@ import 'package:solidcare/components/image_border_component.dart';
 import 'package:solidcare/components/status_widget.dart';
 import 'package:solidcare/main.dart';
 import 'package:solidcare/model/upcoming_appointment_model.dart';
+import 'package:solidcare/screens/appointment/components/appointment_quick_view.dart';
 import 'package:solidcare/utils/app_common.dart';
 import 'package:solidcare/utils/colors.dart';
 import 'package:solidcare/utils/common.dart';
 import 'package:solidcare/utils/extensions/string_extensions.dart';
+import 'package:solidcare/utils/extensions/widget_extentions.dart';
 import 'package:solidcare/utils/images.dart';
 import 'package:nb_utils/nb_utils.dart';
 
@@ -14,6 +16,29 @@ class AppointmentDashboardComponent extends StatelessWidget {
   final UpcomingAppointmentModel upcomingData;
 
   const AppointmentDashboardComponent({required this.upcomingData});
+
+  void _handleViewButton(BuildContext context) {
+    showInDialog(
+      context,
+      contentPadding: EdgeInsets.zero,
+      title: Row(
+        children: [
+          Text(locale.lblAppointmentSummary,
+                  style: primaryTextStyle(color: appPrimaryColor))
+              .expand(),
+          16.width,
+          StatusWidget(
+            status: upcomingData.status.validate(),
+            isAppointmentStatus: true,
+            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+          ),
+        ],
+      ),
+      builder: (p0) {
+        return AppointmentQuickView(upcomingAppointment: upcomingData);
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,38 +53,16 @@ class AppointmentDashboardComponent extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if (upcomingData.patientProfileImg.validate().isNotEmpty &&
-                  upcomingData.doctorProfileImg.validate().isNotEmpty)
-                ImageBorder(
-                    src: isDoctor()
-                        ? upcomingData.patientProfileImg.validate()
-                        : upcomingData.doctorProfileImg.validate(),
-                    height: 40,
-                    width: 40)
-              else if (upcomingData.doctorName.validate().isNotEmpty)
-                GradientBorder(
-                  gradient: LinearGradient(
-                      colors: [primaryColor, appSecondaryColor],
-                      tileMode: TileMode.mirror),
-                  strokeWidth: 2,
-                  borderRadius: 80,
-                  child: PlaceHolderWidget(
-                    height: 40,
-                    width: 40,
-                    shape: BoxShape.circle,
-                    alignment: Alignment.center,
-                    child: Text(
-                      isPatient()
-                          ? (upcomingData.doctorName
-                              .validate(value: 'D')[0]
-                              .capitalizeFirstLetter())
-                          : upcomingData.patientName
-                              .validate(value: 'P')[0]
-                              .capitalizeFirstLetter(),
-                      style: boldTextStyle(color: Colors.black),
-                    ),
-                  ),
-                ),
+              ImageBorder(
+                src: isDoctor()
+                    ? upcomingData.patientProfileImg.validate()
+                    : upcomingData.doctorProfileImg.validate(),
+                height: 40,
+                width: 40,
+                nameInitial: isPatient()
+                    ? (upcomingData.doctorName.validate(value: 'D')[0])
+                    : upcomingData.patientName.validate(value: 'P')[0],
+              ),
               16.width,
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -112,6 +115,8 @@ class AppointmentDashboardComponent extends StatelessWidget {
           8.height
         ],
       ),
-    );
+    ).appOnTap(() {
+      _handleViewButton(context);
+    });
   }
 }

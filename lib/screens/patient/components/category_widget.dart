@@ -5,7 +5,6 @@ import 'package:solidcare/components/cached_image_widget../../../model/service_m
 import 'package:solidcare/components/image_border_component.dart';
 import 'package:solidcare/main.dart';
 import 'package:solidcare/model/user_model.dart';
-import 'package:solidcare/utils/colors.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class CategoryWidget extends StatelessWidget {
@@ -34,7 +33,9 @@ class CategoryWidget extends StatelessWidget {
               ),
             )
           : BoxDecoration(
-              color: lightColors[Random.secure().nextInt(lightColors.length)],
+              color: appStore.isDarkModeOn
+                  ? context.cardColor
+                  : lightColors[Random.secure().nextInt(lightColors.length)],
               shape: BoxShape.rectangle,
               borderRadius: radius(),
             ),
@@ -48,7 +49,9 @@ class CategoryWidget extends StatelessWidget {
                 size: 14,
                 color: data.image.validate().isNotEmpty
                     ? Colors.white
-                    : Colors.black),
+                    : appStore.isDarkModeOn
+                        ? Colors.white
+                        : Colors.black),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
@@ -59,7 +62,9 @@ class CategoryWidget extends StatelessWidget {
               style: secondaryTextStyle(
                   color: data.image.validate().isNotEmpty
                       ? Colors.white70
-                      : Colors.black54),
+                      : appStore.isDarkModeOn
+                          ? Colors.white70
+                          : Colors.black54),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
@@ -73,30 +78,12 @@ class CategoryWidget extends StatelessWidget {
                 children:
                     List.generate(data.doctorList.validate().length, (index) {
                   UserModel userData = data.doctorList.validate()[index];
-                  if (userData.profileImage != null &&
-                      userData.profileImage!.isNotEmpty)
-                    return ImageBorder(
-                      src: userData.profileImage.validate(),
-                      height: 30,
-                      width: 30,
-                    ).paddingLeft(index == 0 ? 0 : (index) * 20);
-                  else
-                    return GradientBorder(
-                      gradient: LinearGradient(
-                          colors: [primaryColor, appSecondaryColor],
-                          tileMode: TileMode.mirror),
-                      strokeWidth: 2,
-                      borderRadius: 80,
-                      child: PlaceHolderWidget(
-                        height: 30,
-                        width: 30,
-                        alignment: Alignment.center,
-                        shape: BoxShape.circle,
-                        child: Text(
-                            '${userData.displayName.validate(value: 'D')[0].capitalizeFirstLetter()}',
-                            style: boldTextStyle(size: 18)),
-                      ),
-                    ).paddingLeft(index == 0 ? 0 : (index * 20));
+                  return ImageBorder(
+                    src: userData.profileImage.validate(),
+                    height: 30,
+                    width: 30,
+                    nameInitial: userData.displayName.validate(value: 'D')[0],
+                  ).paddingLeft(index == 0 ? 0 : (index) * 20);
                 }),
               ),
             ],

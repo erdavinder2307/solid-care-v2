@@ -4,11 +4,15 @@ import 'package:nb_utils/nb_utils.dart';
 
 class DisabledRatingBarWidget extends StatelessWidget {
   final num rating;
+  final int? itemCount;
   final double? size;
   final bool showRatingText;
 
   DisabledRatingBarWidget(
-      {required this.rating, this.size, this.showRatingText = false});
+      {required this.rating,
+      this.itemCount,
+      this.size,
+      this.showRatingText = false});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +20,7 @@ class DisabledRatingBarWidget extends StatelessWidget {
       children: [
         RatingBarWidget(
           onRatingChanged: null,
-          itemCount: 5,
+          itemCount: itemCount ?? 5,
           size: size ?? 18,
           disable: true,
           rating: rating.validate().toDouble(),

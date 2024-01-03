@@ -1,24 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:solidcare/components/body_widget.dart';
-import 'package:solidcare/components/cached_image_widget.dart';
-import 'package:solidcare/components/common_row_component.dart';
-import 'package:solidcare/components/role_widget.dart';
+import 'package:solidcare/components/loader_widget.dart';
 import 'package:solidcare/components/view_all_widget.dart';
 import 'package:solidcare/main.dart';
+import 'package:solidcare/model/user_model.dart';
 import 'package:solidcare/network/auth_repository.dart';
-import 'package:solidcare/network/doctor_list_repository.dart';
+import 'package:solidcare/network/doctor_repository.dart';
 import 'package:solidcare/screens/patient/screens/review/component/review_widget.dart';
 import 'package:solidcare/screens/patient/screens/review/rating_view_all_screen.dart';
+import 'package:solidcare/screens/receptionist/components/qualification_item_widget.dart';
 import 'package:solidcare/screens/receptionist/screens/doctor/add_doctor_screen.dart';
 import 'package:solidcare/utils/app_common.dart';
 import 'package:solidcare/utils/colors.dart';
 import 'package:solidcare/utils/common.dart';
+import 'package:solidcare/utils/constants.dart';
 import 'package:solidcare/utils/extensions/string_extensions.dart';
+import 'package:solidcare/utils/extensions/widget_extentions.dart';
 import 'package:solidcare/utils/images.dart';
 import 'package:nb_utils/nb_utils.dart';
-
-import 'package:solidcare/model/user_model.dart';
 
 class DoctorDetailScreen extends StatefulWidget {
   final UserModel doctorData;
@@ -34,14 +34,23 @@ class DoctorDetailScreen extends StatefulWidget {
 class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
   late UserModel doctor;
 
+  double topPosition = 250;
+
   @override
   void initState() {
     super.initState();
-    getDoctorData(showLoader: isPatient() ? true : false);
+
+    afterBuildCreated(() {
+      setStatusBarColor(Colors.transparent,
+          statusBarIconBrightness: Brightness.dark);
+    });
+
+    getDoctorData(showLoader: isPatient() || isReceptionist() ? true : false);
   }
 
   Future<void> getDoctorData({bool showLoader = true}) async {
     doctor = widget.doctorData;
+
     if (widget.doctorData.doctorId.validate().isNotEmpty &&
         widget.doctorData.doctorId.validate().toInt() != 0) {
       doctor.iD = widget.doctorData.doctorId.toInt();
@@ -51,8 +60,11 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
     }
     getSingleUserDetailAPI(doctor.iD.validate()).then((value) {
       appStore.setLoading(false);
+
       if (value.iD == null) value.iD = doctor.iD;
       if (value.available == null) value.available = doctor.available;
+      if (doctor.ratingList.validate().isNotEmpty)
+        value.ratingList = doctor.ratingList;
 
       if (value.displayName == null)
         value.displayName = '${value.firstName} ${value.lastName.validate()}';
@@ -87,6 +99,7 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
           appStore.setLoading(false);
           toast(locale.lblDoctorDeleted);
           finish(context, true);
+          finish(context, true);
         }).catchError((e) {
           appStore.setLoading(false);
           toast(e.toString());
@@ -98,237 +111,368 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
     );
   }
 
-  Widget buildBasicDetailsWidget() {
-    return Container(
-      padding: EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('${locale.lblBasicDetails}: ', style: boldTextStyle()),
-          8.height,
-          if (doctor.displayName.validate().isNotEmpty)
-            CommonRowComponent(
-              leading: ic_user.iconImage(size: 20),
-              title: locale.lblName,
-              titleTextStyle: secondaryTextStyle(size: 16),
-              value: "${doctor.displayName.validate()}",
-              valueTextStyle: primaryTextStyle(),
-            ),
-          10.height,
-          if (doctor.userEmail.validate().isNotEmpty)
-            CommonRowComponent(
-              leading: ic_message.iconImage(size: 20),
-              title: locale.lblEmail,
-              titleTextStyle: secondaryTextStyle(size: 16),
-              value: "${doctor.userEmail.validate()}",
-              valueTextStyle: primaryTextStyle(),
-            ),
-          10.height,
-          Visibility(
-              visible: doctor.mobileNumber.validate().isNotEmpty,
-              child: CommonRowComponent(
-                leading: ic_phone.iconImage(size: 20),
-                title: locale.lblContact,
-                titleTextStyle: secondaryTextStyle(size: 16),
-                value: doctor.mobileNumber.validate(),
-                valueTextStyle: primaryTextStyle(),
-              )),
-          10.height,
-          Visibility(
-            visible: doctor.noOfExperience.validate().toInt() != 0,
-            child: CommonRowComponent(
-              leading: ic_experience.iconImage(size: 20),
-              title: locale.lblExperience,
-              titleTextStyle: secondaryTextStyle(size: 16),
-              value: doctor.noOfExperience.validate().toInt() > 1
-                  ? doctor.noOfExperience.validate() + ' ${locale.lblYears}'
-                  : ' ${locale.lblYear}',
-              valueTextStyle: primaryTextStyle(),
-            ),
-          ),
-        ],
-      ),
-    );
+  bool get isEdit {
+    return isVisible(SharedPreferenceKey.solidCareDoctorEditKey);
   }
 
-  Widget buildAvailableWeekDaysWidget() {
-    return Container(
-      padding: EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(locale.lblAvailableOn, style: boldTextStyle(size: 16)),
-          16.height,
-          doctor.available.validate().isNotEmpty
-              ? AnimatedWrap(
-                  spacing: 16,
-                  runSpacing: 10,
-                  itemCount: doctor.available!.split(",").length,
-                  listAnimationType: listAnimationType,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      width: context.width() / 4 - 20,
-                      alignment: Alignment.center,
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                      decoration: boxDecorationDefault(
-                          color: appStore.isDarkModeOn
-                              ? cardDarkColor
-                              : context.cardColor),
-                      child: Text(
-                        '${doctor.available!.split(",")[index].capitalizeFirstLetter()}',
-                        style: boldTextStyle(color: primaryColor, size: 14),
-                      ),
-                    );
-                  },
-                )
-              : Text(
-                  "Dr. ${doctor.displayName} ${locale.lblWeekDaysDataNotFound}",
-                  style: primaryTextStyle())
-        ],
-      ),
-    ).visible(doctor.available.validate().isNotEmpty);
-  }
-
-  Widget buildSpecialityWidget() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text('${locale.lblSpecialities}: ', style: boldTextStyle()),
-        16.height,
-        Wrap(
-          direction: Axis.vertical,
-          children: List.generate(
-            doctor.specialties!.length,
-            (index) => Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  decoration: boxDecorationDefault(
-                      shape: BoxShape.circle, color: primaryColor),
-                  height: 8,
-                  width: 8,
-                ),
-                8.width,
-                Text(doctor.specialties![index].label.validate(),
-                    style: primaryTextStyle()),
-                16.width,
-              ],
-            ),
-          ),
-        ),
-      ],
-    ).paddingAll(16);
-  }
-
-  Widget buildReviewWidget() {
-    if (!isProEnabled()) return Offstage();
-    return Container(
-      padding: EdgeInsets.fromLTRB(16, 8, 16, 16),
-      child: Column(
-        children: [
-          ViewAllLabel(
-            label: locale.lblRatingsAndReviews,
-            subLabel: locale.lblKnowWhatYourPatientsSaysAboutYou,
-            viewAllShowLimit: 5,
-            list: doctor.ratingList.validate(),
-            onTap: () {
-              RatingViewAllScreen(doctorId: doctor.iD.validate())
-                  .launch(context);
-            },
-          ),
-          16.height,
-          if (doctor.ratingList.validate().isNotEmpty)
-            ListView.builder(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              itemCount: doctor.ratingList.validate().length,
-              itemBuilder: (context, index) =>
-                  ReviewWidget(data: doctor.ratingList.validate()[index]),
-            )
-        ],
-      ),
-    ).visible(doctor.ratingList.validate().isNotEmpty);
-  }
-
-  Widget buildProfileWidget() {
-    return Visibility(
-      visible: doctor.profileImage.validate().isNotEmpty,
-      child: Hero(
-        tag: doctor.iD.validate(),
-        child: CachedImageWidget(
-          height: 120,
-          width: 120,
-          fit: BoxFit.cover,
-          url: doctor.profileImage.validate(),
-          circle: true,
-        ).center().paddingTop(20).paddingBottom(20),
-      ),
-    );
+  bool get isDelete {
+    return isVisible(SharedPreferenceKey.solidCareDoctorDeleteKey);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBarWidget(
-        locale.lblDoctorDetails,
-        textColor: Colors.white,
-        systemUiOverlayStyle: defaultSystemUiOverlayStyle(context),
-        actions: [
-          RoleWidget(
-            isShowReceptionist: true,
-            child: IconButton(
-              icon: FaIcon(Icons.edit, size: 20, color: Colors.white),
-              onPressed: () async {
-                await AddDoctorScreen(
-                  doctorData: doctor,
-                  refreshCall: () {
-                    widget.refreshCall?.call();
-                    getDoctorData();
-                  },
-                ).launch(context).then(
-                      (value) => (value) {
-                        widget.refreshCall?.call();
-                        getDoctorData();
-                      },
-                    );
-              },
+      body: Stack(
+        children: [
+          Container(
+            height: context.height(),
+            width: context.width(),
+            child: SingleChildScrollView(
+              child: Stack(
+                children: [
+                  Container(
+                    height: context.height() / 2,
+                    width: context.width(),
+                    decoration: boxDecorationDefault(
+                      borderRadius: BorderRadius.zero,
+                      color: doctor.profileImage.validate().isNotEmpty
+                          ? null
+                          : context.scaffoldBackgroundColor,
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: List.generate(
+                            10, (index) => Colors.black.withAlpha(index * 32)),
+                      ),
+                      image: doctor.profileImage.validate().isNotEmpty
+                          ? DecorationImage(
+                              image:
+                                  NetworkImage(doctor.profileImage.validate()),
+                              fit: BoxFit.cover,
+                            )
+                          : DecorationImage(
+                              fit: BoxFit.cover,
+                              image: AssetImage(ic_doctor),
+                              colorFilter: appStore.isDarkModeOn
+                                  ? null
+                                  : ColorFilter.mode(
+                                      appPrimaryColor.withOpacity(0.6),
+                                      BlendMode.dstOver),
+                            ),
+                    ),
+                  ),
+                  Container(
+                    width: context.width(),
+                    height: context.height() * 0.7,
+                    padding: EdgeInsets.all(16),
+                    margin: EdgeInsets.only(
+                        top:
+                            doctor.profileImage.validate().isEmpty ? 360 : 300),
+                    decoration: boxDecorationDefault(
+                      color: context.cardColor,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(24),
+                        topRight: Radius.circular(24),
+                      ),
+                    ),
+                    child: Column(
+                      children: [
+                        if (doctor.qualifications.validate().isNotEmpty)
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(locale.lblQualification,
+                                  style: boldTextStyle()),
+                              Wrap(
+                                spacing: 6,
+                                children: doctor.qualifications
+                                    .validate()
+                                    .map((element) {
+                                  return QualificationItemWidget(
+                                    data: element,
+                                    showAdd: false,
+                                    onEdit: () {},
+                                  );
+                                }).toList(),
+                              )
+                            ],
+                          ),
+                        8.height,
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('Visiting Days', style: boldTextStyle()),
+                            Container(
+                              decoration: boxDecorationDefault(
+                                  borderRadius:
+                                      BorderRadius.circular(defaultRadius),
+                                  color: context.cardColor),
+                              padding: EdgeInsets.all(12),
+                              child: Row(
+                                children: [
+                                  ic_calendar.iconImage(
+                                      size: 20, color: appSecondaryColor),
+                                  22.width,
+                                  if (doctor.available.validate().isNotEmpty)
+                                    Text(
+                                      doctor.available
+                                          .validate()
+                                          .split(',')
+                                          .join(' - ')
+                                          .capitalizeEachWord(),
+                                      style: primaryTextStyle(),
+                                    ).expand()
+                                  else
+                                    Text("Dr. ${doctor.displayName} ${locale.lblWeekDaysDataNotFound}",
+                                            style: primaryTextStyle())
+                                        .expand(),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        10.height,
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(locale.lblContact, style: boldTextStyle()),
+                            Container(
+                              decoration: boxDecorationDefault(
+                                  borderRadius:
+                                      BorderRadius.circular(defaultRadius),
+                                  color: context.cardColor),
+                              padding: EdgeInsets.all(12),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      ic_message.iconImage(
+                                          color: appSecondaryColor, size: 20),
+                                      22.width,
+                                      Text(doctor.userEmail.validate(),
+                                              style: primaryTextStyle())
+                                          .expand(),
+                                    ],
+                                  ),
+                                  12.height,
+                                  Row(
+                                    children: [
+                                      ic_phone.iconImage(
+                                          color: greenColor, size: 20),
+                                      22.width,
+                                      Text(doctor.mobileNumber.validate(),
+                                              style: primaryTextStyle())
+                                          .expand(),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        12.height,
+                        if (isProEnabled() &&
+                            doctor.ratingList.validate().isNotEmpty)
+                          Column(
+                            children: [
+                              ViewAllLabel(
+                                label: locale.lblRatingsAndReviews,
+                                labelSize: 16,
+
+                                ///Todo Add language key
+                                subLabel:
+                                    'Know what patients says about ${doctor.displayName.validate().prefixText(value: 'Dr. ')}',
+                                viewAllShowLimit: 5,
+                                list: doctor.ratingList.validate(),
+                                onTap: () {
+                                  RatingViewAllScreen(
+                                          doctorId: doctor.iD.validate())
+                                      .launch(context,
+                                          pageRouteAnimation: pageAnimation,
+                                          duration: pageAnimationDuration);
+                                },
+                              ),
+                              16.height,
+                              if (doctor.ratingList.validate().isNotEmpty)
+                                ...doctor.ratingList.validate().map((e) {
+                                  return ReviewWidget(
+                                    data: e,
+                                    addMargin: false,
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 8, vertical: 8),
+                                    decoration: boxDecorationDefault(
+                                        color: context.scaffoldBackgroundColor),
+                                  ).visible(
+                                    e.patientName.validate().isNotEmpty,
+                                  );
+                                }).toList()
+                            ],
+                          )
+                      ],
+                    ).paddingTop(48),
+                  ),
+                  Container(
+                    padding: EdgeInsets.all(16),
+                    width: context.width(),
+                    margin: EdgeInsets.only(
+                        left: 22,
+                        right: 22,
+                        top:
+                            doctor.profileImage.validate().isEmpty ? 330 : 254),
+                    decoration: boxDecorationDefault(
+                      color: appStore.isDarkModeOn
+                          ? appSecondaryColor.withOpacity(0.96)
+                          : appPrimaryColor.withOpacity(0.98),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        if (doctor.displayName.validate().isNotEmpty)
+                          RichTextWidget(
+                            list: [
+                              TextSpan(
+                                  text: doctor.displayName.validate(),
+                                  style: boldTextStyle(
+                                      color: Colors.white, size: 18)),
+                              if (doctor.qualifications.validate().isNotEmpty)
+                                TextSpan(
+                                  text: doctor.qualifications!
+                                      .map((e) => e.degree
+                                          .validate()
+                                          .capitalizeFirstLetter())
+                                      .toList()
+                                      .join(' - ')
+                                      .prefixText(value: ' (')
+                                      .suffixText(value: ')'),
+                                  style: primaryTextStyle(color: Colors.white),
+                                ),
+                            ],
+                          ),
+
+                        ///Todo Add language key
+                        if (doctor.noOfExperience.validate().toInt() != 0)
+                          Text(
+                            'Experienced Practitioner since ' +
+                                '${doctor.noOfExperience.validate().toInt() > 1 ? doctor.noOfExperience.validate() + ' ${locale.lblYears}' : ' ${locale.lblYear}'}',
+                            style: secondaryTextStyle(color: Colors.white),
+                          ),
+
+                        if (doctor.specialties.validate().isNotEmpty)
+                          ReadMoreText(
+                            doctor.specialties
+                                .validate()
+                                .map((e) => e.label.validate())
+                                .join(' - '),
+                            style: secondaryTextStyle(color: Colors.white),
+                            textAlign: TextAlign.center,
+                            trimLines: 1,
+                            trimMode: TrimMode.Line,
+                            colorClickableText: Colors.white70,
+                          ),
+                      ],
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      BackButton(color: Colors.white),
+                      if (isReceptionist())
+                        PopupMenuButton(
+                          enabled: true,
+                          icon: FaIcon(Icons.more_vert, color: Colors.white70),
+                          itemBuilder: (context) {
+                            return [
+                              if (isEdit)
+                                PopupMenuItem(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 6, vertical: 0),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      FaIcon(Icons.edit,
+                                          size: 18, color: Colors.green),
+                                      Text(locale.lblEdit,
+                                              style: secondaryTextStyle())
+                                          .paddingLeft(4),
+                                    ],
+                                  ).appOnTap(
+                                    () async {
+                                      ifTester(
+                                        context,
+                                        () async {
+                                          await AddDoctorScreen(
+                                                  doctorData: doctor,
+                                                  refreshCall: () {
+                                                    widget.refreshCall?.call();
+                                                    getDoctorData();
+                                                  })
+                                              .launch(
+                                                context,
+                                                pageRouteAnimation:
+                                                    pageAnimation,
+                                                duration: pageAnimationDuration,
+                                              )
+                                              .then(
+                                                (value) => (value) {
+                                                  widget.refreshCall?.call();
+                                                  getDoctorData();
+                                                },
+                                              );
+                                        },
+                                        userEmail: doctor.userEmail.validate(),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              if (isDelete)
+                                PopupMenuItem(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 5, vertical: 0),
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          FaIcon(Icons.delete,
+                                              size: 18, color: Colors.red),
+                                          FittedBox(
+                                                  child: Text(locale.lblDelete,
+                                                      style:
+                                                          secondaryTextStyle()))
+                                              .paddingLeft(4),
+                                        ],
+                                      ).appOnTap(() {
+                                        ifTester(
+                                            context,
+                                            () => deleteDoctor(
+                                                doctor.iD.validate()),
+                                            userEmail:
+                                                doctor.userEmail.validate());
+                                      })
+                                    ],
+                                  ),
+                                ),
+                            ];
+                          },
+                          color: context.cardColor,
+                          constraints: BoxConstraints(
+                            maxHeight: 100,
+                            maxWidth: 80,
+                          ),
+                        ),
+                    ],
+                  ).paddingSymmetric(vertical: context.statusBarHeight)
+                ],
+              ),
             ),
           ),
-          RoleWidget(
-            isShowReceptionist: true,
-            child: IconButton(
-              icon: FaIcon(Icons.delete, size: 20, color: Colors.white),
-              onPressed: () {
-                ifTester(context, () => deleteDoctor(doctor.iD.validate()),
-                    userEmail: doctor.userEmail.validate());
-              },
-            ).paddingRight(16),
-          ),
+          Observer(
+              builder: (context) =>
+                  LoaderWidget().visible(appStore.isLoading).center())
         ],
-      ),
-      body: Body(
-        visibleOn: appStore.isLoading,
-        child: AnimatedScrollView(
-          listAnimationType: ListAnimationType.None,
-          padding: EdgeInsets.only(bottom: 16),
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          onSwipeRefresh: () async {
-            widget.refreshCall?.call();
-            getDoctorData();
-            return await 1.seconds.delay;
-          },
-          children: [
-            buildProfileWidget(),
-            buildBasicDetailsWidget(),
-            if (widget.doctorData.specialties != null &&
-                widget.doctorData.specialties!.validate().isNotEmpty)
-              buildSpecialityWidget(),
-            buildAvailableWeekDaysWidget(),
-            buildReviewWidget(),
-          ],
-        ),
       ),
     );
   }

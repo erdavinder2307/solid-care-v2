@@ -33,7 +33,7 @@ class SettingThirdPage extends StatelessWidget {
           name: locale.lblAboutUs,
           image: ic_aboutUs,
           widget: AboutUsScreen(),
-          subTitle: locale.lblAboutSolidCare,
+          subTitle: "Healthcare App", //locale.lblAboutSolidCare,
         ),
         AppSettingWidget(
           name: locale.lblRateUs,
@@ -56,7 +56,7 @@ class SettingThirdPage extends StatelessWidget {
           },
         ),
         AppSettingWidget(
-          name: locale.lblShareSolidCare,
+          name: 'Share', //locale.lblShareSolidCare,
           image: ic_share,
           subTitle: locale.lblReachUsMore,
           onTap: () async {

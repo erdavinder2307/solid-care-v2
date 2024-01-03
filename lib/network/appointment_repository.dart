@@ -11,6 +11,7 @@ import 'package:solidcare/network/auth_repository.dart';
 import 'package:solidcare/network/network_utils.dart';
 import 'package:solidcare/utils/app_common.dart';
 import 'package:solidcare/utils/cached_value.dart';
+import 'package:solidcare/utils/constants.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:solidcare/model/encounter_model.dart';
 
@@ -26,12 +27,13 @@ Future<List<UpcomingAppointmentModel>> getPatientAppointmentList(
   }
 
   List<String> param = [];
-  param.add(patientId != null ? '&patient_id=$patientId' : '');
-  param.add('status=$status');
+  param
+      .add(patientId != null ? '&${ConstantKeys.patientIdKey}=$patientId' : '');
+  param.add('${ConstantKeys.statusKey}=$status');
 
   EncounterModel res = EncounterModel.fromJson(
     await handleResponse(await buildHttpResponse(getEndPoint(
-        endPoint: 'kivicare/api/v1/appointment/get-appointment',
+        endPoint: ApiEndPoints.getAppointmentEndPoint,
         page: page,
         params: param))),
   );
@@ -62,13 +64,17 @@ Future<List<UpcomingAppointmentModel>> getAppointment({
   }
 
   AppointmentModel value;
-  String page = "?page=$pages";
-  String limit = "&limit=$perPage";
-  String todayDates = todayDate != null ? "&date=$todayDate" : "";
-  String start = startDate != null ? "&start=$startDate" : "";
-  String end = endDate != null ? "&end=$endDate" : "";
-  value = AppointmentModel.fromJson(await (handleResponse(await buildHttpResponse(
-      'kivicare/api/v1/appointment/get-appointment$page$limit$todayDates$start$end'))));
+
+  List<String> params = [];
+  params.add('${ConstantKeys.pageKey}=$pages');
+  params.add('${ConstantKeys.limitKey}=$perPage');
+  if (todayDate != null) params.add('${ConstantKeys.dateKey}=$todayDate');
+  if (startDate != null) params.add('${ConstantKeys.startKey}=$startDate');
+  if (endDate != null) params.add('${ConstantKeys.endKey}=$endDate');
+
+  value = AppointmentModel.fromJson(await (handleResponse(
+      await buildHttpResponse(getEndPoint(
+          endPoint: ApiEndPoints.getAppointmentEndPoint, params: params)))));
   if (pages == 1) appointmentList.clear();
 
   appointmentList.addAll(value.appointmentData.validate());
@@ -80,9 +86,6 @@ Future<List<UpcomingAppointmentModel>> getAppointment({
 
 Future<List<UpcomingAppointmentModel>> getReceptionistAppointmentList({
   bool isPast = false,
-  String? todayDate,
-  String? startDate,
-  String? endDate,
   required List<UpcomingAppointmentModel> appointmentList,
   String status = 'All',
   int? page,
@@ -93,20 +96,14 @@ Future<List<UpcomingAppointmentModel>> getReceptionistAppointmentList({
   }
 
   List<String> param = [];
-  param.add('status=$status');
-  param.add('page=$page');
-  param.add('limit=$PER_PAGE');
 
-  if (todayDate == null) {
-    if (startDate != null) param.add('start=$startDate');
-    if (endDate != null) param.add('end=$endDate');
-  } else {
-    if (!isPast) param.add('date=$todayDate');
-  }
+  param.add('${ConstantKeys.pageKey}=$page');
+  param.add('${ConstantKeys.limitKey}=$PER_PAGE');
+  param.add('${ConstantKeys.statusKey}=$status');
 
   AppointmentModel res = AppointmentModel.fromJson(await handleResponse(
-      await buildHttpResponse(
-          'kivicare/api/v1/appointment/get-appointment?${param.validate().join('&')}')));
+      await buildHttpResponse(getEndPoint(
+          endPoint: ApiEndPoints.getAppointmentEndPoint, params: param))));
 
   if (page == 1) appointmentList.clear();
 
@@ -121,13 +118,23 @@ Future<List<UpcomingAppointmentModel>> getReceptionistAppointmentList({
 
 //region Appointment
 
-Future<List<List<AppointmentSlotModel>>> getAppointmentTimeSlotList(
-    {String? appointmentDate, String? doctorId, String? clinicId}) async {
+Future<List<List<AppointmentSlotModel>>> getAppointmentTimeSlotList({
+  String? appointmentDate,
+  String? doctorId,
+  String? clinicId,
+}) async {
   if (!appStore.isConnectedToInternet) {
     return [];
   }
-  Iterable it = await (handleResponse(await buildHttpResponse(
-      'kivicare/api/v1/doctor/appointment-time-slot?clinic_id=$clinicId&date=$appointmentDate&doctor_id=${doctorId != null ? doctorId : ''}')));
+
+  List<String> params = [];
+  params.add('${ConstantKeys.clinicIdKey}=$clinicId');
+  params.add('${ConstantKeys.dateKey}=$appointmentDate');
+  params.add('${ConstantKeys.doctorIdKey}=$doctorId');
+
+  Iterable it = await (handleResponse(await buildHttpResponse(getEndPoint(
+      endPoint: ApiEndPoints.getAppointmentTimeSlotsEndpoint,
+      params: params))));
 
   List<List<AppointmentSlotModel>> list = [];
 
@@ -141,14 +148,14 @@ Future<List<List<AppointmentSlotModel>>> getAppointmentTimeSlotList(
 
 Future updateAppointmentStatus(Map request) async {
   return await handleResponse(await buildHttpResponse(
-      'kivicare/api/v1/appointment/update-status',
+      ApiEndPoints.updateAppointmentStatusEndPoint,
       request: request,
       method: HttpMethod.POST));
 }
 
 Future deleteAppointment(Map request) async {
   return await handleResponse(await buildHttpResponse(
-      'kivicare/api/v1/appointment/delete',
+      ApiEndPoints.deleteAppointmentEndPoint,
       request: request,
       method: HttpMethod.POST));
 }
@@ -157,14 +164,14 @@ Future deleteAppointment(Map request) async {
 Future<ConfirmAppointmentResponseModel> saveAppointmentApi(
     {required Map<String, dynamic> data, List<File>? files}) async {
   var multiPartRequest =
-      await getMultiPartRequest('kivicare/api/v2/appointment/save');
+      await getMultiPartRequest(ApiEndPoints.saveAppointmentEndPoint);
 
   multiPartRequest.fields.addAll(await getMultipartFields(val: data));
 
   if (files.validate().isNotEmpty) {
-    multiPartRequest.files.addAll(
-        await getMultipartImages(files: files!, name: 'appointment_report_'));
-    multiPartRequest.fields['attachment_count'] =
+    multiPartRequest.files.addAll(await getMultipartImages(
+        files: files!, name: ConstantKeys.appointmentReportKey));
+    multiPartRequest.fields[ConstantKeys.attachmentCountsKey] =
         files.validate().length.toString();
   }
 
@@ -175,7 +182,7 @@ Future<ConfirmAppointmentResponseModel> saveAppointmentApi(
   appStore.setLoading(true);
 
   return await sendMultiPartRequestNew(multiPartRequest).then((value) {
-    appStore.setLoading(false);
+    multiSelectStore.clearList();
     return ConfirmAppointmentResponseModel.fromJson(value);
   }).catchError((e) async {
     appStore.setLoading(false);

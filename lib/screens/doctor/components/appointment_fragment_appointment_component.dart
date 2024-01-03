@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:solidcare/main.dart';
 import 'package:solidcare/model/upcoming_appointment_model.dart';
 import 'package:solidcare/screens/appointment/components/appointment_widget.dart';
@@ -14,29 +13,22 @@ class AppointmentFragmentAppointmentComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Observer(builder: (context) {
-      return Container(
-        padding: EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            AnimatedListView(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              listAnimationType: listAnimationType,
-              itemCount: data.length,
-              itemBuilder: (context, index) {
-                return AppointmentWidget(
-                  upcomingData: data[index],
-                  refreshCall: () {
-                    refreshCallForRefresh?.call();
-                  },
-                ).paddingSymmetric(vertical: 8);
-              },
-            )
-          ],
-        ),
-      );
-    });
+    return Container(
+      padding: EdgeInsets.all(16),
+      child: AnimatedListView(
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        listAnimationType: listAnimationType,
+        itemCount: data.length,
+        itemBuilder: (context, index) {
+          return AppointmentWidget(
+            upcomingData: data[index],
+            refreshCall: () {
+              refreshCallForRefresh?.call();
+            },
+          ).paddingSymmetric(vertical: 8);
+        },
+      ),
+    );
   }
 }

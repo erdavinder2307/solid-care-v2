@@ -17,7 +17,7 @@ Future<ReportModel> getReportDataAPI({int? patientId}) async {
       'kivicare/api/v1/patient/get-patient-report?patient_id=$patientId&page=1&limit=10'))));
 }
 
-Future<BaseResponses> addReportDataAPI(Map data, {File? file}) async {
+Future<ApiResponses> addReportDataAPI(Map data, {File? file}) async {
   var multiPartRequest = await getMultiPartRequest(
       'kivicare/api/v1/patient/upload-patient-report');
 
@@ -33,19 +33,28 @@ Future<BaseResponses> addReportDataAPI(Map data, {File? file}) async {
   multiPartRequest.headers.addAll(buildHeaderTokens());
   log("Multi Part Request : ${jsonEncode(multiPartRequest.fields)} ${multiPartRequest.files.map((e) => e.field + ": " + e.filename.validate())}");
   Response response = await Response.fromStream(await multiPartRequest.send());
+  apiPrint(
+    url: multiPartRequest.url.toString(),
+    headers: jsonEncode(multiPartRequest.headers),
+    request: jsonEncode(multiPartRequest.fields),
+    hasRequest: true,
+    statusCode: response.statusCode,
+    responseBody: response.body,
+    methodtype: "MultiPart",
+  );
 
   if (response.statusCode.isSuccessful()) {
-    return BaseResponses.fromJson(jsonDecode(response.body));
+    return ApiResponses.fromJson(await handleResponse(response));
   } else {
-    return BaseResponses.fromJson(jsonDecode(response.body));
+    return ApiResponses.fromJson(await handleResponse(response));
   }
 }
 
-Future deleteReportAPI(Map request) async {
-  return await handleResponse(await buildHttpResponse(
+Future<ReportModel> deleteReportAPI(Map request) async {
+  return ReportModel.fromJson(await handleResponse(await buildHttpResponse(
       'kivicare/api/v1/patient/delete-patient-report',
       request: request,
-      method: HttpMethod.POST));
+      method: HttpMethod.POST)));
 }
 
 Future<List<ReportData>> getPatientReportListApi({
@@ -58,7 +67,6 @@ Future<List<ReportData>> getPatientReportListApi({
   if (!appStore.isConnectedToInternet) {
     return [];
   }
-  appStore.setLoading(true);
 
   List<String> param = [];
   param.add('patient_id=$patientId');
@@ -68,7 +76,6 @@ Future<List<ReportData>> getPatientReportListApi({
           endPoint: 'kivicare/api/v1/patient_report/get',
           page: page,
           params: param))));
-  cachedReportList = res.reportData.validate();
   getTotalReport?.call(res.reportData.validate().length.toInt());
 
   if (page == 1) reportList.clear();

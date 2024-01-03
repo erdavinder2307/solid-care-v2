@@ -1,24 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:solidcare/main.dart';
+import 'package:solidcare/model/report_model.dart';
+import 'package:solidcare/screens/doctor/screens/add_report_screen.dart';
+import 'package:solidcare/utils/colors.dart';
+import 'package:solidcare/utils/common.dart';
+import 'package:solidcare/utils/constants.dart';
 import 'package:solidcare/utils/extensions/string_extensions.dart';
+import 'package:solidcare/utils/extensions/widget_extentions.dart';
 import 'package:solidcare/utils/images.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
-import 'package:solidcare/main.dart';
-import 'package:solidcare/model/report_model.dart';
-import 'package:solidcare/utils/common.dart';
-
 class ReportComponent extends StatelessWidget {
   final ReportData reportData;
   final VoidCallback? deleteReportData;
+  final VoidCallback? refreshReportData;
   final bool isForMyReportScreen;
-  final bool isDeleteOn;
+  final bool showDelete;
 
   ReportComponent(
       {required this.reportData,
       this.deleteReportData,
+      this.refreshReportData,
       this.isForMyReportScreen = false,
-      this.isDeleteOn = true});
+      this.showDelete = false});
 
   @override
   Widget build(BuildContext context) {
@@ -60,14 +65,11 @@ class ReportComponent extends StatelessWidget {
           8.width,
           Row(
             children: [
-              if (reportData.uploadReport.validateURL())
+              if (reportData.uploadReport.validate().isNotEmpty)
                 TextButton(
                   onPressed: () {
                     commonLaunchUrl(reportData.uploadReport.validate(),
-                            launchMode: LaunchMode.externalApplication)
-                        .catchError((e) {
-                      throw e;
-                    });
+                        launchMode: LaunchMode.externalApplication);
                   },
                   style: ButtonStyle(
                     shape: MaterialStateProperty.all(RoundedRectangleBorder(
@@ -80,19 +82,37 @@ class ReportComponent extends StatelessWidget {
                   ),
                   child: Text('${locale.lblViewFile}',
                       style: primaryTextStyle(size: 12)),
-                ),
-              if (deleteReportData != null && !isPatient())
+                ).visible(isVisible(
+                    SharedPreferenceKey.solidCarePatientReportViewKey)),
+              if (showDelete &&
+                  isVisible(
+                      SharedPreferenceKey.solidCarePatientReportDeleteKey))
                 IconButton(
                   visualDensity: VisualDensity.compact,
                   padding: EdgeInsets.zero,
-                  icon: Icon(Icons.delete, size: 20, color: Colors.red),
+                  icon: Icon(Icons.delete, size: 20, color: iconColor),
                   onPressed: deleteReportData,
-                ).visible(isDeleteOn),
+                ),
             ],
           ),
           8.height,
         ],
       ),
-    );
+    ).appOnTap(() {
+      if (isVisible(SharedPreferenceKey.solidCarePatientReportEditKey) &&
+          !isPatient())
+        AddReportScreen(
+          patientId: reportData.patientId.validate().toInt(),
+          reportData: reportData,
+        )
+            .launch(context,
+                pageRouteAnimation: pageAnimation,
+                duration: pageAnimationDuration)
+            .then((value) {
+          if (value ?? false) {
+            refreshReportData?.call();
+          }
+        });
+    });
   }
 }

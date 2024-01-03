@@ -5,6 +5,124 @@ class LanguageEn extends BaseLanguage {
   String get appName => "SolidCare";
 
   @override
+  String get lblBill => "Bill";
+
+  @override
+  String get lblStripeTestCredential => "Invalid Amount";
+
+  @override
+  String get lblTodayIsHoliday => "Today is your holiday";
+
+  @override
+  String get lblTotalTax => "Total Tax";
+
+  @override
+  String get lblStart => "Start";
+
+  @override
+  String get lblJoin => "Join";
+
+  @override
+  String get lblTotalDoctors => "Total Doctors";
+
+  @override
+  String get lblTax => "Tax";
+
+  @override
+  String get lblTaxRate => "Tax Rate";
+
+  @override
+  String get lblSubTotal => "SubTotal";
+
+  @override
+  String get lblThisServiceAlreadyExistInClinic =>
+      "This service already existing in selected clinic";
+
+  @override
+  String get lblPleaseSelectPayment => "Please select payment method";
+
+  @override
+  String get lblChargesIsNegative => "Charges must be greater or equal to 0";
+
+  @override
+  String get lblServiceCategoryIsRequired => "Service category is required";
+
+  @override
+  String get lblServiceNameIsRequired => "Service name is required";
+
+  @override
+  String get lblDurationIsRequired => "Duration is required";
+
+  @override
+  String get lblChargesIsRequired => "Charges is required";
+
+  @override
+  String get lblNoLatestAppointmentFound => "No Latest Appointment Found";
+  @override
+  String get lblNoPendingAppointmentFound => "No Pending Appointment Found";
+  @override
+  String get lblNoCompletedAppointmentFound => "No Completed Appointment Found";
+  @override
+  String get lblNoCancelledAppointmentFound => "No Cancelled Appointment Found";
+
+  @override
+  String get clinicIdRequired => "Clinic is required";
+  @override
+  String get roleIsRequired => "Role is required";
+
+  @override
+  String get confirmPasswordIsRequired => "Confirm password is required";
+
+  @override
+  String get passwordIsRequired => "Password is required";
+
+  @override
+  String get contactNumberIsRequired => "Contact number is required";
+
+  @override
+  String get lblSwipeLeftToEdit => "Swipe left to edit details";
+
+  @override
+  String get lblNoEncounterFoundAtYourClinic =>
+      "No Encounter Found At Your Clinic";
+
+  @override
+  String get lblAvailableAtClinics => 'Available at clinics';
+
+  @override
+  String get lblClinicsSelected => "Clinics Selected";
+
+  @override
+  String get lblClinicsAvailable => "Clinics available";
+
+  @override
+  String get lblSelectRole => "Select Role";
+
+  @override
+  String get lblPwdDoesNotMatch => "Password does not match";
+
+  @override
+  String get lblSelectPaymentMethod => "Select Payment Method";
+
+  @override
+  String get lblAmount => "Amount";
+
+  @override
+  String get lblPaymentId => "Payment Id";
+
+  @override
+  String get lblPaymentMethod => "Payment Method";
+
+  @override
+  String get lblVPA => "VPA";
+
+  @override
+  String get lblCardId => "Card ID";
+
+  @override
+  String get lblTransactionId => "Transaction Id";
+
+  @override
   String get lblReportUpdatedSuccessfully => "Report Updated Successfully";
 
   @override
@@ -163,7 +281,7 @@ class LanguageEn extends BaseLanguage {
       "Important Info Awaits : Peek Inside!";
 
   @override
-  String get lblYears => "Years";
+  String get lblYears => "years";
 
   @override
   String get lblDeleteAccountSubTitle => "Disconnect Healthline : Confirm?";
@@ -1004,7 +1122,7 @@ class LanguageEn extends BaseLanguage {
   String get lblEnter => "Enter";
 
   @override
-  String get lblFieldIsRequired => "field is required";
+  String get lblFieldIsRequired => "This field is required";
 
   @override
   String get lblHoliday => "Holiday";
@@ -1155,7 +1273,7 @@ class LanguageEn extends BaseLanguage {
   String get lblYearsOfExperience => "years of Experience";
 
   @override
-  String get lblAvailableOn => "Available for this Weekdays:";
+  String get lblAvailableOn => "Available for this Weekdays";
 
   @override
   String get lblHealth => "Health";
@@ -1408,7 +1526,7 @@ class LanguageEn extends BaseLanguage {
       "You will see a QR for App option on the right hand corner, ";
 
   @override
-  String get lblEnjoyTheFlawlessKivicareSystemWithEase =>
+  String get lblEnjoyTheFlawlessSolidcareSystemWithEase =>
       "Enjoy! the flawless SolidCare system with ease.";
 
   @override
@@ -1831,7 +1949,7 @@ class LanguageEn extends BaseLanguage {
   String get lblSelectPatient => "Select Patient";
 
   @override
-  String get lblNoReportsFound => "No Reports Found";
+  String get lblNoReportsFound => "No reports found";
 
   @override
   String get lblSpecialities => "Specialities";
@@ -1895,4 +2013,7 @@ class LanguageEn extends BaseLanguage {
 
   @override
   String get lblSomethingWentWrong => 'Something Went Wrong!';
+
+  //@override
+  //String get lblAboutSolidCare => 'Healthcare app';
 }

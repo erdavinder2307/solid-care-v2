@@ -7,8 +7,10 @@ import 'package:nb_utils/nb_utils.dart';
 
 class QualificationWidget extends StatefulWidget {
   List<Qualification> qualificationList;
+  bool showAdd;
   final Function(List<Qualification>)? callBack;
-  QualificationWidget({required this.qualificationList, this.callBack});
+  QualificationWidget(
+      {required this.qualificationList, this.callBack, this.showAdd = true});
 
   @override
   _QualificationWidgetState createState() => _QualificationWidgetState();
@@ -38,31 +40,32 @@ class _QualificationWidgetState extends State<QualificationWidget> {
             Text(locale.lblQualification,
                     style: boldTextStyle(color: context.primaryColor, size: 18))
                 .expand(),
-            TextButton(
-              onPressed: () async {
-                showModalBottomSheet(
-                  context: context,
-                  isScrollControlled: true,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: radiusOnly(
-                          topLeft: defaultRadius, topRight: defaultRadius)),
-                  builder: (context) {
-                    return Padding(
-                      padding: MediaQuery.of(context).viewInsets,
-                      child: AddQualificationScreen(
-                        onSubmit: (qualificationData) {
-                          widget.qualificationList.add(qualificationData);
-                          widget.callBack?.call(widget.qualificationList);
-                          setState(() {});
-                        },
-                      ),
-                    );
-                  },
-                );
-              },
-              child: Text(locale.lblAddNewQualification,
-                  style: secondaryTextStyle()),
-            )
+            if (widget.showAdd)
+              TextButton(
+                onPressed: () async {
+                  showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: radiusOnly(
+                            topLeft: defaultRadius, topRight: defaultRadius)),
+                    builder: (context) {
+                      return Padding(
+                        padding: MediaQuery.of(context).viewInsets,
+                        child: AddQualificationScreen(
+                          onSubmit: (qualificationData) {
+                            widget.qualificationList.add(qualificationData);
+                            widget.callBack?.call(widget.qualificationList);
+                            setState(() {});
+                          },
+                        ),
+                      );
+                    },
+                  );
+                },
+                child: Text(locale.lblAddNewQualification,
+                    style: secondaryTextStyle()),
+              )
           ],
         ),
         Divider(color: viewLineColor, height: 0),
@@ -77,6 +80,7 @@ class _QualificationWidgetState extends State<QualificationWidget> {
 
               return QualificationItemWidget(
                 data: element,
+                showAdd: widget.showAdd,
                 onEdit: () async {
                   await showModalBottomSheet(
                     context: context,

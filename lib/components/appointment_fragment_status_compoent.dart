@@ -3,11 +3,27 @@ import 'package:solidcare/main.dart';
 import 'package:solidcare/utils/constants.dart';
 import 'package:nb_utils/nb_utils.dart';
 
-class AppointmentFragmentStatusComponent extends StatelessWidget {
+class AppointmentFragmentStatusComponent extends StatefulWidget {
   final Function(int)? callForStatusChange;
   final int selectedIndex;
   AppointmentFragmentStatusComponent(
       {this.callForStatusChange, required this.selectedIndex});
+
+  @override
+  State<AppointmentFragmentStatusComponent> createState() =>
+      _AppointmentFragmentStatusComponentState();
+}
+
+class _AppointmentFragmentStatusComponentState
+    extends State<AppointmentFragmentStatusComponent> {
+  List<String> appointmentStatusList = [
+    locale.lblAll,
+    locale.lblLatest,
+    locale.lblPending,
+    locale.lblCompleted,
+    locale.lblCancelled,
+    locale.lblPast
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -21,10 +37,10 @@ class AppointmentFragmentStatusComponent extends StatelessWidget {
           itemCount: appointmentStatusList.length,
           padding: EdgeInsets.symmetric(horizontal: 16),
           itemBuilder: (context, index) {
-            bool isSelected = selectedIndex == index;
+            bool isSelected = widget.selectedIndex == index;
             return GestureDetector(
               onTap: () {
-                callForStatusChange?.call(index);
+                widget.callForStatusChange?.call(index);
               },
               child: Container(
                 padding:
