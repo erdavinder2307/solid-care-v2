@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -7,10 +8,13 @@ import 'package:solidcare/components/image_border_component.dart';
 import 'package:solidcare/components/loader_widget.dart';
 import 'package:solidcare/components/no_data_found_widget.dart';
 import 'package:solidcare/main.dart';
+import 'package:solidcare/model/patient_bill_model.dart';
+import 'package:solidcare/model/patient_list_model.dart';
 import 'package:solidcare/model/user_model.dart';
 import 'package:solidcare/network/patient_list_repository.dart';
 import 'package:solidcare/screens/shimmer/screen/patient_search_shimmer_screen.dart';
 import 'package:solidcare/utils/app_common.dart';
+import 'package:solidcare/utils/cached_value.dart';
 import 'package:solidcare/utils/common.dart';
 import 'package:solidcare/utils/constants.dart';
 import 'package:solidcare/utils/extensions/string_extensions.dart';
@@ -45,14 +49,22 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
   @override
   void initState() {
     super.initState();
+    getCachedPatientList();
     init(showLoader: false);
   }
 
-  Future<void> init({bool showLoader = true}) async {
-    if (showLoader) {
+  void getCachedPatientList() {
+    if (getStringAsync(SharedPreferenceKey.cachedPatientList)
+        .validate()
+        .isNotEmpty) {
+      cachedPatientList = PatientListModel.fromJson(
+          jsonDecode(getStringAsync(SharedPreferenceKey.cachedPatientList)));
+    } else {
       appStore.setLoading(true);
     }
+  }
 
+  Future<void> init({bool showLoader = true}) async {
     future = getPatientListAPI(
       searchString: searchCont.text,
       patientList: patientList,
@@ -67,7 +79,7 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
       } else {
         showClear = false;
       }
-      setState(() {});
+      //setState(() {});
       appStore.setLoading(false);
       return value;
     }).catchError((e) {
@@ -137,6 +149,7 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
               },
             ).paddingSymmetric(horizontal: 16, vertical: 16),
             SnapHelperWidget<List<UserModel>>(
+              initialData: cachedPatientList?.patientData,
               future: future,
               loadingWidget: PatientSearchShimmerScreen(),
               errorBuilder: (error) {

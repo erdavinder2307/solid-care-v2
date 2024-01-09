@@ -12,14 +12,20 @@ class AppScaffold extends StatelessWidget {
   final Color? textColor;
   final SystemUiOverlayStyle? systemUiOverlayStyle;
 
-  AppScaffold({this.appBarTitle, required this.child, this.actions, this.scaffoldBackgroundColor, this.systemUiOverlayStyle, this.textColor});
+  AppScaffold(
+      {this.appBarTitle,
+      required this.child,
+      this.actions,
+      this.scaffoldBackgroundColor,
+      this.systemUiOverlayStyle,
+      this.textColor});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBarWidget(
         appBarTitle.validate(),
-        elevation: 0.0,
+        elevation: 10,
         color: context.primaryColor,
         actions: actions,
         systemUiOverlayStyle: systemUiOverlayStyle,

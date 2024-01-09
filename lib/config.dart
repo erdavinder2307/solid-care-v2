@@ -4,7 +4,7 @@ const APP_SECOND_NAME = 'Care';
 const APP_NAME_TAG_LINE = 'Clinic and Patient Management App';
 
 //LIVE
-const DOMAIN_URL = 'https://solidcare.org';
+const DOMAIN_URL = 'http://www.solidcare.org/';
 
 const BASE_URL = '$DOMAIN_URL/wp-json/';
 

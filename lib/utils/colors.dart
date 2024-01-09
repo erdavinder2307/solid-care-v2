@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
 
-const primaryColor = Color(0xFF7093E5);
+const primaryColor = Color(0xFF3A86FF);
 Color appPrimaryColor = primaryColor;
 
-const appSecondaryColor = Color(0xFFF68685);
+const appSecondaryColor = Color(0xFFF8338EC);
 const primaryDarkColor = Color(0xff0a0909);
 
-const telemedColor = Color(0xFF181474);
+const telemedColor = Color(0xFFFF006E);
 
 const borderColor = Color(0xFFEBEBEB);
 const cardColor = Color(0xFFFFFFFF);
@@ -31,7 +31,7 @@ const secondaryTxtColor = Color(0xFF6E7990);
 
 //Error Color
 const errorBackGroundColor = Color(0xFFFFCDD2);
-const errorTextColor = Colors.red;
+const errorTextColor = Color(0xFFFB5607);
 
 //Error Color
 const successBackGroundColor = Color(0xFF242232);
@@ -41,7 +41,7 @@ const selectedColorDarkMode = Color(0xF4B4A4A);
 Color selectedColorLightMode = getColorFromHex('#e6ecfa');
 
 // Dark Mode Colors
-const ratingBarColor = Color(0xfff5c609);
+const ratingBarColor = Color(0xfffFFBE0B);
 
 //Light Mode Colors
 

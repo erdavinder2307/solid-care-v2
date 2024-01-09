@@ -30,6 +30,7 @@ import 'package:solidcare/utils/common.dart';
 import 'package:solidcare/utils/constants.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
+import 'package:workmanager/workmanager.dart';
 
 import 'utils/app_common.dart';
 
@@ -98,8 +99,30 @@ void main() async {
   } else if (themeModeIndex == THEME_MODE_DARK) {
     appStore.setDarkMode(true);
   }
-
+  // Workmanager().initialize(
+  //     callbackDispatcher, // The top level function, aka callbackDispatcher
+  //     isInDebugMode:
+  //         true // If enabled it will post a notification whenever the task is running. Handy for debugging tasks
+  //     );
+  // Workmanager().registerOneOffTask(
+  //   "task-identifier", "simpleTaskKey", // Ignored on iOS
+  //   initialDelay: Duration(minutes: 15),
+  //   constraints: Constraints(
+  //     // connected or metered mark the task as requiring internet
+  //     networkType: NetworkType.connected,
+  //   ),
+  // );
   runApp(MyApp());
+}
+
+@pragma(
+    'vm:entry-point') // Mandatory if the App is obfuscated or using Flutter 3.1+
+void callbackDispatcher() {
+  Workmanager().executeTask((task, inputData) {
+    print(
+        "Native called background task: $task"); //simpleTask will be emitted here.
+    return Future.value(true);
+  });
 }
 
 class MyApp extends StatefulWidget {

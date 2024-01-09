@@ -40,6 +40,7 @@ Future<void> appointmentWidgetNavigation(BuildContext context,
       } else {
         Step3FinalSelectionScreen(
           clinicId: userStore.userClinicId.toInt(),
+          doctorId: userStore.userId,
         )
             .launch(context,
                 pageRouteAnimation: pageAnimation,

@@ -55,6 +55,7 @@ Future<List<UserModel>> getPatientListAPI({
 
   patientList.addAll(res.patientData.validate());
 
+  setValue(SharedPreferenceKey.cachedPatientList, res.toJson());
   appStore.setLoading(false);
 
   if (isReceptionist()) {

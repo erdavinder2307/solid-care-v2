@@ -13,6 +13,7 @@ import 'package:solidcare/network/network_utils.dart';
 import 'package:solidcare/utils/app_common.dart';
 import 'package:solidcare/utils/common.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:solidcare/utils/constants.dart';
 
 Future<List<ServiceData>> getServiceListAPI(
     {String? searchString,
@@ -46,6 +47,7 @@ Future<List<ServiceData>> getServiceListAPI(
       ?.call(res.serviceData.validate().length != (perPages ?? PER_PAGE));
 
   serviceList.addAll(res.serviceData.validate());
+  setValue(SharedPreferenceKey.cachedServiceList, res.toJson());
 
   appStore.setLoading(false);
   return serviceList;

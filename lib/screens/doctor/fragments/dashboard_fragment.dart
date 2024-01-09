@@ -38,7 +38,13 @@ class _DashboardFragmentState extends State<DashboardFragment> {
   }
 
   void init() async {
-    appStore.setLoading(true);
+    if (getStringAsync(SharedPreferenceKey.cachedDashboardDataKey)
+        .validate()
+        .isNotEmpty) {
+      appStore.setLoading(false);
+    } else {
+      appStore.setLoading(true);
+    }
     future = getUserDashBoardAPI().then((value) {
       setState(() {});
       appStore.setLoading(false);

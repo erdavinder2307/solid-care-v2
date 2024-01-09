@@ -281,6 +281,7 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBarWidget(
+        color: Color(0xff3A86FF),
         isUpdate ? locale.lblEditPatientDetail : locale.lblAddNewPatient,
         textColor: Colors.white,
         systemUiOverlayStyle: defaultSystemUiOverlayStyle(context),
@@ -516,9 +517,11 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
                   LoaderWidget().visible(appStore.isLoading).center())
         ],
       ),
-      bottomNavigationBar:
-          AppButton(text: locale.lblSave, onTap: savePatientDetails)
-              .paddingAll(16),
+      bottomNavigationBar: AppButton(
+              color: Color(0xff3A86FF),
+              text: locale.lblSave,
+              onTap: savePatientDetails)
+          .paddingAll(16),
     );
   }
 }

@@ -402,6 +402,8 @@ class SharedPreferenceKey {
   //Region Cache Keys
 
   static final cachedDashboardDataKey = 'CachedDashboardData';
+  static final cachedPatientList = 'CachedPatientList';
+  static final cachedServiceList = 'CachedServiceList';
 
   //End Region
 

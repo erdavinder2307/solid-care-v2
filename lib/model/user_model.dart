@@ -306,6 +306,7 @@ class UserModel {
     data['role'] = this.role;
     data['token'] = this.token;
     data['user_display_name'] = this.userDisplayName;
+    data['display_name'] = userDisplayName;
     data['user_email'] = this.userEmail;
     data['user_id'] = this.userId;
     data['user_nicename'] = this.userNiceName;
@@ -319,7 +320,7 @@ class UserModel {
     data['image'] = this.serviceImage;
     data['mapping_table_id'] = this.mappingTableId;
     data['is_multiple_selection'] = this.multiple;
-
+    data['user_status'] = this.userStatus;
     data['status'] = this.status;
     data['is_telemed'] = this.isTelemed;
 

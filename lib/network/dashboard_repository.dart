@@ -12,7 +12,13 @@ Future<DashboardModel> getUserDashBoardAPI() async {
   if (!appStore.isConnectedToInternet) {
     return DashboardModel();
   }
-  appStore.setLoading(true);
+  if (getStringAsync(SharedPreferenceKey.cachedDashboardDataKey)
+      .validate()
+      .isNotEmpty) {
+    appStore.setLoading(false);
+  } else {
+    appStore.setLoading(true);
+  }
 
   DashboardModel res = DashboardModel.fromJson(await (handleResponse(
       await buildHttpResponse(

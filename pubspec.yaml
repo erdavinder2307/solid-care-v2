@@ -71,6 +71,8 @@ dependencies:
 
   flutter_localizations:
     sdk: flutter
+  workmanager: ^0.5.2
+  hive: ^2.2.3
 
 dev_dependencies:
   flutter_test:

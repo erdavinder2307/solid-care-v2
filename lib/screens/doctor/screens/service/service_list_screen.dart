@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -13,6 +14,7 @@ import 'package:solidcare/network/service_repository.dart';
 import 'package:solidcare/screens/doctor/screens/service/components/service_widget.dart';
 import 'package:solidcare/screens/shimmer/components/services_shimmer_component.dart';
 import 'package:solidcare/utils/app_common.dart';
+import 'package:solidcare/utils/cached_value.dart';
 import 'package:solidcare/utils/colors.dart';
 import 'package:solidcare/utils/common.dart';
 import 'package:solidcare/utils/constants.dart';
@@ -44,7 +46,19 @@ class _ServiceListScreenState extends State<ServiceListScreen> {
   @override
   void initState() {
     super.initState();
+    getCachedPatientList();
     init(showLoader: false);
+  }
+
+  void getCachedPatientList() {
+    if (getStringAsync(SharedPreferenceKey.cachedServiceList)
+        .validate()
+        .isNotEmpty) {
+      cachedServiceList = ServiceListModel.fromJson(
+          jsonDecode(getStringAsync(SharedPreferenceKey.cachedServiceList)));
+    } else {
+      appStore.setLoading(true);
+    }
   }
 
   Future<void> init({bool showLoader = true}) async {
@@ -160,6 +174,7 @@ class _ServiceListScreenState extends State<ServiceListScreen> {
                 ],
               ).paddingSymmetric(horizontal: 16, vertical: 16),
               SnapHelperWidget<List<ServiceData>>(
+                initialData: cachedServiceList?.serviceData,
                 future: future,
                 errorBuilder: (p0) {
                   return ErrorStateWidget(

@@ -18,7 +18,7 @@ Map<String, String> buildHeaderTokens({Map? extraKeys}) {
     extraKeys.putIfAbsent('isStripePayment', () => false);
   }
   Map<String, String> header = {
-    HttpHeaders.cacheControlHeader: 'no-cache',
+    HttpHeaders.cacheControlHeader: 'max-age=604800',
   };
 
   ///Todo Add Constant Keys
