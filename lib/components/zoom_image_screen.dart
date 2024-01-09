@@ -66,8 +66,8 @@ class _ZoomImageScreenState extends State<ZoomImageScreen> {
             builder: (BuildContext context, int index) {
               return PhotoViewGalleryPageOptions(
                 imageProvider: CachedNetworkImageProvider(
-                  widget.galleryImages![index],
-                ),
+                    widget.galleryImages![index],
+                    errorListener: (p0) => PlaceHolderWidget()),
                 //imageProvider: Image.network(widget.galleryImages![index], errorBuilder: (context, error, stackTrace) => PlaceHolderWidget()).image,
                 initialScale: PhotoViewComputedScale.contained,
                 minScale: PhotoViewComputedScale.contained,

@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:solidcare/components/empty_error_state_component.dart';
 import 'package:solidcare/components/internet_connectivity_widget.dart';
 import 'package:solidcare/components/loader_widget.dart';
+import 'package:solidcare/components/ul_widget.dart';
 import 'package:solidcare/main.dart';
 import 'package:solidcare/model/encounter_model.dart';
 import 'package:solidcare/model/encounter_type_model.dart';
 import 'package:solidcare/model/prescription_model.dart';
+import 'package:solidcare/utils/common.dart';
+import 'package:solidcare/utils/constants.dart';
 import 'package:nb_utils/nb_utils.dart';
-
+import 'package:solidcare/utils/extensions/widget_extentions.dart';
 import 'package:solidcare/components/status_widget.dart';
 import 'package:solidcare/network/dashboard_repository.dart';
 import 'package:solidcare/utils/app_common.dart';
@@ -20,8 +23,10 @@ class PatientEncounterDashboardScreen extends StatefulWidget {
 
   final bool isPaymentDone;
 
+  final VoidCallback? callBack;
+
   PatientEncounterDashboardScreen(
-      {Key? key, this.id, this.isPaymentDone = false})
+      {Key? key, this.callBack, this.id, this.isPaymentDone = false})
       : super(key: key);
 
   @override
@@ -111,137 +116,230 @@ class _PatientEncounterDashboardScreenState
 
   Widget buildEncounterDetailsWidget({required EncounterModel data}) {
     return Container(
-      padding: EdgeInsets.only(top: 16, bottom: 16),
+      padding: EdgeInsets.only(top: 28, bottom: 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(locale.lblProblems, style: boldTextStyle()),
-          16.height,
-          if (data.problem.validate().isNotEmpty)
-            UL(
-              customSymbol:
-                  Icon(Icons.done_sharp, color: context.primaryColor, size: 16),
-              symbolType: SymbolType.Custom,
-              children: List.generate(
-                data.problem.validate().length,
-                (index) {
-                  EncounterType encounterData = data.problem.validate()[index];
-                  return Text(encounterData.title.validate(),
-                      style: secondaryTextStyle());
-                },
-              ),
-            )
-          else
-            NoDataWidget(
-              title:
-                  "${locale.lblNo} ${locale.lblProblems} ${locale.lblFound}!",
-              titleTextStyle: secondaryTextStyle(color: Colors.red),
+          if (isVisible(
+              SharedPreferenceKey.solidCareMedicalRecordsListKey)) ...[
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(locale.lblProblems, style: boldTextStyle()),
+                    12.height,
+                    if (data.problem.validate().isNotEmpty)
+                      ULWidget(
+                        customSymbol: Icon(Icons.arrow_forward,
+                                color: context.primaryColor, size: 16)
+                            .paddingSymmetric(vertical: 2),
+                        spacing: 4,
+                        symbolType: SymbolTypeEnum.Custom,
+                        children: List.generate(
+                          data.problem.validate().length,
+                          (index) {
+                            EncounterType encounterData =
+                                data.problem.validate()[index];
+                            return ReadMoreText(
+                              encounterData.title
+                                  .validate()
+                                  .capitalizeFirstLetter(),
+                              style: secondaryTextStyle(size: 13),
+                              trimLines: 2,
+                              trimMode: TrimMode.Line,
+                              colorClickableText: Colors.black,
+                              trimExpandedText: ' ${locale.lblReadLess}',
+                              trimCollapsedText: " ...${locale.lblReadMore}",
+                            );
+                          },
+                        ),
+                      )
+                    else
+                      Text(
+                        locale.lblNoProblemFound.capitalizeEachWord(),
+                        style: secondaryTextStyle(),
+                        textAlign: TextAlign.start,
+                      ),
+                  ],
+                ).expand(),
+                16.width,
+              ],
             ),
-          32.height,
-          Text(locale.lblObservation, style: boldTextStyle()),
-          16.height,
-          if (data.observation.validate().isNotEmpty)
-            UL(
-              customSymbol:
-                  Icon(Icons.done_sharp, color: context.primaryColor, size: 16),
-              symbolType: SymbolType.Custom,
-              symbolCrossAxisAlignment: CrossAxisAlignment.start,
-              children: List.generate(
-                data.observation.validate().length,
-                (index) {
-                  EncounterType encounterData =
-                      data.observation.validate()[index];
-                  return Text(encounterData.title.validate(),
-                      style: secondaryTextStyle());
-                },
-              ),
-            )
-          else
-            NoDataWidget(
-              title:
-                  "${locale.lblNo} ${locale.lblObservation} ${locale.lblFound}",
-              titleTextStyle: secondaryTextStyle(color: Colors.red),
+            24.height,
+            Row(
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(locale.lblObservation, style: boldTextStyle()),
+                    12.height,
+                    if (data.observation.validate().isNotEmpty)
+                      ULWidget(
+                        customSymbol: Icon(Icons.arrow_forward,
+                            color: context.primaryColor, size: 16),
+                        symbolCrossAxisAlignment: CrossAxisAlignment.start,
+                        children: List.generate(
+                          data.observation.validate().length,
+                          (index) {
+                            EncounterType encounterData =
+                                data.observation.validate()[index];
+                            return ReadMoreText(
+                              encounterData.title
+                                  .validate()
+                                  .capitalizeFirstLetter(),
+                              style: secondaryTextStyle(size: 13),
+                              trimLength: 40,
+                              trimMode: TrimMode.Length,
+                              colorClickableText: Colors.black,
+                              trimExpandedText: ' ${locale.lblReadLess}',
+                              trimCollapsedText: " ...${locale.lblReadMore}",
+                            );
+                          },
+                        ),
+                      )
+                    else
+                      Text(locale.lblNoObservationsFound.capitalizeEachWord(),
+                          style: secondaryTextStyle()),
+                  ],
+                ).expand()
+              ],
             ),
-          32.height,
-          Text(locale.lblNotes, style: boldTextStyle()),
-          16.height,
-          if (data.note.validate().isNotEmpty)
-            UL(
-              customSymbol:
-                  Icon(Icons.done_sharp, color: context.primaryColor, size: 16),
-              symbolType: SymbolType.Custom,
-              children: List.generate(
-                data.note.validate().length,
-                (index) {
-                  EncounterType encounterData = data.note.validate()[index];
-                  return Text("${encounterData.title.validate()}",
-                      style: secondaryTextStyle());
-                },
-              ),
-            )
-          else
-            NoDataWidget(
-              title: "${locale.lblNo} ${locale.lblNotes} ${locale.lblFound}!",
-              titleTextStyle: secondaryTextStyle(color: Colors.red),
+            24.height,
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(locale.lblNotes, style: boldTextStyle()),
+                    12.height,
+                    if (data.note.validate().isNotEmpty)
+                      ULWidget(
+                        customSymbol: Icon(Icons.arrow_forward,
+                            color: context.primaryColor, size: 16),
+                        symbolType: SymbolTypeEnum.Custom,
+                        children: List.generate(
+                          data.note.validate().length,
+                          (index) {
+                            EncounterType encounterData =
+                                data.note.validate()[index];
+                            return ReadMoreText(
+                              encounterData.title
+                                  .validate()
+                                  .capitalizeFirstLetter(),
+                              style: secondaryTextStyle(size: 13),
+                              trimLines: 3,
+                              trimMode: TrimMode.Line,
+                              colorClickableText: Colors.black,
+                              trimExpandedText: ' ${locale.lblReadLess}',
+                              trimCollapsedText: " ...${locale.lblReadMore}",
+                            );
+                          },
+                        ),
+                      )
+                    else
+                      Text(
+                        locale.lblNoNotesFound.capitalizeEachWord(),
+                        style: secondaryTextStyle(),
+                        textAlign: TextAlign.start,
+                      ),
+                  ],
+                ).expand(),
+              ],
             ),
-          32.height,
-          if (data.prescription != null) ...[
-            Text(locale.lblPrescription, style: boldTextStyle()),
-            16.height,
-            if (data.prescription.validate().isEmpty)
-              NoDataWidget(
-                title:
-                    "${locale.lblNo} ${locale.lblPrescription} ${locale.lblFound}!",
-                titleTextStyle: secondaryTextStyle(color: Colors.red),
-              )
-            else
-              UL(
-                customSymbol: Icon(Icons.done_sharp,
-                    color: context.primaryColor, size: 16),
-                symbolType: SymbolType.Numbered,
-                symbolCrossAxisAlignment: CrossAxisAlignment.start,
-                children: List.generate(
-                  data.prescription!.validate().length,
-                  (index) {
-                    PrescriptionData encounterData =
-                        data.prescription!.validate()[index];
-                    return Table(
-                      children: [
-                        TableRow(children: [
-                          Text(locale.lblName, style: secondaryTextStyle()),
-                          Text(encounterData.name.validate(),
-                              style: primaryTextStyle()),
-                        ]),
-                        TableRow(children: [
-                          Text(locale.lblFrequency,
-                              style: secondaryTextStyle()),
-                          Text(encounterData.frequency.validate(),
-                              style: primaryTextStyle()),
-                        ]),
-                        TableRow(children: [
-                          Text(locale.lblInstruction,
-                              style: secondaryTextStyle()),
-                          Text(encounterData.instruction.validate(),
-                              style: primaryTextStyle()),
-                        ])
-                      ],
-                    );
-                    return Container(
-                        child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(encounterData.instruction.validate(),
-                            style: secondaryTextStyle()),
-                      ],
-                    ));
-                  },
-                ),
-              ),
           ],
-          32.height,
-          Text(locale.lblMedicalReports, style: boldTextStyle()),
+          if (isVisible(SharedPreferenceKey.solidCareMedicalRecordsListKey))
+            32.height,
+          if (data.prescription != null &&
+              isVisible(SharedPreferenceKey.solidCarePrescriptionListKey))
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(locale.lblPrescription, style: boldTextStyle()),
+                12.height,
+                if (data.prescription.validate().isNotEmpty)
+                  UL(
+                    symbolType: SymbolType.Numbered,
+                    symbolCrossAxisAlignment: CrossAxisAlignment.start,
+                    children: List.generate(
+                      data.prescription!.validate().length,
+                      (index) {
+                        PrescriptionData encounterData =
+                            data.prescription!.validate()[index];
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(locale.lblName,
+                                        style: primaryTextStyle()),
+                                    Divider(height: 8),
+                                    Text(
+                                        encounterData.name
+                                            .validate()
+                                            .capitalizeFirstLetter(),
+                                        style: secondaryTextStyle(
+                                            color: Colors.black)),
+                                  ],
+                                ).expand(),
+                                16.width,
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(locale.lblFrequency,
+                                        style: primaryTextStyle()),
+                                    Divider(height: 8),
+                                    Text(encounterData.frequency.validate(),
+                                        style: secondaryTextStyle(
+                                            color: Colors.black)),
+                                  ],
+                                ).expand(),
+                              ],
+                            ),
+                            if (encounterData.instruction.validate().isNotEmpty)
+                              14.height,
+                            if (encounterData.instruction.validate().isNotEmpty)
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(locale.lblInstruction,
+                                      style: primaryTextStyle()),
+                                  Text(encounterData.instruction.validate(),
+                                      style: primaryTextStyle(size: 14)),
+                                ],
+                              )
+                          ],
+                        ).paddingBottom(8);
+                      },
+                    ),
+                  )
+                else
+                  Text(locale.lblNoPrescriptionFound.capitalizeEachWord(),
+                      style: secondaryTextStyle()),
+              ],
+            ),
+          if (isVisible(SharedPreferenceKey.solidCarePatientReportKey))
+            32.height,
+          if (isVisible(SharedPreferenceKey.solidCarePatientReportKey))
+            Text(locale.lblMedicalReports, style: boldTextStyle()),
           16.height,
-          PatientReportComponent(reportList: data.reportData.validate())
+          if (isVisible(SharedPreferenceKey.solidCarePatientReportKey))
+            PatientReportComponent(reportList: data.reportData.validate())
         ],
       ),
     ).paddingBottom(60);
@@ -301,16 +399,21 @@ class _PatientEncounterDashboardScreenState
               decoration: boxDecorationDefault(color: appSecondaryColor),
               child: Text(locale.lblBillDetails,
                       style: primaryTextStyle(color: Colors.white))
-                  .onTap(
+                  .appOnTap(
                 () {
                   if (widget.isPaymentDone)
-                    BillDetailsScreen(encounterId: widget.id.validate().toInt())
-                        .launch(context);
+                    BillDetailsScreen(
+                      encounterId: widget.id.validate().toInt(),
+                      callBack: () {
+                        widget.callBack?.call();
+                      },
+                    ).launch(context,
+                        pageRouteAnimation: pageAnimation,
+                        duration: pageAnimationDuration);
                 },
-                splashColor: Colors.transparent,
-                highlightColor: Colors.transparent,
               ),
-            )
+            ).visible(
+              isVisible(SharedPreferenceKey.solidCarePatientBillViewKey))
           : Offstage(),
     );
   }

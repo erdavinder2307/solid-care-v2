@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:solidcare/components/cached_image_widget.dart';
-import 'package:solidcare/components/loader_widget.dart';
-import 'package:solidcare/components/setting_third_page.dart';
-import 'package:solidcare/components/status_widget.dart';
-import 'package:solidcare/main.dart';
-import 'package:solidcare/components/doctor_recentionist_general_setting_component.dart';
 import 'package:solidcare/components/app_setting_component.dart';
+import 'package:solidcare/components/doctor_recentionist_general_setting_component.dart';
+import 'package:solidcare/components/loader_widget.dart';
+import 'package:solidcare/components/other_settings_component.dart';
+import 'package:solidcare/main.dart';
 import 'package:solidcare/screens/auth/components/edit_profile_component.dart';
 import 'package:solidcare/screens/patient/components/general_setting_component.dart';
 import 'package:solidcare/utils/colors.dart';
@@ -41,14 +39,6 @@ class _SettingFragmentState extends State<SettingFragment> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               EditProfileComponent(refreshCallback: () {
-                setStatusBarColor(
-                  appStore.isDarkModeOn
-                      ? context.scaffoldBackgroundColor
-                      : appPrimaryColor.withOpacity(0.02),
-                  statusBarIconBrightness: appStore.isDarkModeOn
-                      ? Brightness.light
-                      : Brightness.dark,
-                );
                 setState(() {});
               }),
               Divider(height: isReceptionist() || isPatient() ? 30 : 40),
@@ -63,11 +53,21 @@ class _SettingFragmentState extends State<SettingFragment> {
               Text(locale.lblAppSettings,
                   textAlign: TextAlign.center, style: secondaryTextStyle()),
               16.height,
-              AppSettingComponent(callSetState: () => setState),
+              AppSettingComponent(callSetState: () {
+                setState(() {});
+                setStatusBarColor(
+                  appStore.isDarkModeOn
+                      ? scaffoldColorDark
+                      : appPrimaryColor.withOpacity(0.02),
+                  statusBarIconBrightness: appStore.isDarkModeOn
+                      ? Brightness.light
+                      : Brightness.dark,
+                );
+              }),
               24.height,
               Text(locale.lblOther,
                   textAlign: TextAlign.center, style: secondaryTextStyle()),
-              SettingThirdPage(),
+              OtherSettingsComponent(),
             ],
           ),
         ),

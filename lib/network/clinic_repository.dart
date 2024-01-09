@@ -3,6 +3,8 @@ import 'package:solidcare/main.dart';
 import 'package:solidcare/model/clinic_list_model.dart';
 import 'package:solidcare/network/network_utils.dart';
 import 'package:solidcare/utils/app_common.dart';
+import 'package:solidcare/utils/cached_value.dart';
+import 'package:solidcare/utils/constants.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 Future<Clinic> getSelectedClinicAPI(
@@ -22,6 +24,7 @@ Future<Clinic> getSelectedClinicAPI(
 Future<List<Clinic>> getClinicListAPI({
   String? searchString,
   required int page,
+  bool? isAuthRequired,
   Function(bool)? lastPageCallback,
   required List<Clinic> clinicList,
 }) async {
@@ -31,12 +34,17 @@ Future<List<Clinic>> getClinicListAPI({
 
   List<String> params = [];
   if (searchString.validate().isNotEmpty) params.add('s=$searchString');
+  if (isAuthRequired != null) {
+    params.add('with_auth=$isAuthRequired');
+  }
 
-  ClinicListModel res = ClinicListModel.fromJson(await (handleResponse(
-      await buildHttpResponse(getEndPoint(
-          endPoint: 'kivicare/api/v1/clinic/get-list',
-          page: page,
-          params: params)))));
+  ClinicListModel res = ClinicListModel.fromJson(
+    await (handleResponse(await buildHttpResponse(getEndPoint(
+        endPoint:
+            '${ApiEndPoints.clinicApiEndPoint}/${EndPointKeys.getListEndPointKey}',
+        page: page,
+        params: params)))),
+  );
 
   cachedClinicList = res.clinicData.validate();
 
@@ -51,7 +59,7 @@ Future<List<Clinic>> getClinicListAPI({
 
 Future switchClinicApi({required Map req}) async {
   return (await handleResponse(await buildHttpResponse(
-      'kivicare/api/v1/patient/switch-clinic',
+      '${ApiEndPoints.patientEndPoint}/${EndPointKeys.switchClinicEndPointKey}',
       request: req,
       method: HttpMethod.POST)));
 }

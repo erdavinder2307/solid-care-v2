@@ -3,13 +3,19 @@ import 'package:solidcare/utils/constants.dart';
 
 class ReportModel {
   int? total;
+
+  ReportResponse? reportResponse;
+
   List<ReportData>? reportData;
 
-  ReportModel({this.total, this.reportData});
+  ReportModel({this.total, this.reportData, this.reportResponse});
 
   factory ReportModel.fromJson(Map<String, dynamic> json) {
     return ReportModel(
       total: json['total'],
+      reportResponse: json['message'] != null
+          ? ReportResponse.fromJson(json['message'])
+          : null,
       reportData: json['data'] != null
           ? (json['data'] as List).map((i) => ReportData.fromJson(i)).toList()
           : null,
@@ -19,6 +25,7 @@ class ReportModel {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['total'] = this.total;
+
     if (this.reportData != null) {
       data['data'] = this.reportData!.map((v) => v.toJson()).toList();
     }
@@ -67,6 +74,34 @@ class ReportData {
     data['patient_id'] = this.patientId;
     data['upload_report'] = this.uploadReport;
     data['report_date'] = this.reportDate;
+    return data;
+  }
+}
+
+class ReportResponse {
+  String? message;
+  String? code;
+  bool? status;
+
+  ReportResponse({
+    this.message,
+    this.code,
+    this.status,
+  });
+
+  factory ReportResponse.fromJson(Map<String, dynamic> json) {
+    return ReportResponse(
+      message: json['message'],
+      code: json['code'],
+      status: json['status'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['message'] = this.message;
+    data['code'] = this.code;
+    data['status'] = this.status;
     return data;
   }
 }

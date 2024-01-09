@@ -7,7 +7,7 @@ import 'package:solidcare/components/loader_widget.dart';
 import 'package:solidcare/components/no_data_found_widget.dart';
 import 'package:solidcare/main.dart';
 import 'package:solidcare/model/user_model.dart';
-import 'package:solidcare/network/doctor_list_repository.dart';
+import 'package:solidcare/network/doctor_repository.dart';
 import 'package:solidcare/screens/appointment/appointment_functions.dart';
 import 'package:solidcare/screens/receptionist/screens/doctor/component/doctor_list_component.dart';
 import 'package:solidcare/screens/shimmer/components/doctor_shimmer_component.dart';
@@ -15,6 +15,7 @@ import 'package:solidcare/utils/app_common.dart';
 import 'package:solidcare/utils/common.dart';
 import 'package:solidcare/utils/constants.dart';
 import 'package:solidcare/utils/extensions/string_extensions.dart';
+import 'package:solidcare/utils/extensions/widget_extentions.dart';
 import 'package:solidcare/utils/images.dart';
 import 'package:nb_utils/nb_utils.dart';
 
@@ -126,14 +127,10 @@ class _Step2DoctorSelectionScreenState
                       hintText: locale.lblSearchDoctor,
                       prefixIcon: ic_search.iconImage().paddingAll(16),
                       suffixIcon: showClear
-                          ? ic_clear.iconImage().paddingAll(16).onTap(
+                          ? ic_clear.iconImage().paddingAll(16).appOnTap(
                               () async {
                                 _onClearSearch();
                               },
-                              borderRadius: radius(),
-                              splashColor: Colors.transparent,
-                              highlightColor: Colors.transparent,
-                              hoverColor: Colors.transparent,
                             )
                           : Offstage(),
                     ),
@@ -156,10 +153,11 @@ class _Step2DoctorSelectionScreenState
                   ),
                   16.height,
                   stepCountWidget(
-                      name: locale.lblChooseYourDoctor,
-                      currentCount: isPatient() ? 2 : 1,
-                      totalCount: isReceptionist() ? 2 : 3,
-                      percentage: 0.50),
+                    name: locale.lblChooseYourDoctor,
+                    currentCount: isPatient() ? 2 : 1,
+                    totalCount: isReceptionist() ? 2 : 3,
+                    percentage: isPatient() ? 0.66 : 0.50,
+                  ),
                 ],
               ).paddingSymmetric(vertical: 8),
             SnapHelperWidget<List<UserModel>>(

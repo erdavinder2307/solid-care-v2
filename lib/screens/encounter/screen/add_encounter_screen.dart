@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:intl/intl.dart';
 import 'package:solidcare/components/loader_widget.dart';
+import 'package:solidcare/components/multi_select_service_component.dart';
 import 'package:solidcare/components/role_widget.dart';
 import 'package:solidcare/main.dart';
 import 'package:solidcare/model/clinic_list_model.dart';
@@ -36,8 +37,13 @@ class _AddEncounterScreenState extends State<AddEncounterScreen> {
   TextEditingController selectedPatientNameCont = TextEditingController();
   TextEditingController encounterDateCont = TextEditingController();
   TextEditingController encounterDescriptionCont = TextEditingController();
+  TextEditingController servicesCont = TextEditingController();
 
   EncounterModel? patientEncounterData;
+
+  FocusNode serviceFocus = FocusNode();
+
+  FocusNode dateFocus = FocusNode();
 
   Clinic? selectedClinic;
 
@@ -80,6 +86,24 @@ class _AddEncounterScreenState extends State<AddEncounterScreen> {
       clinicId = patientEncounterData!.clinicId.toInt();
 
       setState(() {});
+    }
+  }
+
+  void selectServices() async {
+    await MultiSelectServiceComponent(
+      clinicId: isPatient() || isDoctor()
+          ? appointmentAppStore.mClinicSelected?.id.toInt()
+          : userStore.userClinicId.toInt(),
+      selectedServicesId: multiSelectStore.selectedService
+          .map((element) => element.serviceId.validate())
+          .toList(),
+    ).launch(context,
+        pageRouteAnimation: pageAnimation, duration: pageAnimationDuration);
+    if (multiSelectStore.selectedService.length > 0)
+      servicesCont.text =
+          '${multiSelectStore.selectedService.length} ${locale.lblServicesSelected}';
+    else {
+      servicesCont.text = locale.lblSelectServices;
     }
   }
 
@@ -185,7 +209,9 @@ class _AddEncounterScreenState extends State<AddEncounterScreen> {
                             onTap: () async {
                               if (!isUpdate) {
                                 await PatientSearchScreen()
-                                    .launch(context)
+                                    .launch(context,
+                                        pageRouteAnimation: pageAnimation,
+                                        duration: pageAnimationDuration)
                                     .then((value) {
                                   if (value != null) {
                                     selectedPatient = value;
@@ -218,7 +244,9 @@ class _AddEncounterScreenState extends State<AddEncounterScreen> {
                                               .patientEncounterData!.clinicId
                                               .toInt()
                                           : null)
-                                  .launch(context)
+                                  .launch(context,
+                                      pageRouteAnimation: pageAnimation,
+                                      duration: pageAnimationDuration)
                                   .then((value) {
                                 if (value != null) {
                                   selectedClinic = value!;
@@ -257,7 +285,9 @@ class _AddEncounterScreenState extends State<AddEncounterScreen> {
                         Step2DoctorSelectionScreen(
                                 doctorId: widget.patientEncounterData?.doctorId
                                     .toInt())
-                            .launch(context)
+                            .launch(context,
+                                pageRouteAnimation: pageAnimation,
+                                duration: pageAnimationDuration)
                             .then((value) {
                           if (value != null) {
                             selectedDoctor = value;
@@ -310,6 +340,7 @@ class _AddEncounterScreenState extends State<AddEncounterScreen> {
                   },
                   controller: encounterDateCont,
                   readOnly: true,
+                  focus: dateFocus,
                   textFieldType: TextFieldType.NAME,
                   suffix: Icon(Icons.date_range),
                   decoration: inputDecoration(

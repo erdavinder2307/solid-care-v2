@@ -16,7 +16,12 @@ import 'package:solidcare/utils/app_common.dart';
 
 class PatientClinicSelectionScreen extends StatefulWidget {
   final VoidCallback? callback;
-  PatientClinicSelectionScreen({this.callback});
+  final bool? isForRegistration;
+  final int? clinicId;
+
+  PatientClinicSelectionScreen(
+      {this.callback, this.isForRegistration, this.clinicId});
+
   @override
   _PatientClinicSelectionScreenState createState() =>
       _PatientClinicSelectionScreenState();
@@ -27,6 +32,8 @@ class _PatientClinicSelectionScreenState
   Future<List<Clinic>>? future;
 
   List<Clinic> clinicList = [];
+
+  Clinic? selectedClinic;
 
   int page = 1;
 
@@ -45,10 +52,17 @@ class _PatientClinicSelectionScreenState
     future = getClinicListAPI(
       page: page,
       clinicList: clinicList,
+      isAuthRequired: !widget.isForRegistration.validate(),
       lastPageCallback: (p0) => isLastPage = p0,
     ).then((value) {
-      selectedIndex = value.indexWhere(
-          (element) => element.id.validate() == userStore.userClinicId);
+      if (widget.clinicId != null) {
+        selectedIndex = value.indexWhere(
+            (element) => element.id.validate().toInt() == widget.clinicId);
+      } else {
+        if (userStore.userClinicId.validate().isNotEmpty)
+          selectedIndex = value.indexWhere(
+              (element) => element.id.validate() == userStore.userClinicId);
+      }
       return value;
     }).catchError((e) {
       appStore.setLoading(false);
@@ -121,68 +135,81 @@ class _PatientClinicSelectionScreenState
 
   @override
   void dispose() {
+    getDisposeStatusBarColor();
     super.dispose();
-  }
-
-  Widget buildBodyWidget() {
-    return InternetConnectivityWidget(
-      retryCallback: () => setState(() {}),
-      child: Stack(
-        children: [
-          SnapHelperWidget<List<Clinic>>(
-            future: future,
-            errorBuilder: (error) {
-              return NoDataWidget(
-                imageWidget:
-                    Image.asset(ic_somethingWentWrong, height: 180, width: 180),
-                title: error.toString(),
-              );
-            },
-            errorWidget: ErrorStateWidget(),
-            loadingWidget: SwitchClinicShimmerScreen(),
-            onSuccess: (snap) {
-              return AnimatedScrollView(
-                padding: EdgeInsets.fromLTRB(16, 24, 16, 24),
-                listAnimationType: ListAnimationType.None,
-                children: [
-                  AnimatedWrap(
-                    spacing: 16,
-                    runSpacing: 16,
-                    itemCount: snap.length,
-                    itemBuilder: (p0, index) {
-                      return ClinicComponent(
-                        clinicData: snap[index],
-                        isCheck: selectedIndex == index,
-                        onTap: (isCheck) async {
-                          await switchFavouriteClinic(
-                              snap[index].id.validate().toInt(), index);
-                        },
-                      );
-                    },
-                  ),
-                ],
-              );
-            },
-          ),
-          Observer(
-              builder: (context) =>
-                  LoaderWidget().visible(appStore.isLoading)).center()
-        ],
-      ),
-    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBarWidget(
-        locale.lblMyClinic,
+        widget.isForRegistration ?? false
+            ? locale.lblSelectOneClinic.capitalizeEachWord()
+            : locale.lblMyClinic,
         textColor: Colors.white,
         systemUiOverlayStyle: defaultSystemUiOverlayStyle(context),
         elevation: 0,
         color: appPrimaryColor,
       ),
-      body: buildBodyWidget(),
+      body: InternetConnectivityWidget(
+        retryCallback: () => setState(() {}),
+        child: Stack(
+          children: [
+            SnapHelperWidget<List<Clinic>>(
+              future: future,
+              errorBuilder: (error) {
+                return NoDataWidget(
+                  imageWidget: Image.asset(ic_somethingWentWrong,
+                      height: 180, width: 180),
+                  title: error.toString(),
+                );
+              },
+              errorWidget: ErrorStateWidget(),
+              loadingWidget: SwitchClinicShimmerScreen(),
+              onSuccess: (snap) {
+                return AnimatedScrollView(
+                  padding: EdgeInsets.fromLTRB(16, 24, 16, 24),
+                  listAnimationType: ListAnimationType.None,
+                  children: [
+                    AnimatedWrap(
+                      spacing: 16,
+                      runSpacing: 16,
+                      itemCount: snap.length,
+                      itemBuilder: (p0, index) {
+                        return ClinicComponent(
+                          clinicData: snap[index],
+                          isCheck: selectedIndex == index,
+                          onTap: (isCheck) async {
+                            if (widget.isForRegistration ?? false) {
+                              setState(() {
+                                selectedIndex = index;
+                                selectedClinic = snap[selectedIndex];
+                              });
+                            } else
+                              await switchFavouriteClinic(
+                                  snap[index].id.validate().toInt(), index);
+                          },
+                        );
+                      },
+                    ),
+                  ],
+                );
+              },
+            ),
+            Observer(
+                builder: (context) =>
+                    LoaderWidget().visible(appStore.isLoading)).center()
+          ],
+        ),
+      ),
+      floatingActionButton: widget.isForRegistration.validate()
+          ? FloatingActionButton(
+              child: Icon(Icons.done),
+              onPressed: () {
+                finish(context, selectedClinic);
+              },
+            )
+          : Offstage(),
     );
   }
 }

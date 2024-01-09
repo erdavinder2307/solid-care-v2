@@ -9,7 +9,7 @@
     },
     {
       "name": "_flutterfire_internals",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/_flutterfire_internals-1.3.9",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/_flutterfire_internals-1.3.16",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
@@ -21,7 +21,7 @@
     },
     {
       "name": "archive",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/archive-3.4.6",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/archive-3.4.10",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -57,19 +57,19 @@
     },
     {
       "name": "build_daemon",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/build_daemon-4.0.0",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/build_daemon-4.0.1",
       "packageUri": "lib/",
-      "languageVersion": "2.14"
+      "languageVersion": "3.0"
     },
     {
       "name": "build_resolvers",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/build_resolvers-2.4.1",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/build_resolvers-2.4.2",
       "packageUri": "lib/",
       "languageVersion": "3.0"
     },
     {
       "name": "build_runner",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/build_runner-2.4.6",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/build_runner-2.4.7",
       "packageUri": "lib/",
       "languageVersion": "3.0"
     },
@@ -87,25 +87,25 @@
     },
     {
       "name": "built_value",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/built_value-8.6.3",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/built_value-8.8.1",
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "3.0"
     },
     {
       "name": "cached_network_image",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/cached_network_image-3.3.0",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/cached_network_image-3.3.1",
       "packageUri": "lib/",
       "languageVersion": "3.0"
     },
     {
       "name": "cached_network_image_platform_interface",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/cached_network_image_platform_interface-3.0.0",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/cached_network_image_platform_interface-4.0.0",
       "packageUri": "lib/",
       "languageVersion": "3.0"
     },
     {
       "name": "cached_network_image_web",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/cached_network_image_web-1.1.0",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/cached_network_image_web-1.1.1",
       "packageUri": "lib/",
       "languageVersion": "3.0"
     },
@@ -129,9 +129,9 @@
     },
     {
       "name": "cli_util",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/cli_util-0.4.0",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/cli_util-0.4.1",
       "packageUri": "lib/",
-      "languageVersion": "2.19"
+      "languageVersion": "3.0"
     },
     {
       "name": "clock",
@@ -141,19 +141,19 @@
     },
     {
       "name": "code_builder",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/code_builder-4.7.0",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/code_builder-4.9.0",
       "packageUri": "lib/",
-      "languageVersion": "2.19"
+      "languageVersion": "3.0"
     },
     {
       "name": "collection",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/collection-1.17.2",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/collection-1.18.0",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
     {
       "name": "connectivity_plus",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/connectivity_plus-5.0.1",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/connectivity_plus-5.0.2",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
@@ -171,9 +171,9 @@
     },
     {
       "name": "cross_file",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/cross_file-0.3.3+6",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/cross_file-0.3.3+8",
       "packageUri": "lib/",
-      "languageVersion": "2.19"
+      "languageVersion": "3.2"
     },
     {
       "name": "crypto",
@@ -195,19 +195,25 @@
     },
     {
       "name": "dart_style",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/dart_style-2.3.3",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/dart_style-2.3.4",
       "packageUri": "lib/",
       "languageVersion": "3.0"
     },
     {
       "name": "dbus",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/dbus-0.7.8",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/dbus-0.7.10",
       "packageUri": "lib/",
-      "languageVersion": "2.15"
+      "languageVersion": "2.17"
     },
     {
       "name": "equatable",
       "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/equatable-2.0.5",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "eventify",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/eventify-1.0.1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -231,9 +237,9 @@
     },
     {
       "name": "file_picker",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/file_picker-5.5.0",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/file_picker-6.1.1",
       "packageUri": "lib/",
-      "languageVersion": "2.17"
+      "languageVersion": "2.19"
     },
     {
       "name": "file_selector_linux",
@@ -261,25 +267,25 @@
     },
     {
       "name": "firebase_analytics",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/firebase_analytics-10.6.1",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/firebase_analytics-10.8.0",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
     {
       "name": "firebase_analytics_platform_interface",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/firebase_analytics_platform_interface-3.7.3",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/firebase_analytics_platform_interface-3.9.0",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
     {
       "name": "firebase_analytics_web",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/firebase_analytics_web-0.5.5+3",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/firebase_analytics_web-0.5.5+12",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
     {
       "name": "firebase_core",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/firebase_core-2.19.0",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/firebase_core-2.24.2",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
@@ -291,37 +297,37 @@
     },
     {
       "name": "firebase_core_web",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/firebase_core_web-2.8.1",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/firebase_core_web-2.10.0",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
     {
       "name": "firebase_crashlytics",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/firebase_crashlytics-3.4.1",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/firebase_crashlytics-3.4.9",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
     {
       "name": "firebase_crashlytics_platform_interface",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/firebase_crashlytics_platform_interface-3.6.9",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/firebase_crashlytics_platform_interface-3.6.16",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
     {
       "name": "firebase_remote_config",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/firebase_remote_config-4.3.1",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/firebase_remote_config-4.3.8",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
     {
       "name": "firebase_remote_config_platform_interface",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/firebase_remote_config_platform_interface-1.4.9",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/firebase_remote_config_platform_interface-1.4.16",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
     {
       "name": "firebase_remote_config_web",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/firebase_remote_config_web-1.4.9",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/firebase_remote_config_web-1.4.16",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
@@ -333,7 +339,7 @@
     },
     {
       "name": "fl_chart",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/fl_chart-0.63.0",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/fl_chart-0.64.0",
       "packageUri": "lib/",
       "languageVersion": "3.0"
     },
@@ -341,7 +347,7 @@
       "name": "flutter",
       "rootUri": "file:///Users/davinderpal/Development/flutter/packages/flutter",
       "packageUri": "lib/",
-      "languageVersion": "3.0"
+      "languageVersion": "3.2"
     },
     {
       "name": "flutter_cache_manager",
@@ -383,29 +389,35 @@
       "name": "flutter_localizations",
       "rootUri": "file:///Users/davinderpal/Development/flutter/packages/flutter_localizations",
       "packageUri": "lib/",
-      "languageVersion": "3.0"
+      "languageVersion": "3.2"
     },
     {
       "name": "flutter_mobx",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/flutter_mobx-2.1.0+1",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/flutter_mobx-2.2.0+2",
       "packageUri": "lib/",
       "languageVersion": "2.13"
     },
     {
       "name": "flutter_plugin_android_lifecycle",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/flutter_plugin_android_lifecycle-2.0.16",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/flutter_plugin_android_lifecycle-2.0.17",
       "packageUri": "lib/",
       "languageVersion": "2.19"
     },
     {
       "name": "flutter_slidable",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/flutter_slidable-3.0.0",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/flutter_slidable-3.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "flutter_stripe",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/flutter_stripe-9.6.0",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
     {
       "name": "flutter_svg",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/flutter_svg-2.0.7",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/flutter_svg-2.0.9",
       "packageUri": "lib/",
       "languageVersion": "2.19"
     },
@@ -413,17 +425,17 @@
       "name": "flutter_test",
       "rootUri": "file:///Users/davinderpal/Development/flutter/packages/flutter_test",
       "packageUri": "lib/",
-      "languageVersion": "3.0"
+      "languageVersion": "3.2"
     },
     {
       "name": "flutter_web_plugins",
       "rootUri": "file:///Users/davinderpal/Development/flutter/packages/flutter_web_plugins",
       "packageUri": "lib/",
-      "languageVersion": "3.0"
+      "languageVersion": "3.2"
     },
     {
       "name": "fluttertoast",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/fluttertoast-8.2.2",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/fluttertoast-8.2.4",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -432,6 +444,12 @@
       "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/font_awesome_flutter-10.6.0",
       "packageUri": "lib/",
       "languageVersion": "3.0"
+    },
+    {
+      "name": "freezed_annotation",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/freezed_annotation-2.4.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
     },
     {
       "name": "frontend_server_client",
@@ -459,7 +477,7 @@
     },
     {
       "name": "google_fonts",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/google_fonts-5.1.0",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/google_fonts-6.1.0",
       "packageUri": "lib/",
       "languageVersion": "2.14"
     },
@@ -468,6 +486,12 @@
       "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/graphs-2.3.1",
       "packageUri": "lib/",
       "languageVersion": "2.18"
+    },
+    {
+      "name": "hive",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/hive-2.2.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
     },
     {
       "name": "html",
@@ -501,27 +525,27 @@
     },
     {
       "name": "image_picker",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/image_picker-1.0.4",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/image_picker-1.0.6",
       "packageUri": "lib/",
-      "languageVersion": "2.19"
+      "languageVersion": "3.0"
     },
     {
       "name": "image_picker_android",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/image_picker_android-0.8.8+1",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/image_picker_android-0.8.9+2",
       "packageUri": "lib/",
-      "languageVersion": "2.19"
+      "languageVersion": "3.0"
     },
     {
       "name": "image_picker_for_web",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/image_picker_for_web-3.0.1",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/image_picker_for_web-3.0.2",
       "packageUri": "lib/",
-      "languageVersion": "2.19"
+      "languageVersion": "3.0"
     },
     {
       "name": "image_picker_ios",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/image_picker_ios-0.8.8+2",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/image_picker_ios-0.8.9",
       "packageUri": "lib/",
-      "languageVersion": "2.19"
+      "languageVersion": "3.0"
     },
     {
       "name": "image_picker_linux",
@@ -537,9 +561,9 @@
     },
     {
       "name": "image_picker_platform_interface",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/image_picker_platform_interface-2.9.1",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/image_picker_platform_interface-2.9.2",
       "packageUri": "lib/",
-      "languageVersion": "2.19"
+      "languageVersion": "3.0"
     },
     {
       "name": "image_picker_windows",
@@ -584,6 +608,12 @@
       "languageVersion": "2.19"
     },
     {
+      "name": "lottie",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/lottie-2.7.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.1"
+    },
+    {
       "name": "matcher",
       "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/matcher-0.12.16",
       "packageUri": "lib/",
@@ -597,7 +627,7 @@
     },
     {
       "name": "meta",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/meta-1.9.1",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/meta-1.10.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -609,25 +639,25 @@
     },
     {
       "name": "mobx",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/mobx-2.2.1",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/mobx-2.3.0+1",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
     {
       "name": "mobx_codegen",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/mobx_codegen-2.4.0",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/mobx_codegen-2.6.0+1",
       "packageUri": "lib/",
       "languageVersion": "3.0"
     },
     {
       "name": "moment_dart",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/moment_dart-0.17.5",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/moment_dart-1.1.0",
       "packageUri": "lib/",
-      "languageVersion": "2.17"
+      "languageVersion": "2.19"
     },
     {
       "name": "nb_utils",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/nb_utils-6.0.6",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/nb_utils-6.1.0",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
@@ -651,7 +681,7 @@
     },
     {
       "name": "onesignal_flutter",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/onesignal_flutter-3.5.1",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/onesignal_flutter-5.0.4",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -664,6 +694,18 @@
     {
       "name": "package_config",
       "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/package_config-2.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "package_info_plus",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/package_info_plus-4.2.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
+      "name": "package_info_plus_platform_interface",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/package_info_plus_platform_interface-2.0.1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -687,9 +729,9 @@
     },
     {
       "name": "path_provider_android",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/path_provider_android-2.2.0",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/path_provider_android-2.2.2",
       "packageUri": "lib/",
-      "languageVersion": "2.19"
+      "languageVersion": "3.0"
     },
     {
       "name": "path_provider_foundation",
@@ -723,9 +765,9 @@
     },
     {
       "name": "petitparser",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/petitparser-5.4.0",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/petitparser-6.0.2",
       "packageUri": "lib/",
-      "languageVersion": "2.19"
+      "languageVersion": "3.2"
     },
     {
       "name": "photo_view",
@@ -735,15 +777,15 @@
     },
     {
       "name": "platform",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/platform-3.1.3",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/platform-3.1.4",
       "packageUri": "lib/",
-      "languageVersion": "2.19"
+      "languageVersion": "3.0"
     },
     {
       "name": "plugin_platform_interface",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/plugin_platform_interface-2.1.6",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/plugin_platform_interface-2.1.8",
       "packageUri": "lib/",
-      "languageVersion": "2.19"
+      "languageVersion": "3.0"
     },
     {
       "name": "pointycastle",
@@ -759,7 +801,7 @@
     },
     {
       "name": "provider",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/provider-6.0.5",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/provider-6.1.1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -776,8 +818,8 @@
       "languageVersion": "2.18"
     },
     {
-      "name": "rename_app",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/rename_app-1.3.1",
+      "name": "razorpay_flutter",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/razorpay_flutter-1.3.5",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -831,9 +873,9 @@
     },
     {
       "name": "shared_preferences_web",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/shared_preferences_web-2.2.1",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/shared_preferences_web-2.2.2",
       "packageUri": "lib/",
-      "languageVersion": "2.19"
+      "languageVersion": "3.2"
     },
     {
       "name": "shared_preferences_windows",
@@ -861,7 +903,7 @@
     },
     {
       "name": "signature",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/signature-5.4.0",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/signature-5.4.1",
       "packageUri": "lib/",
       "languageVersion": "2.19"
     },
@@ -869,11 +911,11 @@
       "name": "sky_engine",
       "rootUri": "file:///Users/davinderpal/Development/flutter/bin/cache/pkg/sky_engine",
       "packageUri": "lib/",
-      "languageVersion": "3.0"
+      "languageVersion": "3.2"
     },
     {
       "name": "source_gen",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/source_gen-1.4.0",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/source_gen-1.5.0",
       "packageUri": "lib/",
       "languageVersion": "3.0"
     },
@@ -897,21 +939,21 @@
     },
     {
       "name": "sqflite_common",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/sqflite_common-2.5.0",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/sqflite_common-2.5.0+2",
       "packageUri": "lib/",
       "languageVersion": "3.0"
     },
     {
       "name": "stack_trace",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/stack_trace-1.11.0",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/stack_trace-1.11.1",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
     {
       "name": "stream_channel",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/stream_channel-2.1.1",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/stream_channel-2.1.2",
       "packageUri": "lib/",
-      "languageVersion": "2.14"
+      "languageVersion": "2.19"
     },
     {
       "name": "stream_transform",
@@ -926,22 +968,40 @@
       "languageVersion": "2.18"
     },
     {
+      "name": "stripe_android",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/stripe_android-9.6.0+2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "stripe_ios",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/stripe_ios-9.6.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "stripe_platform_interface",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/stripe_platform_interface-9.6.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
       "name": "syncfusion_flutter_core",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/syncfusion_flutter_core-22.2.12",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/syncfusion_flutter_core-23.2.7",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
     {
       "name": "syncfusion_flutter_datepicker",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/syncfusion_flutter_datepicker-22.2.12",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/syncfusion_flutter_datepicker-23.2.7",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
     {
       "name": "synchronized",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/synchronized-3.1.0",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/synchronized-3.1.0+1",
       "packageUri": "lib/",
-      "languageVersion": "2.18"
+      "languageVersion": "3.0"
     },
     {
       "name": "term_glyph",
@@ -951,9 +1011,9 @@
     },
     {
       "name": "test_api",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/test_api-0.6.0",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/test_api-0.6.1",
       "packageUri": "lib/",
-      "languageVersion": "2.18"
+      "languageVersion": "3.0"
     },
     {
       "name": "timing",
@@ -969,73 +1029,73 @@
     },
     {
       "name": "url_launcher",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/url_launcher-6.1.14",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/url_launcher-6.2.2",
+      "packageUri": "lib/",
+      "languageVersion": "3.1"
+    },
+    {
+      "name": "url_launcher_android",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/url_launcher_android-6.2.1",
       "packageUri": "lib/",
       "languageVersion": "3.0"
     },
     {
-      "name": "url_launcher_android",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/url_launcher_android-6.1.0",
-      "packageUri": "lib/",
-      "languageVersion": "2.19"
-    },
-    {
       "name": "url_launcher_ios",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/url_launcher_ios-6.1.5",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/url_launcher_ios-6.2.2",
       "packageUri": "lib/",
-      "languageVersion": "2.19"
+      "languageVersion": "3.0"
     },
     {
       "name": "url_launcher_linux",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/url_launcher_linux-3.0.6",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/url_launcher_linux-3.1.1",
       "packageUri": "lib/",
-      "languageVersion": "2.19"
+      "languageVersion": "3.0"
     },
     {
       "name": "url_launcher_macos",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/url_launcher_macos-3.0.7",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/url_launcher_macos-3.1.0",
       "packageUri": "lib/",
       "languageVersion": "2.19"
     },
     {
       "name": "url_launcher_platform_interface",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/url_launcher_platform_interface-2.1.5",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/url_launcher_platform_interface-2.3.0",
       "packageUri": "lib/",
-      "languageVersion": "2.19"
+      "languageVersion": "3.0"
     },
     {
       "name": "url_launcher_web",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/url_launcher_web-2.0.20",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/url_launcher_web-2.2.3",
       "packageUri": "lib/",
-      "languageVersion": "3.1"
+      "languageVersion": "3.2"
     },
     {
       "name": "url_launcher_windows",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/url_launcher_windows-3.0.8",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/url_launcher_windows-3.1.1",
       "packageUri": "lib/",
-      "languageVersion": "2.19"
+      "languageVersion": "3.0"
     },
     {
       "name": "uuid",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/uuid-4.1.0",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/uuid-4.2.2",
       "packageUri": "lib/",
       "languageVersion": "2.14"
     },
     {
       "name": "vector_graphics",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/vector_graphics-1.1.9",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/vector_graphics-1.1.9+1",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
     {
       "name": "vector_graphics_codec",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/vector_graphics_codec-1.1.9",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/vector_graphics_codec-1.1.9+1",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
     {
       "name": "vector_graphics_compiler",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/vector_graphics_compiler-1.1.9",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/vector_graphics_compiler-1.1.9+1",
       "packageUri": "lib/",
       "languageVersion": "2.19"
     },
@@ -1053,9 +1113,9 @@
     },
     {
       "name": "web",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/web-0.1.4-beta",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/web-0.3.0",
       "packageUri": "lib/",
-      "languageVersion": "3.1"
+      "languageVersion": "3.2"
     },
     {
       "name": "web_socket_channel",
@@ -1065,45 +1125,51 @@
     },
     {
       "name": "webview_flutter",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/webview_flutter-4.4.1",
-      "packageUri": "lib/",
-      "languageVersion": "2.19"
-    },
-    {
-      "name": "webview_flutter_android",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/webview_flutter_android-3.12.0",
-      "packageUri": "lib/",
-      "languageVersion": "2.19"
-    },
-    {
-      "name": "webview_flutter_platform_interface",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/webview_flutter_platform_interface-2.6.0",
-      "packageUri": "lib/",
-      "languageVersion": "2.19"
-    },
-    {
-      "name": "webview_flutter_wkwebview",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/webview_flutter_wkwebview-3.9.1",
-      "packageUri": "lib/",
-      "languageVersion": "2.19"
-    },
-    {
-      "name": "win32",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/win32-5.0.9",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/webview_flutter-4.4.3",
       "packageUri": "lib/",
       "languageVersion": "3.0"
     },
     {
-      "name": "xdg_directories",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/xdg_directories-1.0.3",
+      "name": "webview_flutter_android",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/webview_flutter_android-3.13.2",
       "packageUri": "lib/",
-      "languageVersion": "2.19"
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "webview_flutter_platform_interface",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/webview_flutter_platform_interface-2.9.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "webview_flutter_wkwebview",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/webview_flutter_wkwebview-3.10.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "win32",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/win32-5.2.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.2"
+    },
+    {
+      "name": "workmanager",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/workmanager-0.5.2",
+      "packageUri": "lib/",
+      "languageVersion": "3.1"
+    },
+    {
+      "name": "xdg_directories",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/xdg_directories-1.0.4",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
     },
     {
       "name": "xml",
-      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/xml-6.3.0",
+      "rootUri": "file:///Users/davinderpal/.pub-cache/hosted/pub.dev/xml-6.5.0",
       "packageUri": "lib/",
-      "languageVersion": "2.19"
+      "languageVersion": "3.2"
     },
     {
       "name": "yaml",
@@ -1118,7 +1184,7 @@
       "languageVersion": "3.0"
     }
   ],
-  "generated": "2023-10-25T09:31:49.334367Z",
+  "generated": "2024-01-09T05:47:08.664782Z",
   "generator": "pub",
-  "generatorVersion": "3.1.3"
+  "generatorVersion": "3.2.3"
 }

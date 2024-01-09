@@ -24,6 +24,9 @@ abstract class AppointmentAppStoreBase with Store {
   bool? mIsUpdate;
 
   @observable
+  String? mSelectedPaymentMethod;
+
+  @observable
   String? mPatientSelected;
 
   @observable
@@ -116,4 +119,8 @@ abstract class AppointmentAppStoreBase with Store {
 
   @action
   void setDescription(String? aSelected) => mDescription = aSelected;
+
+  @action
+  void setPaymentMethod(String? paymentMethod) =>
+      mSelectedPaymentMethod = paymentMethod;
 }

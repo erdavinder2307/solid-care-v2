@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:developer' as dev;
 
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
@@ -11,16 +12,32 @@ import 'package:solidcare/utils/common.dart';
 import 'package:solidcare/utils/constants.dart';
 import 'package:nb_utils/nb_utils.dart';
 
-Map<String, String> buildHeaderTokens() {
+Map<String, String> buildHeaderTokens({Map? extraKeys}) {
+  if (extraKeys == null) {
+    extraKeys = {};
+    extraKeys.putIfAbsent('isStripePayment', () => false);
+  }
   Map<String, String> header = {
-    HttpHeaders.contentTypeHeader: 'application/json; charset=utf-8',
-    HttpHeaders.cacheControlHeader: 'no-cache',
-    HttpHeaders.acceptHeader: 'application/json; charset=utf-8',
+    HttpHeaders.cacheControlHeader: 'max-age=604800',
   };
 
-  if (appStore.isLoggedIn) {
+  ///Todo Add Constant Keys
+  if (appStore.isLoggedIn &&
+      extraKeys.containsKey('isStripePayment') &&
+      extraKeys['isStripePayment']) {
+    header.putIfAbsent(HttpHeaders.contentTypeHeader,
+        () => 'application/x-www-form-urlencoded');
     header.putIfAbsent(HttpHeaders.authorizationHeader,
-        () => 'Bearer ${getStringAsync(TOKEN)}');
+        () => 'Bearer ${extraKeys!['stripeKeyPayment']}');
+  } else {
+    header.putIfAbsent(
+        HttpHeaders.contentTypeHeader, () => 'application/json; charset=utf-8');
+    header.putIfAbsent(
+        HttpHeaders.acceptHeader, () => 'application/json; charset=utf-8');
+    if (appStore.isLoggedIn) {
+      header.putIfAbsent(HttpHeaders.authorizationHeader,
+          () => 'Bearer ${getStringAsync(TOKEN)}');
+    }
   }
 
   return header;
@@ -57,17 +74,19 @@ Future<Response> buildHttpResponse(String endPoint,
     }
 
     apiPrint(
-        url: url.toString(),
-        endPoint: endPoint,
-        headers: jsonEncode(headers),
-        hasRequest: method == HttpMethod.POST || method == HttpMethod.PUT,
-        request: jsonEncode(request),
-        statusCode: response.statusCode,
-        responseBody: response.body,
-        methodtype: method.name);
+      url: url.toString(),
+      endPoint: endPoint,
+      headers: jsonEncode(headers),
+      hasRequest: method == HttpMethod.POST || method == HttpMethod.PUT,
+      request: jsonEncode(request),
+      statusCode: response.statusCode,
+      responseBody: response.body,
+      methodtype: method.name,
+    );
 
     return response;
   } else {
+    toast(locale.lblNoInternetMsg);
     throw errorInternetNotAvailable;
   }
 }
@@ -80,6 +99,8 @@ Future handleResponse(Response response) async {
     BaseResponses responses = BaseResponses.fromJson(jsonDecode(response.body));
     if (responses.code == '[jwt_auth] incorrect_password') {
       toast(locale.lblIncorrectPwd);
+    } else if (responses.code == 'rest_forbidden') {
+      toast(responses.message);
     } else {
       toast(responses.message);
       logout(isTokenExpired: true);
@@ -109,12 +130,14 @@ Future handleResponse(Response response) async {
   } else {
     try {
       var body = jsonDecode(response.body);
-      if (body['message'].toString().isNotEmpty) {
+      log('==>>>>${jsonDecode(response.body)}');
+      if (body['message'].toString().validate().isNotEmpty) {
         throw parseHtmlString(body['message']);
       } else {
+        log(response.body);
         throw errorSomethingWentWrong;
       }
-    } on Exception catch (e) {
+    } on Exception {
       toast(errorSomethingWentWrong);
       throw errorSomethingWentWrong;
     }
@@ -143,7 +166,15 @@ Future<dynamic> sendMultiPartRequest(MultipartRequest multiPartRequest,
   http.Response response =
       await http.Response.fromStream(await multiPartRequest.send());
 
-  log('response : ${response.body}');
+  apiPrint(
+    url: multiPartRequest.url.toString(),
+    headers: jsonEncode(multiPartRequest.headers),
+    request: jsonEncode(multiPartRequest.fields),
+    hasRequest: true,
+    statusCode: response.statusCode,
+    responseBody: response.body,
+    methodtype: "MultiPart",
+  );
 
   if (response.statusCode.isSuccessful()) {
     if (response.body.isJson()) {
@@ -195,16 +226,59 @@ void apiPrint({
   String responseBody = "",
   String methodtype = "",
   bool hasRequest = false,
+  bool fullLog = false,
 }) {
-  log("┌───────────────────────────────────────────────────────────────────────────────────────────────────────");
-  log("\u001b[93m Url: \u001B[39m $url");
-  log("\u001b[93m endPoint: \u001B[39m \u001B[1m$endPoint\u001B[22m");
-  log("\u001b[93m header: \u001B[39m \u001b[96m$headers\u001B[39m");
-  if (hasRequest) {
-    log('\u001b[93m Request: \u001B[39m \u001b[95m$hasRequest\u001B[39m');
+  // fullLog = statusCode.isSuccessful();
+  if (fullLog) {
+    dev.log(
+        "┌───────────────────────────────────────────────────────────────────────────────────────────────────────");
+    dev.log("\u001b[93m Url: \u001B[39m $url");
+    dev.log("\u001b[93m endPoint: \u001B[39m \u001B[1m$endPoint\u001B[22m");
+    dev.log("\u001b[93m header: \u001B[39m \u001b[96m$headers\u001B[39m");
+    if (hasRequest) {
+      dev.log('\u001b[93m Request: \u001B[39m \u001b[95m$request\u001B[39m');
+    }
+    dev.log(statusCode.isSuccessful() ? "\u001b[32m" : "\u001b[31m");
+    dev.log('MethodType ($methodtype) | StatusCode ($statusCode)');
+    dev.log('\x1B[32m${formatJson(responseBody)}\x1B[0m', name: 'Response');
+    //dev.log('Response ($methodtype) : statusCode:{$responseBody}');
+    dev.log("\u001B[0m");
+    dev.log(
+        "└───────────────────────────────────────────────────────────────────────────────────────────────────────");
+  } else {
+    log("┌───────────────────────────────────────────────────────────────────────────────────────────────────────");
+    log("\u001b[93m Url: \u001B[39m $url");
+    log("\u001b[93m endPoint: \u001B[39m \u001B[1m$endPoint\u001B[22m");
+    log("\u001b[93m header: \u001B[39m \u001b[96m${headers.split(',').join(',\n')}\u001B[39m");
+    if (hasRequest) {
+      log('\u001b[93m Request: \u001B[39m \u001b[95m$request\u001B[39m');
+    }
+    log(statusCode.isSuccessful() ? "\u001b[32m" : "\u001b[31m");
+    log('MethodType ($methodtype) | statusCode: ($statusCode)');
+    log('Response : ');
+    log('${formatJson(responseBody)}');
+    log("\u001B[0m");
+    log("└───────────────────────────────────────────────────────────────────────────────────────────────────────");
   }
-  log("${statusCode.isSuccessful() ? "\u001b[32m" : "\u001b[31m"}");
-  log('Response ($methodtype) $statusCode: $responseBody');
-  log("\u001B[0m");
-  log("└───────────────────────────────────────────────────────────────────────────────────────────────────────");
+}
+
+String formatJson(String jsonStr) {
+  try {
+    final dynamic parsedJson = jsonDecode(jsonStr);
+    const formatter = JsonEncoder.withIndent('  ');
+    return formatter.convert(parsedJson);
+  } on Exception catch (e) {
+    dev.log("\x1b[31m formatJson error ::-> ${e.toString()} \x1b[0m");
+    return jsonStr;
+  }
+}
+
+String parseStripeError(String response) {
+  try {
+    var body = jsonDecode(response);
+    return parseHtmlString(body['error']['message']);
+  } on Exception catch (e) {
+    log(e);
+    throw errorSomethingWentWrong;
+  }
 }

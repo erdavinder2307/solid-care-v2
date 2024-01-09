@@ -13,6 +13,7 @@ import 'package:solidcare/screens/shimmer/screen/session_shimmer_screen.dart';
 import 'package:solidcare/utils/app_common.dart';
 import 'package:solidcare/utils/colors.dart';
 import 'package:solidcare/utils/common.dart';
+import 'package:solidcare/utils/constants.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class DoctorSessionListScreen extends StatefulWidget {
@@ -54,82 +55,91 @@ class _DoctorSessionListScreenState extends State<DoctorSessionListScreen> {
 
   @override
   void dispose() {
+    getDisposeStatusBarColor();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: appBarWidget(
-          isReceptionist() ? locale.lblDoctorSessions : locale.lblSessions,
-          textColor: Colors.white,
-          systemUiOverlayStyle: defaultSystemUiOverlayStyle(context)),
-      body: InternetConnectivityWidget(
-        retryCallback: () {
-          setState(() {});
-        },
-        child: Stack(
-          children: [
-            SnapHelperWidget<DoctorSessionModel>(
-              future: future,
-              loadingWidget: SessionShimmerScreen(),
-              errorWidget: ErrorStateWidget(),
-              onSuccess: (data) {
-                if (data.sessionData.validate().isEmpty)
-                  return NoDataFoundWidget(text: locale.lblNoSessionAvailable)
-                      .center();
-                return AnimatedScrollView(
-                  padding: EdgeInsets.fromLTRB(16, 16, 16, 80),
-                  disposeScrollController: true,
-                  listAnimationType: listAnimationType,
-                  physics: AlwaysScrollableScrollPhysics(),
-                  slideConfiguration: SlideConfiguration(verticalOffset: 400),
-                  onSwipeRefresh: () async {
-                    init();
-                    return await 2.seconds.delay;
-                  },
-                  children: [
-                    Text('${locale.lblNote} : ${locale.lblSessionTapMsg}',
-                        style: secondaryTextStyle(
-                            size: 10, color: appSecondaryColor)),
-                    8.height,
-                    ...data.sessionData
-                        .validate()
-                        .map<Widget>(
-                          (sessionData) => SessionWidget(
-                            data: sessionData,
-                            callForRefresh: () {
-                              init(showLoader: true);
-                            },
-                          ),
-                        )
-                        .toList()
-                  ],
-                );
-              },
-            ),
-            Observer(
-                builder: (context) =>
-                    LoaderWidget().center().visible(appStore.isLoading))
-          ],
+    return Observer(builder: (context) {
+      return Scaffold(
+        appBar: appBarWidget(
+            isReceptionist() ? locale.lblDoctorSessions : locale.lblSessions,
+            textColor: Colors.white,
+            systemUiOverlayStyle: defaultSystemUiOverlayStyle(context)),
+        body: InternetConnectivityWidget(
+          retryCallback: () {
+            setState(() {});
+          },
+          child: Stack(
+            children: [
+              SnapHelperWidget<DoctorSessionModel>(
+                future: future,
+                loadingWidget: SessionShimmerScreen(),
+                errorWidget: ErrorStateWidget(),
+                onSuccess: (data) {
+                  if (data.sessionData.validate().isEmpty)
+                    return NoDataFoundWidget(text: locale.lblNoSessionAvailable)
+                        .center();
+                  return AnimatedScrollView(
+                    padding: EdgeInsets.fromLTRB(16, 16, 16, 80),
+                    disposeScrollController: true,
+                    listAnimationType: listAnimationType,
+                    physics: AlwaysScrollableScrollPhysics(),
+                    slideConfiguration: SlideConfiguration(verticalOffset: 400),
+                    onSwipeRefresh: () async {
+                      init();
+                      return await 2.seconds.delay;
+                    },
+                    children: [
+                      if (isVisible(SharedPreferenceKey
+                              .solidCareDoctorSessionEditKey) ||
+                          isVisible(SharedPreferenceKey
+                              .solidCareDoctorSessionDeleteKey))
+                        Text('${locale.lblNote} : ${locale.lblSwipeLeftToEdit}',
+                            style: secondaryTextStyle(
+                                size: 10, color: appSecondaryColor)),
+                      8.height,
+                      ...data.sessionData
+                          .validate()
+                          .map<Widget>(
+                            (sessionData) => SessionWidget(
+                              data: sessionData,
+                              callForRefresh: () {
+                                init(showLoader: true);
+                              },
+                            ).paddingSymmetric(vertical: 8),
+                          )
+                          .toList()
+                    ],
+                  );
+                },
+              ),
+              LoaderWidget().center().visible(appStore.isLoading)
+            ],
+          ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () async {
-          if (appStore.isConnectedToInternet) {
-            await AddSessionsScreen().launch(context).then((value) {
-              if (value != null) {
-                if (value ?? false) {
-                  init(showLoader: true);
+        floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.add),
+          onPressed: () async {
+            if (appStore.isConnectedToInternet) {
+              await AddSessionsScreen()
+                  .launch(context,
+                      pageRouteAnimation: pageAnimation,
+                      duration: pageAnimationDuration)
+                  .then((value) {
+                if (value != null) {
+                  if (value ?? false) {
+                    init(showLoader: true);
+                  }
                 }
-              }
-            });
-          } else {
-            toast(locale.lblNoInternetMsg);
-          }
-        },
-      ),
-    );
+              });
+            } else {
+              toast(locale.lblNoInternetMsg);
+            }
+          },
+        ).visible(isVisible(SharedPreferenceKey.solidCareDoctorSessionAddKey)),
+      );
+    });
   }
 }

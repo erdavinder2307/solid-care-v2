@@ -4,6 +4,7 @@ import 'package:solidcare/model/clinic_list_model.dart';
 import 'package:solidcare/utils/extensions/string_extensions.dart';
 import 'package:solidcare/utils/images.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:solidcare/utils/extensions/widget_extentions.dart';
 
 import 'package:solidcare/components/status_widget.dart';
 
@@ -26,7 +27,12 @@ class ClinicComponent extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               28.height,
-              Text(clinicData.name.validate(), style: boldTextStyle(size: 14)),
+              Marquee(
+                child: Text(clinicData.name.validate(),
+                    style: boldTextStyle(size: 14)),
+                animationDuration: Duration(milliseconds: 400),
+                pauseDuration: Duration(milliseconds: 100),
+              ),
               4.height,
               TextIcon(
                 spacing: 4,
@@ -47,12 +53,17 @@ class ClinicComponent extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              CachedImageWidget(
-                url: clinicData.profileImage.validate(),
-                height: 40,
-                width: 40,
-                fit: BoxFit.cover,
-              ).cornerRadiusWithClipRRect(8),
+              if (clinicData.profileImage.validate().isNotEmpty)
+                CachedImageWidget(
+                  url: clinicData.profileImage.validate(),
+                  height: 40,
+                  width: 40,
+                  fit: BoxFit.cover,
+                ).cornerRadiusWithClipRRect(8)
+              else
+                ic_clinicPlaceHolder
+                    .iconImageColored(height: 40, width: 40)
+                    .cornerRadiusWithClipRRect(8),
               16.width.expand(),
               StatusWidget(
                 status: clinicData.status.validate(),
@@ -78,21 +89,17 @@ class ClinicComponent extends StatelessWidget {
                     padding: EdgeInsets.all(isCheck ? 0 : 8),
                     decoration: boxDecorationDefault(
                         shape: BoxShape.circle, color: context.cardColor)),
-          ).onTap(
+          ).appOnTap(
             () {
               onTap!.call(!isCheck);
             },
-            splashColor: Colors.transparent,
-            highlightColor: Colors.transparent,
           ),
         )
       ],
-    ).onTap(
+    ).appOnTap(
       () {
         onTap!.call(!isCheck);
       },
-      splashColor: Colors.transparent,
-      highlightColor: Colors.transparent,
     );
   }
 }

@@ -5,6 +5,123 @@ class LanguageHi extends BaseLanguage {
   String get appName => 'किवीकेयर';
 
   @override
+  String get lblBill => "";
+
+  @override
+  String get lblStripeTestCredential => "";
+
+  @override
+  String get lblTodayIsHoliday => "आज आपकी छुट्टी है";
+
+  @override
+  String get lblTotalTax => "टोटल टैक्स";
+
+  @override
+  String get lblStart => "स्टार्ट";
+
+  @override
+  String get lblJoin => "जॉइन";
+
+  @override
+  String get lblTotalDoctors => "टोटल डॉक्टर";
+
+  @override
+  String get lblTax => "टैक्‍स";
+
+  @override
+  String get lblTaxRate => "टैक्‍स रेट";
+
+  @override
+  String get lblSubTotal => "सबटोटल";
+
+  @override
+  String get lblThisServiceAlreadyExistInClinic =>
+      "यह सेवा चयनित क्लिनिक में पहले से ही उपलब्ध है";
+
+  @override
+  String get lblPleaseSelectPayment => "कृपया भुगतान विधि का चयन करें";
+  @override
+  String get lblChargesIsNegative => "शुल्क अधिक या 0 के बराबर होना चाहिए";
+
+  @override
+  String get lblServiceCategoryIsRequired => "सेवा श्रेणी की आवश्यकता है";
+
+  @override
+  String get lblServiceNameIsRequired => "सेवा का नाम आवश्यक है";
+
+  @override
+  String get lblDurationIsRequired => "अवधि की आवश्यकता है";
+
+  @override
+  String get lblChargesIsRequired => "शुल्क आवश्यक है";
+
+  @override
+  String get lblNoLatestAppointmentFound => "कोई नवीनतम नियुक्ति नहीं मिली";
+  @override
+  String get lblNoPendingAppointmentFound => "कोई लंबित नियुक्ति नहीं मिली";
+  @override
+  String get lblNoCompletedAppointmentFound => "कोई पूर्ण नियुक्ति नहीं मिली";
+  @override
+  String get lblNoCancelledAppointmentFound => "कोई रद्द नियुक्ति नहीं मिली";
+
+  @override
+  String get clinicIdRequired => "क्लिनिक की आवश्यकता है";
+  @override
+  String get roleIsRequired => "भूमिका की आवश्यकता है";
+
+  @override
+  String get confirmPasswordIsRequired => "पासवर्ड की पुष्टि करें";
+
+  @override
+  String get passwordIsRequired => "पासवर्ड की आवश्यकता है";
+
+  @override
+  String get contactNumberIsRequired => "संपर्क नंबर की आवश्यकता है";
+
+  @override
+  String get lblSwipeLeftToEdit => "विवरण संपादित करने के लिए छोड़ दिया स्वाइप";
+
+  @override
+  String get lblNoEncounterFoundAtYourClinic =>
+      "आपके क्लिनिक में कोई मुठभेड़ नहीं मिली";
+
+  @override
+  String get lblAvailableAtClinics => 'क्लीनिक में उपलब्ध है';
+
+  @override
+  String get lblClinicsSelected => "चयनित क्लीनिक";
+
+  @override
+  String get lblClinicsAvailable => "उपलब्ध क्लीनिक";
+
+  @override
+  String get lblSelectRole => "भूमिका का चयन करें";
+
+  @override
+  String get lblPwdDoesNotMatch => "पासवर्ड मैच नहीं कर रहा है";
+
+  @override
+  String get lblSelectPaymentMethod => "भुगतान का तरीका चुनें";
+
+  @override
+  String get lblAmount => "मात्रा";
+
+  @override
+  String get lblPaymentId => "भुगतान आईडी";
+
+  @override
+  String get lblPaymentMethod => "भुगतान विधि";
+
+  @override
+  String get lblVPA => "वीपीए";
+
+  @override
+  String get lblCardId => "कार्ड आईडी";
+
+  @override
+  String get lblTransactionId => "लेन -देन आईडी";
+
+  @override
   String get lblReportUpdatedSuccessfully => "रिपोर्ट सफलतापूर्वक अपडेट की गई";
 
   @override
@@ -360,16 +477,16 @@ class LanguageHi extends BaseLanguage {
   String get lblWalkThroughTitle4 => 'डॉक्टरों के साथ बात करें';
   @override
   String get lblWalkThroughSubTitle1 =>
-      '""Kivicare App डॉक्टरों, चिकित्सा पेशेवरों, क्लिनिक और रोगी प्रबंधन के लिए तैयार और अंतिम इलेक्ट्रॉनिक स्वास्थ्य रिकॉर्ड (EHR) समाधान है। डॉक्टर, क्लिनिक प्रशासकों, रिसेप्शनिस्ट और रोगियों के लिए चार अद्वितीय मॉडल।';
+      '""Solidcare App डॉक्टरों, चिकित्सा पेशेवरों, क्लिनिक और रोगी प्रबंधन के लिए तैयार और अंतिम इलेक्ट्रॉनिक स्वास्थ्य रिकॉर्ड (EHR) समाधान है। डॉक्टर, क्लिनिक प्रशासकों, रिसेप्शनिस्ट और रोगियों के लिए चार अद्वितीय मॉडल।';
   @override
   String get lblWalkThroughSubTitle2 =>
-      'डॉक्टरों को सूचीबद्ध करके अपने मोबाइल ऐप को संसाधनपूर्ण बनाएं। आप डॉक्टर को पा सकते हैं जो इस अद्भुत डॉक्टरों के मॉडल के साथ आपके निकटतम है। Kivicare के साथ डॉक्टरों की सूची जोड़ें और प्रबंधित करें।';
+      'डॉक्टरों को सूचीबद्ध करके अपने मोबाइल ऐप को संसाधनपूर्ण बनाएं। आप डॉक्टर को पा सकते हैं जो इस अद्भुत डॉक्टरों के मॉडल के साथ आपके निकटतम है। Solidcare के साथ डॉक्टरों की सूची जोड़ें और प्रबंधित करें।';
   @override
   String get lblWalkThroughSubTitle3 =>
       'क्लिनिक या अस्पताल में नियुक्तियों का प्रबंधन करें, बुद्धिमान किवीकेयर इंटरफ़ेस के साथ समय से पहले रोगियों को शेड्यूल करें। किसी भी देरी या लंबे समय तक कतारों में प्रतीक्षा करने से बचें';
   @override
   String get lblWalkThroughSubTitle4 =>
-      'मरीजों में डॉक्टर के साथ प्रत्यक्ष परामर्श हो सकता है जो पहला निदान सटीक और समय पर हो सकता है। Kivicare की SMS अधिसूचना रोगी की पंजीकृत संख्या पर अलर्ट भेजती है।';
+      'मरीजों में डॉक्टर के साथ प्रत्यक्ष परामर्श हो सकता है जो पहला निदान सटीक और समय पर हो सकता है। Solidcare की SMS अधिसूचना रोगी की पंजीकृत संख्या पर अलर्ट भेजती है।';
   @override
   String get lblWalkThroughSkipButton => 'छोडना';
   @override
@@ -461,7 +578,7 @@ class LanguageHi extends BaseLanguage {
   @override
   String get lblDone => 'पूर्ण';
   @override
-  String get lblSignUpAsPatient => 'अपना Kivicare खाता बनाएँ';
+  String get lblSignUpAsPatient => 'अपना Solidcare खाता बनाएँ';
   @override
   String get lblAlreadyAMember => 'क्या पहले से ही सदस्य हैं?';
   @override
@@ -829,7 +946,7 @@ class LanguageHi extends BaseLanguage {
   @override
   String get lblClinicTAndC => 'क्लिनिक टी एंड सी';
   @override
-  String get lblAboutSolidCare => 'Kivicare के बारे में';
+  String get lblAboutSolidCare => 'Solidcare के बारे में';
   @override
   String get lblYourReviewCounts => 'आपकी समीक्षा मायने रखती है';
   @override
@@ -855,7 +972,7 @@ class LanguageHi extends BaseLanguage {
   String get lblContactUs => 'संपर्क करें';
   @override
   String get lblAboutUsDes =>
-      '""Kivicare डॉक्टरों और मरीजों के लिए एक पूर्ण क्लिनिक/अस्पताल की नियुक्ति और रिकॉर्ड प्रबंधन है। यह मरीजों को किसी भी समय अपने डॉक्टर की नियुक्ति को आसानी से बुक करने में मदद करता है। Kivicare ऐप का उपयोग करके आप अपने सभी रोगी रिकॉर्ड जैसे व्यक्तिगत रूप से निर्माण, प्रबंधन और ट्रैक कर सकते हैं जैसे कि व्यक्तिगत सूचना, चिकित्सा रिपोर्ट, दवा, इतिहास, नैदानिक ​​नोट, रोगी इतिहास और अन्य नोट्स पर जाएँ। आपके रोगियों के लिए नियुक्तियों को आसानी से किविकेयर ऐप का उपयोग करके प्रबंधित किया जा सकता है। आपके सभी रोगी मेडिकल रिकॉर्ड आपको तुरंत देखने के लिए उपलब्ध होंगे। इसलिए कोई और नहीं। अपने रोगियों के पिछले इतिहास को देखने के लिए कागजात के माध्यम से जुगल करना, आपके निदान के लिए सब कुछ आसानी से उपलब्ध है।';
+      '""Solidcare डॉक्टरों और मरीजों के लिए एक पूर्ण क्लिनिक/अस्पताल की नियुक्ति और रिकॉर्ड प्रबंधन है। यह मरीजों को किसी भी समय अपने डॉक्टर की नियुक्ति को आसानी से बुक करने में मदद करता है। Solidcare ऐप का उपयोग करके आप अपने सभी रोगी रिकॉर्ड जैसे व्यक्तिगत रूप से निर्माण, प्रबंधन और ट्रैक कर सकते हैं जैसे कि व्यक्तिगत सूचना, चिकित्सा रिपोर्ट, दवा, इतिहास, नैदानिक ​​नोट, रोगी इतिहास और अन्य नोट्स पर जाएँ। आपके रोगियों के लिए नियुक्तियों को आसानी से किविकेयर ऐप का उपयोग करके प्रबंधित किया जा सकता है। आपके सभी रोगी मेडिकल रिकॉर्ड आपको तुरंत देखने के लिए उपलब्ध होंगे। इसलिए कोई और नहीं। अपने रोगियों के पिछले इतिहास को देखने के लिए कागजात के माध्यम से जुगल करना, आपके निदान के लिए सब कुछ आसानी से उपलब्ध है।';
   @override
   String get lblPurchase => 'खरीदना';
   @override
@@ -1082,8 +1199,8 @@ class LanguageHi extends BaseLanguage {
   String get lblYouWillSeeAQRForAppOptionOnTheRightHandCorner =>
       'आप दाहिने हाथ के कोने पर ऐप विकल्प के लिए एक क्यूआर देखेंगे,';
   @override
-  String get lblEnjoyTheFlawlessKivicareSystemWithEase =>
-      'आनंद लेना! सहजता के साथ निर्दोष kivicare प्रणाली।';
+  String get lblEnjoyTheFlawlessSolidcareSystemWithEase =>
+      'आनंद लेना! सहजता के साथ निर्दोष solidcare प्रणाली।';
   @override
   String get lblCamera => 'कैमरा';
   @override

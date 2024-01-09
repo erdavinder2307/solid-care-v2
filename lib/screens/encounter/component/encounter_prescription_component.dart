@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
-
+import 'package:solidcare/utils/extensions/widget_extentions.dart';
 import 'package:solidcare/main.dart';
 import 'package:solidcare/model/prescription_model.dart';
 
@@ -49,10 +49,8 @@ class EncounterPrescriptionComponent extends StatelessWidget {
           ).expand(),
           10.width.visible(isDeleteOn),
           Icon(Icons.delete, color: Colors.red, size: 20)
-              .onTap(
+              .appOnTap(
                 () => onTap?.call(),
-                splashColor: Colors.transparent,
-                highlightColor: Colors.transparent,
               )
               .visible(isDeleteOn),
         ],

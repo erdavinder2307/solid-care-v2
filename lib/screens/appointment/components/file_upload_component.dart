@@ -6,6 +6,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:solidcare/main.dart';
 import 'package:solidcare/utils/common.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:open_file/open_file.dart';
 
 class FileUploadComponent extends StatefulWidget {
   @override
@@ -70,13 +71,14 @@ class _FileUploadComponentState extends State<FileUploadComponent> {
                 return SettingItemWidget(
                   splashColor: Colors.transparent,
                   highlightColor: Colors.transparent,
-                  onTap:
-                      appointmentAppStore.reportList[index].name.validateURL()
-                          ? () {
-                              commonLaunchUrl(
-                                  "${appointmentAppStore.reportList[index].name}");
-                            }
-                          : () {},
+                  onTap: appointmentAppStore.reportList[index].path
+                          .validate()
+                          .isNotEmpty
+                      ? () {
+                          OpenFile.open(
+                              appointmentAppStore.reportList[index].path);
+                        }
+                      : () {},
                   leading:
                       Icon(Icons.document_scanner, color: context.primaryColor),
                   title: '${locale.lblMedicalReport} ${index + 1}',

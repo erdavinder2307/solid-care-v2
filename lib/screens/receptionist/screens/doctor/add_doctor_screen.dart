@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +7,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:intl/intl.dart';
 import 'package:solidcare/components/body_widget.dart';
+import 'package:solidcare/components/cached_image_widget.dart';
+import 'package:solidcare/components/custom_image_picker.dart';
 import 'package:solidcare/components/gender_selection_component.dart';
 import 'package:solidcare/components/internet_connectivity_widget.dart';
 import 'package:solidcare/components/no_data_found_widget.dart';
@@ -13,7 +16,7 @@ import 'package:solidcare/main.dart';
 import 'package:solidcare/model/qualification_model.dart';
 import 'package:solidcare/model/static_data_model.dart';
 import 'package:solidcare/model/user_model.dart';
-import 'package:solidcare/network/auth_repository.dart';
+import 'package:solidcare/network/doctor_repository.dart';
 import 'package:solidcare/screens/auth/components/qualification_widget.dart';
 import 'package:solidcare/screens/doctor/screens/add_qualification_screen.dart';
 import 'package:solidcare/screens/receptionist/components/multi_select_specialization.dart';
@@ -23,7 +26,10 @@ import 'package:solidcare/utils/colors.dart';
 import 'package:solidcare/utils/common.dart';
 import 'package:solidcare/utils/constants.dart';
 import 'package:solidcare/utils/extensions/date_extensions.dart';
+import 'package:solidcare/utils/extensions/enums.dart';
 import 'package:solidcare/utils/extensions/string_extensions.dart';
+import 'package:solidcare/utils/extensions/widget_extentions.dart';
+import 'package:solidcare/utils/images.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class AddDoctorScreen extends StatefulWidget {
@@ -48,6 +54,7 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
   TextEditingController userLogin = TextEditingController();
   TextEditingController contactNumberCont = TextEditingController();
   TextEditingController dobCont = TextEditingController();
+
   TextEditingController genderCont = TextEditingController();
   TextEditingController specializationCont = TextEditingController();
   TextEditingController addressCont = TextEditingController();
@@ -69,6 +76,7 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
   FocusNode countryFocus = FocusNode();
   FocusNode postalCodeFocus = FocusNode();
   FocusNode experienceFocus = FocusNode();
+  File? selectedProfileImage;
 
   DateTime selectedDate = DateTime.now();
 
@@ -126,6 +134,31 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
     if (mounted) super.setState(fn);
   }
 
+  Future<void> _chooseImage() async {
+    await showInDialog(
+      context,
+      contentPadding: EdgeInsets.symmetric(vertical: 16),
+      title: Text(locale.lblChooseAction, style: boldTextStyle()),
+      builder: (p0) {
+        return FilePickerDialog(isSelected: (false));
+      },
+    ).then((file) async {
+      if (file != null) {
+        if (file == GalleryFileTypes.CAMERA) {
+          await getCameraImage().then((value) {
+            selectedProfileImage = value;
+            setState(() {});
+          });
+        } else if (file == GalleryFileTypes.GALLERY) {
+          await getCameraImage(isCamera: false).then((value) {
+            selectedProfileImage = value;
+            setState(() {});
+          });
+        }
+      } else {}
+    });
+  }
+
   Future<void> dateBottomSheet(context, {DateTime? bDate}) async {
     await showModalBottomSheet(
       context: context,
@@ -139,14 +172,12 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(locale.lblCancel, style: boldTextStyle()).onTap(
+                    Text(locale.lblCancel, style: boldTextStyle()).appOnTap(
                       () {
                         finish(context);
                       },
-                      splashColor: Colors.transparent,
-                      highlightColor: Colors.transparent,
                     ),
-                    Text(locale.lblDone, style: boldTextStyle()).onTap(
+                    Text(locale.lblDone, style: boldTextStyle()).appOnTap(
                       () {
                         if (DateTime.now().year - selectedDate.year < 18) {
                           toast(locale.lblMinimumAgeRequired +
@@ -159,8 +190,6 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
                               .toString();
                         }
                       },
-                      splashColor: Colors.transparent,
-                      highlightColor: Colors.transparent,
                     )
                   ],
                 ).paddingOnly(top: 8, left: 8, right: 8, bottom: 8),
@@ -285,7 +314,9 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
 
     log(request);
 
-    await addUpdateDoctorDetailsAPI(data: request).then((value) {
+    await addUpdateDoctorDetailsAPI(
+            data: request, profileImage: selectedProfileImage)
+        .then((value) {
       appStore.setLoading(false);
       toast(value);
 
@@ -325,6 +356,62 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
                   EdgeInsets.only(bottom: 80, left: 16, right: 16, top: 16),
               listAnimationType: ListAnimationType.None,
               children: [
+                Stack(
+                  clipBehavior: Clip.none,
+                  children: <Widget>[
+                    Container(
+                      padding: EdgeInsets.all(8),
+                      decoration: boxDecorationDefault(
+                        color: appStore.isDarkModeOn
+                            ? cardDarkColor
+                            : context.scaffoldBackgroundColor,
+                        shape: BoxShape.circle,
+                        border: Border.all(color: viewLineColor),
+                      ),
+                      child: selectedProfileImage != null
+                          ? Image.file(selectedProfileImage!,
+                                  fit: BoxFit.cover, width: 126, height: 126)
+                              .cornerRadiusWithClipRRect(65)
+                          : CachedImageWidget(
+                              url: widget.doctorData != null
+                                  ? widget.doctorData!.profileImage
+                                          .validate()
+                                          .isEmpty
+                                      ? ic_no_photo
+                                      : widget.doctorData!.profileImage
+                                          .validate()
+                                  : ic_no_photo,
+                              height: 126,
+                              width: 126,
+                              fit: BoxFit.cover,
+                              circle: true,
+                            ),
+                    ).appOnTap(
+                      () {
+                        _chooseImage();
+                      },
+                      borderRadius: radius(65),
+                    ),
+                    Positioned(
+                      bottom: 0,
+                      right: 0,
+                      child: Container(
+                        padding: EdgeInsets.all(8),
+                        decoration: boxDecorationDefault(
+                            color: appPrimaryColor,
+                            shape: BoxShape.circle,
+                            border: Border.all(color: white, width: 3)),
+                        child:
+                            ic_camera.iconImage(size: 14, color: Colors.white),
+                      ).appOnTap(
+                        () {
+                          _chooseImage();
+                        },
+                        borderRadius: radius(65),
+                      ),
+                    )
+                  ],
+                ).center(),
                 Text(locale.lblBasicDetails,
                     style:
                         boldTextStyle(color: context.primaryColor, size: 18)),
@@ -384,6 +471,13 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
                           focus: dobFocus,
                           nextFocus: addressFocus,
                           readOnly: true,
+                          isValidationRequired: true,
+                          validator: (value) {
+                            if (dobCont.text.isEmptyOrNull)
+                              return locale.lblBirthDateIsRequired;
+                            return null;
+                          },
+                          errorThisFieldRequired: locale.lblBirthDateIsRequired,
                           textFieldType: TextFieldType.OTHER,
                           decoration: inputDecoration(
                               context: context, labelText: locale.lblDOB),
@@ -419,7 +513,9 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
                                     .validate()
                                     .map((element) => element!.id.validate())
                                     .toList())
-                            .launch(context);
+                            .launch(context,
+                                pageRouteAnimation: pageAnimation,
+                                duration: pageAnimationDuration);
                       },
                       child: Container(
                         padding: EdgeInsets.fromLTRB(10, 16, 16, 16),

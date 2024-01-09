@@ -27,6 +27,10 @@ class _FeedFragmentState extends State<FeedFragment> {
   }
 
   Future<void> init() async {
+    getNewsListAPI().whenComplete(() {
+      appStore.setLoading(false);
+      setState(() {});
+    });
     future = getNewsListAPI().whenComplete(() {
       appStore.setLoading(false);
       setState(() {});
@@ -62,7 +66,7 @@ class _FeedFragmentState extends State<FeedFragment> {
         errorWidget: ErrorStateWidget(),
         onSuccess: (snap) {
           return AnimatedListView(
-            itemCount: snap.newsData!.length,
+            itemCount: snap.newsData.validate().length,
             shrinkWrap: true,
             padding: EdgeInsets.only(top: 16, left: 16, bottom: 24, right: 16),
             onSwipeRefresh: () async {

@@ -22,6 +22,7 @@ import 'package:solidcare/utils/common.dart';
 import 'package:solidcare/utils/constants.dart';
 import 'package:solidcare/utils/extensions/int_extensions.dart';
 import 'package:solidcare/utils/extensions/string_extensions.dart';
+import 'package:solidcare/utils/extensions/widget_extentions.dart';
 import 'package:solidcare/utils/images.dart';
 
 import 'package:nb_utils/nb_utils.dart';
@@ -53,6 +54,94 @@ class _AppointmentWidgetState extends State<AppointmentWidget> {
     else if (status.validate().toInt() == 4) return locale.lblCheckOut;
 
     return '';
+  }
+
+  bool get isEdit {
+    return widget.upcomingData.status.toInt().getStatus() != CheckOutStatus &&
+        widget.upcomingData.status.toInt().getStatus() != CancelledStatus &&
+        widget.upcomingData.status.toInt().getStatus() != CheckInStatus &&
+        (DateFormat(SAVE_DATE_FORMAT)
+                .parse(
+                    widget.upcomingData.appointmentGlobalStartDate.validate())
+                .isAfter(DateFormat(SAVE_DATE_FORMAT)
+                    .parse(DateTime.now().toString())) ||
+            DateFormat(SAVE_DATE_FORMAT).parse(DateTime.now().toString()) ==
+                DateFormat(SAVE_DATE_FORMAT).parse(widget
+                    .upcomingData.appointmentGlobalStartDate
+                    .validate())) &&
+        isVisible(SharedPreferenceKey.solidCareAppointmentEditKey);
+  }
+
+  //region Visible Button conditions
+  bool get showEncounterButton {
+    if (isReceptionist() || isDoctor()) {
+      return ((isVisible(
+              SharedPreferenceKey.solidCarePatientEncounterAddKey)) &&
+          (widget.upcomingData.status.toInt() == CheckInStatusInt));
+    }
+    return (widget.upcomingData.status.toInt() == CheckInStatusInt &&
+        (isVisible(SharedPreferenceKey.solidCarePatientEncounterViewKey)));
+  }
+
+  bool get showViewButton {
+    return isVisible(SharedPreferenceKey.solidCareAppointmentViewKey);
+  }
+
+  bool get showCheckInButton {
+    if (isVisible(
+        SharedPreferenceKey.solidCarePatientAppointmentStatusChangeKey)) {
+      bool beforeTime = getDateDifference(
+              widget.upcomingData.appointmentGlobalStartDate.validate()) ==
+          0;
+      return ((isDoctor() || isReceptionist()) &&
+          (widget.upcomingData.status.toInt() == BookedStatusInt ||
+              widget.upcomingData.status.toInt() == CheckInStatusInt) &&
+          beforeTime);
+    } else
+      return false;
+  }
+
+  bool get ifCheckIn {
+    return ((isDoctor() || isReceptionist()) &&
+        widget.upcomingData.status.toInt() == CheckInStatusInt);
+  }
+
+  bool get showReviewButton {
+    return isPatient() &&
+        widget.upcomingData.status.toInt() == CheckOutStatusInt &&
+        getReviewPermission;
+  }
+
+  bool get getReviewPermission {
+    if (widget.upcomingData.doctorRating != null)
+      return showReviewUpdate;
+    else
+      return showReviewAdd;
+  }
+
+  bool get showReviewAdd {
+    return isVisible(SharedPreferenceKey.solidCarePatientReviewAddKey);
+  }
+
+  bool get showReviewUpdate {
+    return isVisible(SharedPreferenceKey.solidCarePatientReviewEditKey);
+  }
+
+  bool get showGoogleMeet {
+    bool gMeetIsON = false;
+    if (!isReceptionist()) {
+      if (widget.upcomingData.googleMeetData.validate().isNotEmpty &&
+          (widget.upcomingData.status.toInt() != CancelledStatusInt ||
+              widget.upcomingData.status.toInt() != PendingStatusInt) &&
+          widget.upcomingData.status.toInt() != CheckOutStatusInt) {
+        return gMeetIsON = true;
+      }
+    }
+    return gMeetIsON;
+  }
+
+  bool get showDelete {
+    return isVisible(SharedPreferenceKey.solidCareAppointmentDeleteKey);
   }
 
   void changeAppointmentStatus() async {
@@ -126,50 +215,42 @@ class _AppointmentWidgetState extends State<AppointmentWidget> {
     Map<String, dynamic> request = {"id": id};
 
     await deleteAppointment(request).then((value) {
-      appointmentStreamController.add(true);
-
-      appStore.setLoading(false);
       widget.refreshCall?.call();
+      appStore.setLoading(false);
+      finish(context);
+      appointmentStreamController.add(true);
       toast(locale.lblAppointmentDeleted);
     }).catchError((e) {
       appStore.setLoading(false);
       toast(e.toString());
       throw e;
     });
+  }
 
-    appStore.setLoading(false);
-    finish(context);
+  void _handleTelemedButton() {
+    if ((isDoctor() || isPatient()) &&
+        widget.upcomingData.googleMeetData != null) {
+      meetLaunch(widget.upcomingData.googleMeetData.validate());
+    } else {
+      toast(locale.lblYouCannotStart);
+    }
   }
 
   void _handleViewButton() {
     showInDialog(
       context,
       contentPadding: EdgeInsets.zero,
-      title: Stack(
-        clipBehavior: Clip.none,
+      title: Row(
         children: [
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                padding: EdgeInsets.all(8),
-                decoration: boxDecorationDefault(color: appSecondaryColor),
-                child: Image.asset(ic_appointment,
-                    fit: BoxFit.cover, height: 22, width: 22, color: white),
-              ),
-              16.width,
-              Text(locale.lblAppointmentSummary, style: boldTextStyle(size: 18))
-                  .flexible(),
-            ],
-          ).paddingOnly(top: 24),
-          Positioned(
-            right: -12,
-            top: -12,
-            child: StatusWidget(
-              status: widget.upcomingData.status.validate(),
-              isAppointmentStatus: true,
-            ),
-          )
+          Text(locale.lblAppointmentSummary,
+                  style: primaryTextStyle(color: appPrimaryColor))
+              .expand(),
+          16.width,
+          StatusWidget(
+            status: widget.upcomingData.status.validate(),
+            isAppointmentStatus: true,
+            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+          ),
         ],
       ),
       builder: (p0) {
@@ -181,8 +262,9 @@ class _AppointmentWidgetState extends State<AppointmentWidget> {
   void _handleEncounterButton() {
     if (isPatient()) {
       PatientEncounterDashboardScreen(
-              id: widget.upcomingData.encounterId.validate())
-          .launch(context);
+        id: widget.upcomingData.encounterId.validate(),
+        callBack: () => widget.refreshCall?.call(),
+      ).launch(context);
     } else {
       EncounterDashboardScreen(
               encounterId: widget.upcomingData.encounterId.validate())
@@ -243,45 +325,6 @@ class _AppointmentWidgetState extends State<AppointmentWidget> {
 
   //endregion
 
-  bool get isEdit {
-    return widget.upcomingData.status.toInt().getStatus() != CheckOutStatus &&
-        widget.upcomingData.status.toInt().getStatus() != CancelledStatus &&
-        widget.upcomingData.status.toInt().getStatus() != CheckInStatus &&
-        (getDateDifference(
-                    widget.upcomingData.appointmentGlobalStartDate.validate()) >
-                0 ||
-            DateFormat(SAVE_DATE_FORMAT).parse(DateTime.now().toString()) ==
-                DateFormat(SAVE_DATE_FORMAT).parse(
-                    widget.upcomingData.appointmentGlobalStartDate.validate()));
-  }
-
-  //region Visible Button conditions
-  bool get showEncounterButton {
-    return (widget.upcomingData.status.toInt() == CheckInStatusInt);
-  }
-
-  bool get showCheckInButton {
-    bool beforeTime = getDateDifference(
-            widget.upcomingData.appointmentGlobalStartDate.validate()) ==
-        0;
-    return ((isDoctor() || isReceptionist()) &&
-        (widget.upcomingData.status.toInt() == BookedStatusInt ||
-            widget.upcomingData.status.toInt() == CheckInStatusInt) &&
-        beforeTime);
-  }
-
-  bool get ifCheckIn {
-    return ((isDoctor() || isReceptionist()) &&
-        widget.upcomingData.status.toInt() == CheckInStatusInt);
-  }
-
-  bool get showReviewButton {
-    return isPatient() &&
-        widget.upcomingData.status.toInt() == CheckOutStatusInt;
-  }
-
-  //endregion
-
   @override
   void setState(fn) {
     if (mounted) super.setState(fn);
@@ -294,7 +337,9 @@ class _AppointmentWidgetState extends State<AppointmentWidget> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Image.asset(ic_appointment, color: Colors.black, fit: BoxFit.cover),
+          Image.asset(ic_appointment,
+              color: appStore.isDarkModeOn ? Colors.white : Colors.black,
+              fit: BoxFit.cover),
           16.height,
           Text(locale.lblChangingStatusFrom,
               style: primaryTextStyle(), textAlign: TextAlign.center),
@@ -342,20 +387,22 @@ class _AppointmentWidgetState extends State<AppointmentWidget> {
     );
   }
 
-  Widget commonAppButton(
-      {Color? color,
-      Color? buttonTextColor,
-      required String buttonText,
-      int? buttonSize,
-      double? topRight,
-      double? topLeft,
-      double? bottomRight,
-      double? bottomLeft,
-      required Function() onTap}) {
+  Widget commonAppButton({
+    Color? color,
+    Color? buttonTextColor,
+    required String buttonText,
+    int? buttonSize,
+    double? topRight,
+    double? topLeft,
+    double? bottomRight,
+    double? bottomLeft,
+    Widget? child,
+    required Function() onTap,
+  }) {
     return Flexible(
       child: AppButton(
         onTap: onTap,
-        padding: EdgeInsets.symmetric(horizontal: 24),
+        padding: EdgeInsets.symmetric(horizontal: 12),
         shapeBorder: RoundedRectangleBorder(
           borderRadius: radiusOnly(
               topRight: topRight ?? 0,
@@ -364,9 +411,11 @@ class _AppointmentWidgetState extends State<AppointmentWidget> {
               bottomLeft: bottomLeft ?? 0),
         ),
         child: FittedBox(
-            child: Text(buttonText,
-                style: boldTextStyle(
-                    color: buttonTextColor ?? white, size: buttonSize ?? 12)),
+            child: child ??
+                Text(buttonText,
+                    style: boldTextStyle(
+                        color: buttonTextColor ?? white,
+                        size: buttonSize ?? 12)),
             fit: BoxFit.none),
         color: color ?? appPrimaryColor,
       ),
@@ -377,33 +426,13 @@ class _AppointmentWidgetState extends State<AppointmentWidget> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (widget.upcomingData.doctorProfileImg.validate().isNotEmpty &&
-            widget.upcomingData.patientProfileImg.validate().isNotEmpty)
-          ImageBorder(src: widget.upcomingData.getProfileImage, height: 40)
-        else
-          GradientBorder(
-            gradient: LinearGradient(
-                colors: [primaryColor, appSecondaryColor],
-                tileMode: TileMode.mirror),
-            strokeWidth: 2,
-            borderRadius: 80,
-            child: PlaceHolderWidget(
-              height: 40,
-              width: 40,
-              shape: BoxShape.circle,
-              alignment: Alignment.center,
-              child: Text(
-                isPatient()
-                    ? widget.upcomingData.doctorName
-                        .validate(value: 'D')[0]
-                        .capitalizeFirstLetter()
-                    : widget.upcomingData.patientName
-                        .validate(value: 'P')[0]
-                        .capitalizeFirstLetter(),
-                style: boldTextStyle(color: Colors.black),
-              ),
-            ),
-          ),
+        ImageBorder(
+          src: widget.upcomingData.getProfileImage,
+          height: 40,
+          nameInitial: isPatient()
+              ? widget.upcomingData.doctorName.validate(value: 'D')[0]
+              : widget.upcomingData.patientName.validate(value: 'P')[0],
+        ),
         16.width,
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -475,6 +504,25 @@ class _AppointmentWidgetState extends State<AppointmentWidget> {
                 bottomLeft: defaultRadius,
                 topRight: (showEncounterButton ||
                         showCheckInButton ||
+                        showReviewButton ||
+                        showGoogleMeet)
+                    ? 0
+                    : defaultRadius,
+                bottomRight: (showEncounterButton ||
+                        showCheckInButton ||
+                        showReviewButton ||
+                        showGoogleMeet)
+                    ? 0
+                    : defaultRadius,
+              ).visible(showViewButton),
+              commonAppButton(
+                buttonText: isPatient() ? locale.lblJoin : locale.lblStart,
+                onTap: _handleTelemedButton,
+                color: telemedColor,
+                topLeft: showViewButton ? 0 : defaultRadius,
+                bottomLeft: showViewButton ? 0 : defaultRadius,
+                topRight: (showEncounterButton ||
+                        showCheckInButton ||
                         showReviewButton)
                     ? 0
                     : defaultRadius,
@@ -483,15 +531,21 @@ class _AppointmentWidgetState extends State<AppointmentWidget> {
                         showReviewButton)
                     ? 0
                     : defaultRadius,
-              ),
+                child: TextIcon(
+                  text: isDoctor() ? locale.lblStart : locale.lblJoin,
+                  suffix: ic_googleMeet.iconImageColored(size: 24),
+                  textStyle: boldTextStyle(size: 12, color: Colors.white),
+                ),
+              ).visible(showGoogleMeet),
               commonAppButton(
                 buttonText: locale.lblEncounter,
                 onTap: _handleEncounterButton,
                 color: appStore.isDarkModeOn
                     ? context.iconColor.withOpacity(0.2)
                     : context.iconColor,
-                topLeft: 0,
-                bottomLeft: 0,
+                topLeft: (showViewButton || showGoogleMeet) ? 0 : defaultRadius,
+                bottomLeft:
+                    (showViewButton || showGoogleMeet) ? 0 : defaultRadius,
                 topRight:
                     (showCheckInButton || showReviewButton) ? 0 : defaultRadius,
                 bottomRight:
@@ -510,8 +564,8 @@ class _AppointmentWidgetState extends State<AppointmentWidget> {
                 buttonText: locale.lblReview,
                 onTap: _handleReviewButton,
                 color: appSecondaryColor,
-                topLeft: 0,
-                bottomLeft: 0,
+                topLeft: showViewButton ? 0 : defaultRadius,
+                bottomLeft: showViewButton ? 0 : defaultRadius,
                 topRight: defaultRadius,
                 bottomRight: defaultRadius,
               ).visible(showReviewButton),
@@ -527,36 +581,43 @@ class _AppointmentWidgetState extends State<AppointmentWidget> {
   @override
   Widget build(BuildContext context) {
     return Slidable(
+      enabled: isEdit || showDelete,
       key: ValueKey(widget.upcomingData),
       endActionPane: ActionPane(
         extentRatio: 0.7,
         motion: ScrollMotion(),
         children: [
-          SlidableAction(
-            onPressed: (BuildContext context) {
-              appointmentWidgetNavigation(context, data: widget.upcomingData)
-                  .then((value) {
-                widget.refreshCall?.call();
-              });
-            },
-            backgroundColor: primaryColor,
-            foregroundColor: Colors.white,
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(defaultRadius),
-                bottomLeft: Radius.circular(defaultRadius)),
-            icon: Icons.edit,
-            label: locale.lblEdit,
-          ).visible(isEdit),
-          SlidableAction(
-            borderRadius: BorderRadius.only(
-                topRight: Radius.circular(defaultRadius),
-                bottomRight: Radius.circular(defaultRadius)),
-            onPressed: deleteAppointmentValue,
-            backgroundColor: Colors.red,
-            foregroundColor: Colors.white,
-            icon: Icons.delete,
-            label: locale.lblDelete,
-          ),
+          if (isEdit)
+            SlidableAction(
+              onPressed: (BuildContext context) {
+                appointmentWidgetNavigation(context, data: widget.upcomingData)
+                    .then((value) {
+                  widget.refreshCall?.call();
+                });
+              },
+              backgroundColor: primaryColor,
+              foregroundColor: Colors.white,
+              borderRadius: showDelete
+                  ? BorderRadius.only(
+                      topLeft: Radius.circular(defaultRadius),
+                      bottomLeft: Radius.circular(defaultRadius))
+                  : BorderRadius.circular(defaultRadius),
+              icon: Icons.edit,
+              label: locale.lblEdit,
+            ),
+          if (showDelete)
+            SlidableAction(
+              borderRadius: isEdit
+                  ? BorderRadius.only(
+                      topRight: Radius.circular(defaultRadius),
+                      bottomRight: Radius.circular(defaultRadius))
+                  : BorderRadius.circular(defaultRadius),
+              onPressed: deleteAppointmentValue,
+              backgroundColor: Colors.red,
+              foregroundColor: Colors.white,
+              icon: Icons.delete,
+              label: locale.lblDelete,
+            ),
         ],
       ),
       child: Container(
@@ -569,9 +630,11 @@ class _AppointmentWidgetState extends State<AppointmentWidget> {
             buildButtonWidget(),
           ],
         ),
-      ).onTap(() {
-        _handleViewButton();
-      }, splashColor: Colors.transparent, highlightColor: Colors.transparent),
+      ).appOnTap(
+        () {
+          if (showViewButton) _handleViewButton();
+        },
+      ),
     );
   }
 }

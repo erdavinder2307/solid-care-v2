@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:solidcare/components/app_loader.dart';
 import 'package:solidcare/main.dart';
 import 'package:nb_utils/nb_utils.dart';
@@ -27,15 +26,13 @@ class Body extends StatelessWidget {
         fit: StackFit.expand,
         children: [
           child,
-          Observer(builder: (context) {
-            if (loadingWidget != null)
-              return loadingWidget.visible(visibleOn ?? false);
-            else
-              return AppLoader(
-                      visibleOn: visibleOn ?? appStore.isLoading,
-                      loaderSize: size)
-                  .center();
-          }),
+          if (loadingWidget != null)
+            loadingWidget.visible(visibleOn ?? false).center()
+          else
+            AppLoader(
+                    visibleOn: visibleOn ?? appStore.isLoading,
+                    loaderSize: size)
+                .center(),
         ],
       ),
     );

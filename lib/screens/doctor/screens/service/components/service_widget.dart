@@ -2,9 +2,9 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:solidcare/components/image_border_component.dart';
-import 'package:solidcare/components/price_widget.dart';
 import 'package:solidcare/components/status_widget.dart';
 import 'package:solidcare/main.dart';
+import 'package:solidcare/model/service_duration_model.dart';
 import 'package:solidcare/model/user_model.dart';
 import 'package:solidcare/utils/colors.dart';
 import 'package:solidcare/utils/common.dart';
@@ -16,6 +16,7 @@ import 'package:solidcare/model/service_model.dart';
 
 class ServiceWidget extends StatelessWidget {
   final ServiceData data;
+  List<DurationModel> durationList = getServiceDuration();
 
   ServiceWidget({required this.data});
 
@@ -49,24 +50,29 @@ class ServiceWidget extends StatelessWidget {
                     ),
                   )
                 : BoxDecoration(
-                    color: lightColors[
-                        Random.secure().nextInt(lightColors.length)],
+                    color: appStore.isDarkModeOn
+                        ? context.cardColor
+                        : lightColors[
+                            Random.secure().nextInt(lightColors.length)],
                     shape: BoxShape.rectangle,
                     borderRadius: radius(),
                   ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (isDoctor()) 12.height,
+                if (isDoctor()) 10.height,
                 if (isReceptionist() || isPatient()) 8.height,
-                Text(data.name.validate().capitalizeEachWord(),
-                    style: boldTextStyle(
-                        size: 16,
-                        color: data.image.validate().isNotEmpty
-                            ? Colors.white
-                            : Colors.black),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis),
+                Marquee(
+                    child: Text(data.name.validate().capitalizeEachWord(),
+                        style: boldTextStyle(
+                            size: 16,
+                            color: data.image.validate().isNotEmpty
+                                ? Colors.white
+                                : appStore.isDarkModeOn
+                                    ? Colors.white
+                                    : Colors.black),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis)),
                 8.height,
                 if ((isReceptionist() || isPatient()) &&
                     data.doctorList.validate().isNotEmpty)
@@ -75,11 +81,15 @@ class ServiceWidget extends StatelessWidget {
                     style: secondaryTextStyle(
                         color: data.image.validate().isNotEmpty
                             ? Colors.white70
-                            : Colors.black54),
+                            : appStore.isDarkModeOn
+                                ? Colors.white70
+                                : Colors.black54),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
-                8.height,
+                if ((isReceptionist() || isPatient()) &&
+                    data.doctorList.validate().isNotEmpty)
+                  8.height,
                 if ((isReceptionist() || isPatient()) &&
                     data.doctorList.validate().isNotEmpty)
                   Row(
@@ -95,101 +105,98 @@ class ServiceWidget extends StatelessWidget {
                               .profileImage
                               .validate();
                           if (data.doctorList.validate().length > 1) {
-                            if (image.isNotEmpty)
-                              return ImageBorder(
-                                height: 30,
-                                width: 30,
-                                src: image,
-                              ).paddingLeft(index == 0 ? 0 : (index) * 20);
-                            else
-                              return GradientBorder(
-                                gradient: LinearGradient(
-                                    colors: [primaryColor, appSecondaryColor],
-                                    tileMode: TileMode.mirror),
-                                strokeWidth: 2,
-                                borderRadius: 30,
-                                child: PlaceHolderWidget(
-                                  shape: BoxShape.circle,
-                                  height: 30,
-                                  width: 30,
-                                  alignment: Alignment.center,
-                                  child: Text(
-                                      userData.displayName
-                                          .validate(value: 'D')[0]
-                                          .capitalizeFirstLetter(),
-                                      style:
-                                          boldTextStyle(color: Colors.black)),
-                                ),
-                              ).paddingLeft(index == 0 ? 0 : (index) * 20);
+                            return ImageBorder(
+                              height: 30,
+                              width: 30,
+                              src: image,
+                              nameInitial:
+                                  userData.displayName.validate(value: 'D')[0],
+                            ).paddingLeft(index == 0 ? 0 : (index) * 20);
                           } else
                             return Wrap(
                               spacing: 4,
                               runSpacing: 4,
                               crossAxisAlignment: WrapCrossAlignment.center,
                               children: [
-                                if (image.isNotEmpty)
-                                  ImageBorder(
-                                    src: image,
-                                    height: 30,
-                                    width: 30,
-                                  ).paddingLeft(index == 0 ? 0 : (index) * 20)
-                                else
-                                  GradientBorder(
-                                    gradient: LinearGradient(colors: [
-                                      primaryColor,
-                                      appSecondaryColor
-                                    ], tileMode: TileMode.mirror),
-                                    strokeWidth: 2,
-                                    borderRadius: 30,
-                                    child: PlaceHolderWidget(
-                                      shape: BoxShape.circle,
-                                      height: 30,
-                                      width: 30,
-                                      alignment: Alignment.center,
-                                      child: Text(
-                                          userData.displayName
-                                              .validate(value: 'D')[0]
-                                              .capitalizeFirstLetter(),
-                                          style: boldTextStyle(
-                                              color: Colors.black)),
-                                    ),
-                                  ),
-                                2.width,
-                                Text(
+                                ImageBorder(
+                                  src: image,
+                                  height: 30,
+                                  width: 30,
+                                  nameInitial: userData.displayName
+                                      .validate(value: 'D')[0],
+                                ).paddingLeft(index == 0 ? 0 : (index) * 20),
+                                FittedBox(
+                                  child: Text(
                                     "Dr. " +
                                         userData.displayName
                                             .validate()
                                             .split(' ')
                                             .first
                                             .capitalizeFirstLetter(),
-                                    style:
-                                        primaryTextStyle(color: Colors.black)),
+                                    style: primaryTextStyle(
+                                        color: appStore.isDarkModeOn
+                                            ? Colors.white
+                                            : Colors.black,
+                                        size: 14),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
                               ],
                             );
                         }),
-                      ),
+                      ).expand(),
                     ],
                   )
                 else
-                  Row(
-                    children: [
-                      PriceWidget(
-                              price: "${data.charges.validate()}",
-                              textSize: 16,
-                              textColor: primaryColor)
-                          .expand(),
-                      if (!data.duration.isEmptyOrNull)
-                        TextIcon(
-                          prefix: ic_timer.iconImage(
-                              color: appSecondaryColor, size: 16),
-                          text: "${data.duration.validate()} min",
-                          textStyle: secondaryTextStyle(
-                              color: data.image.validate().isNotEmpty
-                                  ? Colors.white70
-                                  : Colors.black54),
-                        )
-                    ],
-                  ),
+                  FittedBox(
+                    child: Row(
+                      children: [
+                        RichTextWidget(
+                          list: [
+                            TextSpan(
+                                text: '${appStore.currencyPrefix.validate()} ',
+                                style: data.image.validate().isNotEmpty
+                                    ? secondaryTextStyle(color: Colors.white70)
+                                    : primaryTextStyle(size: 14)),
+                            TextSpan(
+                              text:
+                                  '${data.charges}${appStore.currencyPostfix}',
+                              style: data.image.validate().isNotEmpty
+                                  ? secondaryTextStyle(color: Colors.white70)
+                                  : primaryTextStyle(size: 14),
+                            ),
+                          ],
+                        ),
+                        16.width,
+                        if (data.duration != null &&
+                            data.duration.validate() != '0')
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              ic_timer.iconImage(
+                                  color: appSecondaryColor, size: 16),
+                              2.width,
+                              FittedBox(
+                                child: Text(
+                                  durationList
+                                      .where((element) =>
+                                          element.value ==
+                                          data.duration.toInt())
+                                      .first
+                                      .label
+                                      .validate(),
+                                  style: data.image.validate().isNotEmpty
+                                      ? secondaryTextStyle(
+                                          color: Colors.white70)
+                                      : primaryTextStyle(size: 14),
+                                ),
+                              ),
+                            ],
+                          )
+                      ],
+                    ),
+                  ).paddingTop(3),
               ],
             ).paddingOnly(
                 left: 12, right: 12, top: isDoctor() ? 28 : 0, bottom: 12),
@@ -200,6 +207,7 @@ class ServiceWidget extends StatelessWidget {
             right: 8,
             top: 10,
             child: StatusWidget(
+              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               status: data.status.validate(),
               isServiceActivityStatus: true,
             ),

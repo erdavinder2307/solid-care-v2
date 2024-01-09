@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:solidcare/components/no_data_found_widget.dart';
+import 'package:solidcare/components/view_all_widget.dart';
 import 'package:solidcare/main.dart';
 import 'package:solidcare/model/dashboard_model.dart';
 import 'package:solidcare/model/upcoming_appointment_model.dart';
@@ -18,12 +19,19 @@ class DashboardFragmentAppointmentComponent extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(locale.lblTodaySAppointments, style: boldTextStyle(size: 18)),
-          8.height,
+          ViewAllLabel(
+            label: locale.lblTodaySAppointments,
+            labelSize: 18,
+            list: data.upcomingAppointment.validate(),
+            viewAllShowLimit: 3,
+            onTap: () {
+              doctorAppStore.setBottomNavIndex(1);
+            },
+          ),
           if (data.upcomingAppointment.validate().isNotEmpty)
             AnimatedListView(
               shrinkWrap: true,
-              itemCount: data.upcomingAppointment.validate().length,
+              itemCount: data.upcomingAppointment.validate().take(3).length,
               physics: NeverScrollableScrollPhysics(),
               itemBuilder: (BuildContext context, int index) {
                 UpcomingAppointmentModel value =
@@ -37,7 +45,7 @@ class DashboardFragmentAppointmentComponent extends StatelessWidget {
               },
             )
           else
-            NoDataFoundWidget(text: locale.lblNoAppointmentForToday).center(),
+            NoDataFoundWidget(text: locale.lblNoAppointmentForToday)
         ],
       ),
     );

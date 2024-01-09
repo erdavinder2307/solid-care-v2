@@ -6,7 +6,6 @@ import 'package:solidcare/main.dart';
 import 'package:solidcare/model/base_response.dart';
 import 'package:solidcare/model/clinic_list_model.dart';
 import 'package:solidcare/model/user_model.dart';
-import 'package:solidcare/network/google_repository.dart';
 import 'package:solidcare/network/network_utils.dart';
 import 'package:solidcare/screens/auth/screens/sign_in_screen.dart';
 import 'package:solidcare/utils/cached_value.dart';
@@ -19,7 +18,7 @@ import 'clinic_repository.dart';
 
 Future<UserModel> loginAPI(Map<String, dynamic> req) async {
   UserModel value = UserModel.fromJson(await handleResponse(
-      await buildHttpResponse('jwt-auth/v1/token',
+      await buildHttpResponse(ApiEndPoints.jwtEndPoint,
           request: req, method: HttpMethod.POST)));
   cachedUserData = value;
 
@@ -52,15 +51,13 @@ Future<UserModel> loginAPI(Map<String, dynamic> req) async {
   userStore.setUserMobileNumber(value.mobileNumber.validate(),
       initialize: true);
   userStore.setUserGender(value.gender.validate(), initialize: true);
+  userStore.setUserData(value, initialize: true);
 
-  appStore.setUserProEnabled(value.isKivicareProOnName.validate(),
-      initialize: true);
-
-  getConfigurationAPI();
   if (isReceptionist() || isPatient()) {
     getSelectedClinicAPI(
             clinicId: userStore.userClinicId.validate(), isForLogin: true)
         .then((value) {
+      userStore.setUserClinic(value);
       userStore.setUserClinicImage(value.profileImage.validate(),
           initialize: true);
       userStore.setUserClinicName(value.name.validate(), initialize: true);
@@ -76,41 +73,43 @@ Future<UserModel> loginAPI(Map<String, dynamic> req) async {
       userStore.setUserClinicAddress(clinicAddress, initialize: true);
     });
   }
-  appStore.setLoading(false);
 
   return value;
 }
 
 Future<BaseResponses> changePasswordAPI(Map<String, dynamic> request) async {
   return BaseResponses.fromJson(await handleResponse(await buildHttpResponse(
-      'kivicare/api/v1/user/change-password',
+      '${ApiEndPoints.userEndpoint}/${EndPointKeys.changePwdEndPointKey}',
       request: request,
       method: HttpMethod.POST)));
 }
 
 Future<BaseResponses> deleteAccountPermanently() async {
   return BaseResponses.fromJson(await handleResponse(await buildHttpResponse(
-      'kivicare/api/v1/auth/delete',
+      '${ApiEndPoints.authEndPoint}/${EndPointKeys.deleteEndPointKey}',
       method: HttpMethod.DELETE)));
 }
 
 Future<BaseResponses> logOutApi() async {
-  Map req = {"player_id": appStore.playerId, "logged_out": 1};
-  log(req.toString());
-  await removeKey(PLAYER_ID);
-  OneSignal.shared.disablePush(true);
+  Map req = {
+    ConstantKeys.playerIdKey: appStore.playerId,
+    ConstantKeys.loggedOutKey: 1
+  };
+  log(req);
+
   return BaseResponses.fromJson(await handleResponse(await buildHttpResponse(
-      'kivicare/api/v1/auth/manage-user-player-ids',
+      '${ApiEndPoints.authEndPoint}/${EndPointKeys.managePlayerIdEndPointKey}',
       request: req,
       method: HttpMethod.POST)));
 }
 
 Future<void> logout({bool isTokenExpired = false}) async {
-  if (!isTokenExpired)
+  if (!isTokenExpired) {
     await logOutApi().catchError((e) {
       appStore.setLoading(false);
       throw e;
     });
+  }
 
   await removeKey(TOKEN);
   await removeKey(USER_ID);
@@ -123,23 +122,152 @@ Future<void> logout({bool isTokenExpired = false}) async {
   await removeKey(USER_GENDER);
   await removeKey(USER_ROLE);
   await removeKey(PASSWORD);
+  await removeKey(USER_DATA);
+  await removeKey(PLAYER_ID);
+  appStore.setPlayerId('');
+  OneSignal.User.pushSubscription.optOut();
+  if (isDoctor()) {
+    cachedDoctorAppointment = null;
+    cachedDoctorAppointment = [];
+    cachedDoctorPatient = [];
+  }
+  if (isReceptionist()) {
+    cachedReceptionistAppointment = null;
+    cachedDoctorList = [];
+    cachedClinicPatient = [];
+  }
+  if (isPatient()) {
+    cachedPatientAppointment = [];
+    cachedPatientAppointment = null;
+  }
 
+  OneSignal.logout();
+  await removeKey(SharedPreferenceKey.cachedDashboardDataKey);
+
+  removePermission();
+
+  userStore.setClinicId('');
   appStore.setLoggedIn(false);
   appStore.setLoading(false);
+  paymentMethodList.clear();
+  paymentMethodImages.clear();
+  paymentModeList.clear();
+
   push(SignInScreen(),
       isNewTask: true, pageRouteAnimation: PageRouteAnimation.Fade);
 }
 
+void removePermission() {
+  removeKey(USER_PERMISSION);
+  removeKey(SharedPreferenceKey.solidCareAppointmentAddKey);
+  removeKey(SharedPreferenceKey.solidCareAppointmentDeleteKey);
+  removeKey(SharedPreferenceKey.solidCareAppointmentEditKey);
+  removeKey(SharedPreferenceKey.solidCareAppointmentListKey);
+  removeKey(SharedPreferenceKey.solidCareAppointmentViewKey);
+  removeKey(SharedPreferenceKey.solidCarePatientAppointmentStatusChangeKey);
+  removeKey(SharedPreferenceKey.solidCareAppointmentExportKey);
+  removeKey(SharedPreferenceKey.solidCarePatientBillAddKey);
+  removeKey(SharedPreferenceKey.solidCarePatientBillDeleteKey);
+  removeKey(SharedPreferenceKey.solidCarePatientBillEditKey);
+  removeKey(SharedPreferenceKey.solidCarePatientBillListKey);
+  removeKey(SharedPreferenceKey.solidCarePatientBillExportKey);
+  removeKey(SharedPreferenceKey.solidCarePatientBillViewKey);
+  removeKey(SharedPreferenceKey.solidCareClinicAddKey);
+  removeKey(SharedPreferenceKey.solidCareClinicDeleteKey);
+  removeKey(SharedPreferenceKey.solidCareClinicEditKey);
+  removeKey(SharedPreferenceKey.solidCareClinicListKey);
+  removeKey(SharedPreferenceKey.solidCareClinicProfileKey);
+  removeKey(SharedPreferenceKey.solidCareClinicViewKey);
+  removeKey(SharedPreferenceKey.solidCareMedicalRecordsAddKey);
+  removeKey(SharedPreferenceKey.solidCareMedicalRecordsDeleteKey);
+  removeKey(SharedPreferenceKey.solidCareMedicalRecordsEditKey);
+  removeKey(SharedPreferenceKey.solidCareMedicalRecordsListKey);
+  removeKey(SharedPreferenceKey.solidCareMedicalRecordsViewKey);
+  removeKey(SharedPreferenceKey.solidCareDashboardTotalAppointmentKey);
+  removeKey(SharedPreferenceKey.solidCareDashboardTotalDoctorKey);
+  removeKey(SharedPreferenceKey.solidCareDashboardTotalPatientKey);
+  removeKey(SharedPreferenceKey.solidCareDashboardTotalRevenueKey);
+  removeKey(SharedPreferenceKey.solidCareDashboardTotalTodayAppointmentKey);
+  removeKey(SharedPreferenceKey.solidCareDashboardTotalServiceKey);
+  removeKey(SharedPreferenceKey.solidCareDoctorAddKey);
+  removeKey(SharedPreferenceKey.solidCareDoctorDeleteKey);
+  removeKey(SharedPreferenceKey.solidCareDoctorEditKey);
+  removeKey(SharedPreferenceKey.solidCareDoctorDashboardKey);
+  removeKey(SharedPreferenceKey.solidCareDoctorListKey);
+  removeKey(SharedPreferenceKey.solidCareDoctorViewKey);
+  removeKey(SharedPreferenceKey.solidCareDoctorExportKey);
+  removeKey(SharedPreferenceKey.solidCarePatientEncounterAddKey);
+  removeKey(SharedPreferenceKey.solidCarePatientEncounterDeleteKey);
+  removeKey(SharedPreferenceKey.solidCarePatientEncounterEditKey);
+  removeKey(SharedPreferenceKey.solidCarePatientEncounterExportKey);
+  removeKey(SharedPreferenceKey.solidCarePatientEncounterListKey);
+  removeKey(SharedPreferenceKey.solidCarePatientEncountersKey);
+  removeKey(SharedPreferenceKey.solidCarePatientEncounterViewKey);
+  removeKey(SharedPreferenceKey.solidCareEncountersTemplateAddKey);
+  removeKey(SharedPreferenceKey.solidCareEncountersTemplateDeleteKey);
+  removeKey(SharedPreferenceKey.solidCareEncountersTemplateEditKey);
+  removeKey(SharedPreferenceKey.solidCareEncountersTemplateListKey);
+  removeKey(SharedPreferenceKey.solidCareEncountersTemplateViewKey);
+  removeKey(SharedPreferenceKey.solidCareClinicScheduleKey);
+  removeKey(SharedPreferenceKey.solidCareClinicScheduleAddKey);
+  removeKey(SharedPreferenceKey.solidCareClinicScheduleDeleteKey);
+  removeKey(SharedPreferenceKey.solidCareClinicScheduleEditKey);
+  removeKey(SharedPreferenceKey.solidCareClinicScheduleExportKey);
+  removeKey(SharedPreferenceKey.solidCareDoctorSessionAddKey);
+  removeKey(SharedPreferenceKey.solidCareDoctorSessionEditKey);
+  removeKey(SharedPreferenceKey.solidCareDoctorSessionListKey);
+  removeKey(SharedPreferenceKey.solidCareDoctorSessionDeleteKey);
+  removeKey(SharedPreferenceKey.solidCareDoctorSessionExportKey);
+  removeKey(SharedPreferenceKey.solidCareChangePasswordKey);
+  removeKey(SharedPreferenceKey.solidCarePatientReviewAddKey);
+  removeKey(SharedPreferenceKey.solidCarePatientReviewDeleteKey);
+  removeKey(SharedPreferenceKey.solidCarePatientReviewEditKey);
+  removeKey(SharedPreferenceKey.solidCarePatientReviewGetKey);
+  removeKey(SharedPreferenceKey.solidCareDashboardKey);
+  removeKey(SharedPreferenceKey.solidCarePatientAddKey);
+  removeKey(SharedPreferenceKey.solidCarePatientDeleteKey);
+  removeKey(SharedPreferenceKey.solidCarePatientClinicKey);
+  removeKey(SharedPreferenceKey.solidCarePatientProfileKey);
+  removeKey(SharedPreferenceKey.solidCarePatientEditKey);
+  removeKey(SharedPreferenceKey.solidCarePatientListKey);
+  removeKey(SharedPreferenceKey.solidCarePatientExportKey);
+  removeKey(SharedPreferenceKey.solidCarePatientViewKey);
+  removeKey(SharedPreferenceKey.solidCareReceptionistProfileKey);
+  removeKey(SharedPreferenceKey.solidCarePatientReportKey);
+  removeKey(SharedPreferenceKey.solidCarePatientReportAddKey);
+  removeKey(SharedPreferenceKey.solidCarePatientReportEditKey);
+  removeKey(SharedPreferenceKey.solidCarePatientReportViewKey);
+  removeKey(SharedPreferenceKey.solidCarePatientReportDeleteKey);
+  removeKey(SharedPreferenceKey.solidCarePrescriptionAddKey);
+  removeKey(SharedPreferenceKey.solidCarePrescriptionDeleteKey);
+  removeKey(SharedPreferenceKey.solidCarePrescriptionEditKey);
+  removeKey(SharedPreferenceKey.solidCarePrescriptionViewKey);
+  removeKey(SharedPreferenceKey.solidCarePrescriptionListKey);
+  removeKey(SharedPreferenceKey.solidCarePrescriptionExportKey);
+  removeKey(SharedPreferenceKey.solidCareServiceAddKey);
+  removeKey(SharedPreferenceKey.solidCareServiceDeleteKey);
+  removeKey(SharedPreferenceKey.solidCareServiceEditKey);
+  removeKey(SharedPreferenceKey.solidCareServiceExportKey);
+  removeKey(SharedPreferenceKey.solidCareServiceListKey);
+  removeKey(SharedPreferenceKey.solidCareServiceViewKey);
+  removeKey(SharedPreferenceKey.solidCareStaticDataAddKey);
+  removeKey(SharedPreferenceKey.solidCareStaticDataDeleteKey);
+  removeKey(SharedPreferenceKey.solidCareStaticDataEditKey);
+  removeKey(SharedPreferenceKey.solidCareStaticDataExportKey);
+  removeKey(SharedPreferenceKey.solidCareStaticDataListKey);
+  removeKey(SharedPreferenceKey.solidCareStaticDataViewKey);
+}
+
 Future<UserModel> getSingleUserDetailAPI(int? id) async {
-  return UserModel.fromJson(await (handleResponse(
-      await buildHttpResponse('kivicare/api/v1/user/get-detail?ID=$id'))));
+  return UserModel.fromJson(await (handleResponse(await buildHttpResponse(
+      '${ApiEndPoints.userEndpoint}/${EndPointKeys.getDetailEndPointKey}?${ConstantKeys.capitalIDKey}=$id'))));
 }
 
 //Post API Change
 
 Future<BaseResponses> forgotPasswordAPI(Map<String, dynamic> request) async {
   return BaseResponses.fromJson(await handleResponse(await buildHttpResponse(
-      'kivicare/api/v1/user/forgot-password',
+      '${ApiEndPoints.userEndpoint}/${EndPointKeys.forgetPwdEndPointKey}',
       request: request,
       method: HttpMethod.POST)));
 }
@@ -148,12 +276,12 @@ Future<void> updateProfileAPI(
     {required Map<String, dynamic> data,
     File? profileImage,
     File? doctorSignature}) async {
-  var multiPartRequest =
-      await getMultiPartRequest('kivicare/api/v1/user/profile-update');
+  var multiPartRequest = await getMultiPartRequest(
+      '${ApiEndPoints.userEndpoint}/${EndPointKeys.updateProfileEndPointKey}');
 
   multiPartRequest.fields.addAll(await getMultipartFields(val: data));
 
-  log("Multipart ${multiPartRequest.fields}");
+  log("${ConstantKeys.multiPartRequestKey} ${multiPartRequest.fields}");
   multiPartRequest.headers.addAll(buildHeaderTokens());
 
   if (profileImage != null) {
@@ -188,38 +316,6 @@ Future<void> updateProfileAPI(
     toast(error.toString(), print: true);
     appStore.setLoading(false);
   });
-}
-
-Future<String> addUpdateDoctorDetailsAPI(
-    {required Map<String, dynamic> data}) async {
-  var multiPartRequest =
-      await getMultiPartRequest('kivicare/api/v1/doctor/add-doctor');
-
-  multiPartRequest.fields.addAll(await getMultipartFields(val: data));
-
-  log("Multipart ${jsonEncode(multiPartRequest.fields)}");
-
-  multiPartRequest.headers.addAll(buildHeaderTokens());
-
-  appStore.setLoading(true);
-  String msg = '';
-
-  await sendMultiPartRequest(
-    multiPartRequest,
-    onSuccess: (temp) async {
-      appStore.setLoading(false);
-      log("Response: $temp");
-      UserModel data = UserModel.fromJson(temp['data']);
-      cachedUserData = data;
-
-      msg = temp['message'];
-    },
-    onError: (error) {
-      msg = error;
-      return error;
-    },
-  );
-  return msg;
 }
 
 //region CommonFunctions

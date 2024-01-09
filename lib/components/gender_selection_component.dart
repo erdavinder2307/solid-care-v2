@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:solidcare/main.dart';
 import 'package:solidcare/model/gender_model.dart';
 import 'package:solidcare/utils/colors.dart';
+import 'package:solidcare/utils/extensions/widget_extentions.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class GenderSelectionComponent extends StatefulWidget {
@@ -110,17 +111,17 @@ class _GenderSelectionComponentState extends State<GenderSelectionComponent> {
                           .flexible(),
                     ],
                   ).paddingBottom(4).center(),
-                ).onTap(() {
-                  if (isSelected) {
-                    selectedGender = -1;
-                  } else {
-                    widget.onTap.call(genderList[index].value.validate());
-                    selectedGender = index;
-                  }
-                  setState(() {});
-                },
-                    borderRadius:
-                        BorderRadius.circular(defaultRadius)).paddingRight(16);
+                ).appOnTap(
+                  () {
+                    if (isSelected) {
+                      selectedGender = -1;
+                    } else {
+                      widget.onTap.call(genderList[index].value.validate());
+                      selectedGender = index;
+                    }
+                    setState(() {});
+                  },
+                ).paddingRight(16);
               },
             ),
           ),

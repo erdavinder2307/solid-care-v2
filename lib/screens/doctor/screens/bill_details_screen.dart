@@ -4,8 +4,11 @@ import 'package:solidcare/components/price_widget.dart';
 import 'package:solidcare/components/status_widget.dart';
 import 'package:solidcare/main.dart';
 import 'package:solidcare/model/patient_bill_model.dart';
+import 'package:solidcare/model/tax_model.dart';
 import 'package:solidcare/network/bill_repository.dart';
 import 'package:solidcare/utils/app_common.dart';
+import 'package:solidcare/utils/colors.dart';
+import 'package:solidcare/utils/constants.dart';
 
 import 'package:nb_utils/nb_utils.dart';
 
@@ -13,7 +16,9 @@ class BillDetailsScreen extends StatefulWidget {
   final int? encounterId;
   final int? billId;
 
-  BillDetailsScreen({this.encounterId, this.billId});
+  final VoidCallback? callBack;
+
+  BillDetailsScreen({this.encounterId, this.billId, this.callBack});
 
   @override
   _BillDetailsScreenState createState() => _BillDetailsScreenState();
@@ -21,6 +26,9 @@ class BillDetailsScreen extends StatefulWidget {
 
 class _BillDetailsScreenState extends State<BillDetailsScreen> {
   Future<PatientBillModule?>? future;
+  PatientBillModule? billDetail;
+
+  TaxModel? taxData;
 
   List<String> list = [
     locale.lblTotal,
@@ -35,13 +43,64 @@ class _BillDetailsScreenState extends State<BillDetailsScreen> {
   }
 
   init() async {
-    future = getBillDetailsAPI(encounterId: widget.encounterId)?.then((value) {
+    future = getBillDetailsAPI(encounterId: widget.encounterId).then((value) {
       appStore.setLoading(false);
+      billDetail = value;
+      getTaxDataApi();
+      setState(() {});
       return value;
     }).catchError((e) {
       appStore.setLoading(false);
       toast(e.toString());
       throw e;
+    });
+  }
+
+  void getTaxDataApi() {
+    Map<String, dynamic> request = {
+      ConstantKeys.doctorIdKey: billDetail?.patientEncounter?.doctorId,
+      ConstantKeys.clinicIdKey: billDetail?.patientEncounter?.clinicId,
+    };
+
+    List<ServiceRequestModel> selectedServiceRequest = [];
+
+    request.putIfAbsent(
+        ConstantKeys.visitTypeKey, () => selectedServiceRequest);
+    billDetail?.billItems
+        .validate()
+        .validate()
+        .forEachIndexed((element, index) {
+      selectedServiceRequest.add(ServiceRequestModel(
+          serviceId: element.mappingTableId,
+          quantity: element.qty.validate().toInt()));
+    });
+
+    request.putIfAbsent(
+        ConstantKeys.visitTypeKey, () => selectedServiceRequest);
+    log('Request : $request');
+    appStore.setLoading(true);
+    getTaxData(request).then((data) {
+      taxData = data;
+      setState(() {});
+
+      appStore.setLoading(false);
+    }).catchError((e) {
+      appStore.setLoading(false);
+      toast(e.toString());
+      throw e;
+    });
+  }
+
+  Future<void> deleteBill() async {
+    appStore.setLoading(true);
+    deleteBillApi(widget.billId.toString()).then((value) {
+      toast(value.message);
+      widget.callBack?.call();
+      appStore.setLoading(false);
+      finish(context);
+    }).catchError((e) {
+      appStore.setLoading(false);
+      toast(e.toString());
     });
   }
 
@@ -82,77 +141,182 @@ class _BillDetailsScreenState extends State<BillDetailsScreen> {
                 children: [
                   Text(locale.lblClinicDetails.toUpperCase(),
                       style: boldTextStyle(size: 16)),
-                  Divider(color: viewLineColor),
+                  Divider(color: viewLineColor, height: 24),
                   clinicDetails(patientBillData: snap.data!),
-                  Divider(color: viewLineColor),
+                  Divider(color: viewLineColor, height: 24),
                   16.height,
                   Text(locale.lblPatientDetails.toUpperCase(),
                       style: boldTextStyle(size: 16)),
-                  Divider(color: viewLineColor),
+                  Divider(color: viewLineColor, height: 24),
                   if (snap.data != null)
                     patientDetails(patientBillData: snap.data!),
-                  Divider(color: viewLineColor),
+                  Divider(color: viewLineColor, height: 24),
                   16.height,
                   Text(locale.lblServices.toUpperCase(),
                       style: boldTextStyle(size: 16)),
-                  Divider(color: viewLineColor),
-                  servicesDetails(patientBillData: snap.data!)
-                      .paddingBottom(200),
+                  Divider(color: viewLineColor, height: 24),
+                  servicesDetails(patientBillData: snap.data!),
+                  16.height,
                 ],
               ),
               Positioned(
-                right: 0,
-                left: 0,
-                bottom: 0,
-                child: Container(
-                  decoration: boxDecorationDefault(
-                      borderRadius: radiusOnly(
-                          topLeft: defaultRadius, topRight: defaultRadius),
-                      color: context.cardColor),
-                  child: Table(
-                    children: <TableRow>[
-                      TableRow(
-                        children: [
-                          Text(locale.lblTotal,
-                                  style: boldTextStyle(size: 12),
-                                  textAlign: TextAlign.start)
-                              .paddingSymmetric(vertical: 8),
-                          PriceWidget(
-                            price: snap.data!.totalAmount.validate(),
-                            textStyle: boldTextStyle(size: 12),
-                            textAlign: TextAlign.end,
-                          ).paddingSymmetric(vertical: 8),
-                        ],
-                      ),
-                      TableRow(
-                        children: [
-                          Text(locale.lblDiscount,
-                                  style: boldTextStyle(size: 12),
-                                  textAlign: TextAlign.start)
-                              .paddingSymmetric(vertical: 8),
-                          PriceWidget(
-                            price: snap.data!.discount.validate(),
-                            textStyle: boldTextStyle(size: 12),
-                            textAlign: TextAlign.end,
-                          ).paddingSymmetric(vertical: 8),
-                        ],
-                      ),
-                      TableRow(
-                        children: [
-                          Text(locale.lblAmountDue,
-                                  style: boldTextStyle(size: 12),
-                                  textAlign: TextAlign.start)
-                              .paddingSymmetric(vertical: 8),
-                          PriceWidget(
-                            price: snap.data!.actualAmount.validate(),
-                            textStyle: boldTextStyle(size: 12),
-                            textAlign: TextAlign.end,
-                          ).paddingSymmetric(vertical: 8),
-                        ],
-                      ),
-                    ],
-                  ).paddingAll(16),
+                child: DottedBorderWidget(
+                  color: appPrimaryColor,
+                  gap: 3,
+                  radius: 8,
+                  strokeWidth: 1,
+                  child: Container(
+                    decoration: boxDecorationWithRoundedCorners(
+                        backgroundColor: context.scaffoldBackgroundColor),
+                    padding: EdgeInsets.symmetric(horizontal: 16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Text(locale.lblPrice + ' : ',
+                                    style: secondaryTextStyle(size: 12),
+                                    textAlign: TextAlign.start)
+                                .paddingSymmetric(vertical: 4)
+                                .expand(),
+                            FittedBox(
+                              child: Text(
+                                '${appStore.currencyPrefix.validate(value: appStore.currency.validate())}${snap.data!.totalAmount.validate().toDouble().toStringAsFixed(2)}${appStore.currencyPostfix.validate(value: '')}',
+                                textAlign: TextAlign.end,
+                                style: primaryTextStyle(size: 12),
+                              ),
+                            )
+                          ],
+                        ),
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Text(locale.lblDiscount + ' :  ',
+                                    style: secondaryTextStyle(size: 12),
+                                    textAlign: TextAlign.start)
+                                .paddingSymmetric(vertical: 4)
+                                .expand(),
+                            FittedBox(
+                              child: Text(
+                                ' ${appStore.currencyPrefix.validate(value: appStore.currency.validate())}${snap.data!.discount.validate().toDouble().toStringAsFixed(2)}${appStore.currencyPostfix.validate(value: '')}',
+                                textAlign: TextAlign.end,
+                                style: primaryTextStyle(size: 12),
+                              ),
+                            )
+                          ],
+                        ),
+                        if (taxData != null)
+                          Divider(height: 8, color: context.dividerColor),
+                        if (taxData != null)
+                          Row(
+                            children: [
+                              Text(locale.lblSubTotal + " : ",
+                                      style: secondaryTextStyle(size: 12),
+                                      textAlign: TextAlign.start)
+                                  .paddingSymmetric(vertical: 4)
+                                  .expand(),
+                              FittedBox(
+                                child: PriceWidget(
+                                  price:
+                                      '${(snap.data!.totalAmount.validate().toDouble() - snap.data!.discount.validate().toDouble()).toStringAsFixed(2)}',
+                                  textStyle: primaryTextStyle(size: 12),
+                                ),
+                              )
+                            ],
+                          ),
+                        if (taxData != null &&
+                            taxData!.taxList.validate().isNotEmpty)
+                          Divider(height: 8, color: context.dividerColor),
+                        if (taxData != null &&
+                            taxData!.taxList.validate().isNotEmpty)
+                          Row(
+                            children: [
+                              Text(locale.lblTax,
+                                      style: boldTextStyle(size: 12))
+                                  .expand(),
+                              16.width,
+                              Text(
+                                locale.lblTaxRate,
+                                style: boldTextStyle(size: 12),
+                                textAlign: TextAlign.center,
+                              ).expand(flex: 2),
+                              16.width,
+                              Text(
+                                locale.lblCharges,
+                                style: boldTextStyle(size: 12),
+                                textAlign: TextAlign.end,
+                              ).expand(),
+                            ],
+                          ),
+                        if (taxData != null &&
+                            taxData!.taxList.validate().isNotEmpty)
+                          6.height,
+                        if (taxData != null &&
+                            taxData!.taxList.validate().isNotEmpty)
+                          ...taxData!.taxList.validate().map<Widget>((e) {
+                            return Row(
+                              children: [
+                                Text(
+                                        e.taxName.validate().replaceAll(
+                                            RegExp(r'[^a-zA-Z]'), ''),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: secondaryTextStyle(size: 12))
+                                    .expand(),
+                                if (e.taxName.validate().contains('%'))
+                                  Text(
+                                    e.taxRate
+                                        .validate()
+                                        .toString()
+                                        .suffixText(value: '%'),
+                                    style: primaryTextStyle(size: 12),
+                                    textAlign: TextAlign.center,
+                                  ).expand(flex: 2)
+                                else
+                                  PriceWidget(
+                                    price:
+                                        e.taxRate.validate().toStringAsFixed(2),
+                                    textStyle: primaryTextStyle(size: 12),
+                                    textAlign: TextAlign.center,
+                                  ).paddingLeft(4).expand(flex: 2),
+                                PriceWidget(
+                                  price:
+                                      e.charges.validate().toStringAsFixed(2),
+                                  textStyle: primaryTextStyle(size: 12),
+                                  textAlign: TextAlign.end,
+                                ).paddingLeft(4).expand(),
+                              ],
+                            );
+                          }).toList(),
+                        Divider(height: 8, color: context.dividerColor),
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Text(locale.lblTotal + ' : ',
+                                    style: secondaryTextStyle(size: 12),
+                                    textAlign: TextAlign.end)
+                                .paddingSymmetric(vertical: 4)
+                                .expand(flex: 5),
+                            FittedBox(
+                              child: Text(
+                                '${appStore.currencyPrefix.validate(value: appStore.currency.validate())}${snap.data!.actualAmount.validate().toDouble().toStringAsFixed(2)}${appStore.currencyPostfix.validate(value: '')}',
+                                textAlign: TextAlign.end,
+                                style: boldTextStyle(size: 12),
+                              ),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
                 ),
+                bottom: 16,
+                right: 16,
+                left: 16,
               )
             ],
           );
@@ -171,8 +335,9 @@ class _BillDetailsScreenState extends State<BillDetailsScreen> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('${patientBillData.clinic!.name.validate()}',
-                    style: boldTextStyle()),
+                FittedBox(
+                    child: Text('${patientBillData.clinic!.name.validate()}',
+                        style: boldTextStyle())),
                 4.height,
                 RichTextWidget(
                   list: [
@@ -208,8 +373,9 @@ class _BillDetailsScreenState extends State<BillDetailsScreen> {
                 Text('${patientBillData.clinic!.country.validate()}',
                     style: primaryTextStyle(size: 14)),
                 2.height,
-                Text('${patientBillData.clinic!.email.validate()} ',
-                    style: primaryTextStyle(size: 14)),
+                FittedBox(
+                    child: Text('${patientBillData.clinic!.email.validate()} ',
+                        style: primaryTextStyle(size: 14))),
                 2.height,
                 Row(
                   mainAxisSize: MainAxisSize.min,
@@ -272,6 +438,7 @@ class _BillDetailsScreenState extends State<BillDetailsScreen> {
 
   Widget servicesDetails({required PatientBillModule patientBillData}) {
     return SingleChildScrollView(
+      padding: EdgeInsets.only(bottom: 120),
       child: Column(
         children: [
           Container(

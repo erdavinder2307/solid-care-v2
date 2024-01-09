@@ -1,7 +1,5 @@
 // ignore_for_file: unused_import
 
-import 'dart:ffi';
-
 import 'package:nb_utils/nb_utils.dart';
 
 class RestrictAppointmentModel {

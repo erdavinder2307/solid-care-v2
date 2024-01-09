@@ -1,3 +1,4 @@
+
 import 'clinic_list_model.dart';
 
 class PatientBillModule {
@@ -127,11 +128,16 @@ class BillItem {
   String? billId;
   String? id;
   String? itemId;
+
+  String? mappingTableId;
+
   String? label;
   String? price;
   String? qty;
 
-  BillItem({this.billId, this.id, this.itemId, this.label, this.price, this.qty});
+  String? serviceId;
+
+  BillItem({this.billId, this.mappingTableId, this.id, this.serviceId, this.itemId, this.label, this.price, this.qty});
 
   factory BillItem.fromJson(Map<String, dynamic> json) {
     return BillItem(
@@ -140,7 +146,9 @@ class BillItem {
       price: json['price'],
       qty: json['qty'],
       itemId: json['item_id'],
+      serviceId: json['item_id'],
       label: json['label'],
+      mappingTableId: json['mapping_table_id'],
     );
   }
 

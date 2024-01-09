@@ -13,13 +13,19 @@ Widget stepCountWidget(
     {String? name,
     int? totalCount,
     int? currentCount,
-    double percentage = 0.33}) {
+    double percentage = 0.33,
+    bool showSteps = true}) {
   return Row(
     children: [
-      Text(name.validate(), style: boldTextStyle(size: titleTextSize)).expand(),
-      16.width,
-      StepProgressIndicator(
-          stepTxt: "$currentCount/$totalCount", percentage: percentage),
+      Text(
+        name.validate(),
+        style: boldTextStyle(size: titleTextSize),
+        textAlign: showSteps ? TextAlign.start : TextAlign.center,
+      ).expand(),
+      if (showSteps) 16.width,
+      if (showSteps)
+        StepProgressIndicator(
+            stepTxt: "$currentCount/$totalCount", percentage: percentage),
     ],
   );
 }
@@ -29,26 +35,37 @@ Future<void> appointmentWidgetNavigation(BuildContext context,
   if (data == null) {
     if (isDoctor()) {
       if (isProEnabled()) {
-        Step1ClinicSelectionScreen().launch(context);
+        Step1ClinicSelectionScreen().launch(context,
+            pageRouteAnimation: pageAnimation, duration: pageAnimationDuration);
       } else {
         Step3FinalSelectionScreen(
           clinicId: userStore.userClinicId.toInt(),
-        ).launch(context).then((value) {});
+          doctorId: userStore.userId,
+        )
+            .launch(context,
+                pageRouteAnimation: pageAnimation,
+                duration: pageAnimationDuration)
+            .then((value) {});
       }
     } else if (isReceptionist()) {
       Step2DoctorSelectionScreen(
         clinicId: userStore.userClinicId.toInt(),
         isForAppointment: true,
-      ).launch(context);
+      ).launch(context,
+          pageRouteAnimation: pageAnimation, duration: pageAnimationDuration);
     } else if (isPatient()) {
-      Step1ClinicSelectionScreen().launch(context);
+      Step1ClinicSelectionScreen().launch(context,
+          pageRouteAnimation: pageAnimation, duration: pageAnimationDuration);
     }
   } else {
     Step3FinalSelectionScreen(
       clinicId: data.clinicId.toInt(),
       doctorId: data.doctorId.validate().toInt(),
       data: data,
-    ).launch(context).then((value) {});
+    )
+        .launch(context,
+            pageRouteAnimation: pageAnimation, duration: pageAnimationDuration)
+        .then((value) {});
   }
 }
 
@@ -57,7 +74,10 @@ Future<void> doctorNavigation(BuildContext context,
   Step3FinalSelectionScreen(
     clinicId: clinicId,
     doctorId: doctorId,
-  ).launch(context).then((value) {});
+  )
+      .launch(context,
+          pageRouteAnimation: pageAnimation, duration: pageAnimationDuration)
+      .then((value) {});
 }
 
 Future<void> clinicNavigation(BuildContext context, {int? clinicId}) async {
@@ -66,12 +86,14 @@ Future<void> clinicNavigation(BuildContext context, {int? clinicId}) async {
       Step3FinalSelectionScreen(
         clinicId: clinicId,
         doctorId: userStore.userId.validate(),
-      ).launch(context);
+      ).launch(context,
+          pageRouteAnimation: pageAnimation, duration: pageAnimationDuration);
     }
   } else if (isPatient()) {
     Step2DoctorSelectionScreen(
       clinicId: clinicId,
       isForAppointment: true,
-    ).launch(context);
+    ).launch(context,
+        pageRouteAnimation: pageAnimation, duration: pageAnimationDuration);
   }
 }

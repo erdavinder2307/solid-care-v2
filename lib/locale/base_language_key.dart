@@ -3,6 +3,74 @@ import 'package:flutter/material.dart';
 abstract class BaseLanguage {
   static BaseLanguage of(BuildContext context) =>
       Localizations.of<BaseLanguage>(context, BaseLanguage)!;
+
+  String get lblBill;
+  String get lblStripeTestCredential;
+  String get lblTodayIsHoliday;
+  String get lblTotalTax;
+  String get lblStart;
+
+  String get lblJoin;
+  String get lblTotalDoctors;
+  String get lblTax;
+
+  String get lblTaxRate;
+  String get lblSubTotal;
+
+  String get lblThisServiceAlreadyExistInClinic;
+  String get lblPleaseSelectPayment;
+  String get lblChargesIsNegative;
+  String get lblServiceCategoryIsRequired;
+  String get lblServiceNameIsRequired;
+
+  String get lblDurationIsRequired;
+
+  String get lblChargesIsRequired;
+
+  String get lblNoLatestAppointmentFound;
+
+  String get lblNoPendingAppointmentFound;
+
+  String get lblNoCompletedAppointmentFound;
+
+  String get lblNoCancelledAppointmentFound;
+
+  String get clinicIdRequired;
+
+  String get roleIsRequired;
+
+  String get confirmPasswordIsRequired;
+
+  String get passwordIsRequired;
+
+  String get contactNumberIsRequired;
+  String get lblSwipeLeftToEdit;
+  String get lblNoEncounterFoundAtYourClinic;
+
+  String get lblAvailableAtClinics;
+
+  String get lblClinicsSelected;
+
+  String get lblClinicsAvailable;
+
+  String get lblSelectRole;
+
+  String get lblPwdDoesNotMatch;
+
+  String get lblSelectPaymentMethod;
+
+  String get lblAmount;
+
+  String get lblPaymentId;
+
+  String get lblPaymentMethod;
+
+  String get lblVPA;
+
+  String get lblCardId;
+
+  String get lblTransactionId;
+
   String get lblReportUpdatedSuccessfully;
 
   String get lblNoPrescriptionFound;
@@ -225,7 +293,7 @@ abstract class BaseLanguage {
 
   String get lblClickOnThatAndScanItFromTheApp;
 
-  String get lblEnjoyTheFlawlessKivicareSystemWithEase;
+  String get lblEnjoyTheFlawlessSolidcareSystemWithEase;
 
   String get lblRemoveImage;
 

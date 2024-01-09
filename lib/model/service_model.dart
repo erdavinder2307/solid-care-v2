@@ -43,7 +43,7 @@ class ServiceData {
   String? status;
   bool? isTelemed;
   String? displayName;
-  String? doctorProfileImage;
+  String? profileImage;
   String? clinicName;
   String? clinicId;
 
@@ -78,7 +78,7 @@ class ServiceData {
     this.label,
     this.isTelemed,
     this.displayName,
-    this.doctorProfileImage,
+    this.profileImage,
     this.imageFile,
   });
 
@@ -93,7 +93,7 @@ class ServiceData {
         userId: json['user_id'],
         duration: json['duration'],
         id: json['id'],
-        doctorProfileImage: json['profile_Image'],
+        profileImage: json['profile_Image'],
         image: json['image'],
         isTelemed: json['is_telemed'],
         mappingTableId: json['mapping_table_id'],
@@ -133,10 +133,12 @@ class ServiceData {
     data['service_id'] = this.serviceId;
     data['status'] = this.status;
     data['is_telemed'] = this.isTelemed;
-    data['profile_image'] = this.doctorProfileImage;
+    data['profile_image'] = this.profileImage;
     data['type'] = this.type;
     data['label'] = this.label;
     data['display_name'] = this.displayName;
+    data['clini_id'] = this.clinicId;
+    data['clinic_name'] = this.clinicName;
 
     //data['extra'] = this.extra!.toJson();
 

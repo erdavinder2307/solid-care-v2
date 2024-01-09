@@ -15,6 +15,7 @@ import 'package:solidcare/utils/colors.dart';
 import 'package:solidcare/utils/common.dart';
 import 'package:solidcare/utils/constants.dart';
 import 'package:solidcare/utils/extensions/string_extensions.dart';
+import 'package:solidcare/utils/extensions/widget_extentions.dart';
 import 'package:solidcare/utils/images.dart';
 import 'package:nb_utils/nb_utils.dart';
 
@@ -52,6 +53,7 @@ class _HolidayScreenState extends State<HolidayScreen> {
 
   @override
   void dispose() {
+    getDisposeStatusBarColor();
     super.dispose();
   }
 
@@ -62,121 +64,132 @@ class _HolidayScreenState extends State<HolidayScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: appBarWidget(locale.lblHolidays,
-          textColor: Colors.white,
-          systemUiOverlayStyle: defaultSystemUiOverlayStyle(context)),
-      body: InternetConnectivityWidget(
-        retryCallback: () async {
-          await 2.seconds.delay;
-          setState(() {});
-        },
-        child: Stack(
-          children: [
-            SnapHelperWidget<HolidayModel>(
-              future: future,
-              loadingWidget: HolidayShimmerScreen(),
-              errorWidget: ErrorStateWidget(),
-              errorBuilder: (error) {
-                return NoDataWidget(
-                  imageWidget: Image.asset(ic_somethingWentWrong,
-                      height: 180, width: 180),
-                  title: locale.lblSomethingWentWrong,
-                ).center();
-              },
-              onSuccess: (snap) {
-                if (snap.holidayData.validate().isEmpty)
-                  return EmptyStateWidget(
-                    emptyWidgetTitle: locale.lblNo +
-                        " " +
-                        locale.lblHolidays +
-                        " " +
-                        locale.lblSchedule.suffixText(value: 'd'),
+    return Observer(builder: (context) {
+      return Scaffold(
+        appBar: appBarWidget(locale.lblHolidays,
+            textColor: Colors.white,
+            systemUiOverlayStyle: defaultSystemUiOverlayStyle(context)),
+        body: InternetConnectivityWidget(
+          retryCallback: () async {
+            await 2.seconds.delay;
+            setState(() {});
+          },
+          child: Stack(
+            children: [
+              SnapHelperWidget<HolidayModel>(
+                future: future,
+                loadingWidget: HolidayShimmerScreen(),
+                errorWidget: ErrorStateWidget(),
+                errorBuilder: (error) {
+                  return NoDataWidget(
+                    imageWidget: Image.asset(ic_somethingWentWrong,
+                        height: 180, width: 180),
+                    title: locale.lblSomethingWentWrong,
                   ).center();
-                return AnimatedScrollView(
-                  padding: EdgeInsets.fromLTRB(16, 16, 16, 80),
-                  disposeScrollController: true,
-                  listAnimationType: ListAnimationType.None,
-                  physics: AlwaysScrollableScrollPhysics(),
-                  slideConfiguration: SlideConfiguration(verticalOffset: 400),
-                  onSwipeRefresh: () async {
-                    init();
-                    return await 2.seconds.delay;
-                  },
-                  children: [
-                    Text('${locale.lblNote} : ${locale.lblHolidayTapMsg}',
-                        style: secondaryTextStyle(
-                            size: 10, color: appSecondaryColor)),
-                    8.height,
-                    AnimatedWrap(
-                      spacing: 16,
-                      runSpacing: 16,
-                      listAnimationType: listAnimationType,
-                      children: snap.holidayData.validate().map(
-                        (holidayData) {
-                          return HolidayWidget(data: holidayData).onTap(
-                            splashColor: Colors.transparent,
-                            highlightColor: Colors.transparent,
-                            () async {
-                              bool isPending = getDateDifference(
-                                      holidayData.holidayEndDate.validate()) <
-                                  0;
+                },
+                onSuccess: (snap) {
+                  if (snap.holidayData.validate().isEmpty)
+                    return EmptyStateWidget(
+                      emptyWidgetTitle: locale.lblNo +
+                          " " +
+                          locale.lblHolidays +
+                          " " +
+                          locale.lblSchedule.suffixText(value: 'd'),
+                    ).center();
+                  return AnimatedScrollView(
+                    padding: EdgeInsets.fromLTRB(16, 16, 16, 80),
+                    disposeScrollController: true,
+                    listAnimationType: ListAnimationType.None,
+                    physics: AlwaysScrollableScrollPhysics(),
+                    slideConfiguration: SlideConfiguration(verticalOffset: 400),
+                    onSwipeRefresh: () async {
+                      init();
+                      return await 2.seconds.delay;
+                    },
+                    children: [
+                      if (isVisible(
+                          SharedPreferenceKey.solidCareClinicScheduleEditKey))
+                        Text('${locale.lblNote} : ${locale.lblHolidayTapMsg}',
+                            style: secondaryTextStyle(
+                                size: 10, color: appSecondaryColor)),
+                      if (isVisible(
+                          SharedPreferenceKey.solidCareClinicScheduleEditKey))
+                        8.height,
+                      AnimatedWrap(
+                        spacing: 16,
+                        runSpacing: 16,
+                        listAnimationType: listAnimationType,
+                        children: snap.holidayData.validate().map(
+                          (holidayData) {
+                            return HolidayWidget(data: holidayData).appOnTap(
+                              () async {
+                                if (isVisible(SharedPreferenceKey
+                                    .solidCareClinicScheduleEditKey)) {
+                                  List<DateTime> dates =
+                                      getDatesBetweenTwoDates(
+                                          DateFormat(SAVE_DATE_FORMAT).parse(
+                                              holidayData.holidayStartDate
+                                                  .validate()),
+                                          DateFormat(SAVE_DATE_FORMAT).parse(
+                                              holidayData.holidayEndDate
+                                                  .validate()));
 
-                              List<DateTime> dates = getDatesBetweenTwoDates(
-                                  DateFormat(SAVE_DATE_FORMAT).parse(
-                                      holidayData.holidayStartDate.validate()),
-                                  DateFormat(SAVE_DATE_FORMAT).parse(
-                                      holidayData.holidayEndDate.validate()));
-                              bool isOnLeave = dates.contains(
-                                  DateFormat(SAVE_DATE_FORMAT)
-                                      .parse(DateTime.now().toString()));
-
-                              if (isOnLeave || !isPending) {
-                                toast(locale.lblEditHolidayRestriction);
-                              }
-
-                              if (isPending && !isOnLeave)
-                                await AddHolidayScreen(holidayData: holidayData)
-                                    .launch(context,
-                                        pageRouteAnimation:
-                                            PageRouteAnimation.Slide)
-                                    .then((value) {
-                                  init(showLoader: true);
-                                });
-                            },
-                          );
-                        },
-                      ).toList(),
-                    ),
-                  ],
-                );
-              },
-            ),
-            Observer(
-              builder: (context) =>
-                  LoaderWidget().center().visible(appStore.isLoading),
-            )
-          ],
+                                  bool isPending = getDateDifference(holidayData
+                                          .holidayStartDate
+                                          .validate()) <=
+                                      0;
+                                  String today = DateFormat(SAVE_DATE_FORMAT)
+                                      .format(DateTime.now());
+                                  bool isOnLeave = dates
+                                      .map((date) =>
+                                          DateFormat(SAVE_DATE_FORMAT)
+                                              .format(date))
+                                      .contains(today);
+                                  if (isPending || isOnLeave)
+                                    await AddHolidayScreen(
+                                            holidayData: holidayData)
+                                        .launch(context,
+                                            pageRouteAnimation: pageAnimation,
+                                            duration: pageAnimationDuration)
+                                        .then((value) {
+                                      if (value ?? false)
+                                        init(showLoader: true);
+                                    });
+                                  else
+                                    toast(locale.lblEditHolidayRestriction);
+                                }
+                              },
+                            );
+                          },
+                        ).toList(),
+                      ),
+                    ],
+                  );
+                },
+              ),
+              LoaderWidget().center().visible(appStore.isLoading)
+            ],
+          ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () async {
-          if (appStore.isConnectedToInternet)
-            await AddHolidayScreen()
-                .launch(context, pageRouteAnimation: PageRouteAnimation.Slide)
-                .then((value) {
-              if (value != null) {
-                if (value) {
+        floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.add),
+          onPressed: () async {
+            if (appStore.isConnectedToInternet)
+              await AddHolidayScreen()
+                  .launch(context,
+                      pageRouteAnimation: pageAnimation,
+                      duration: pageAnimationDuration)
+                  .then((value) {
+                if (value ?? false) {
                   init(showLoader: true);
                 }
-              }
-            });
-          else {
-            toast(locale.lblNoInternetMsg);
-          }
-        },
-      ),
-    );
+              });
+            else {
+              toast(locale.lblNoInternetMsg);
+            }
+          },
+        ).visible(isVisible(SharedPreferenceKey.solidCareClinicScheduleAddKey)),
+      );
+    });
   }
 }

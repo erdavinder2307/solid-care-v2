@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:solidcare/components/body_widget.dart';
 import 'package:solidcare/components/loader_widget.dart';
 import 'package:solidcare/components/status_widget.dart';
 import 'package:solidcare/main.dart';
@@ -11,6 +10,7 @@ import 'package:solidcare/model/encounter_model.dart';
 import 'package:solidcare/network/dashboard_repository.dart';
 import 'package:solidcare/network/encounter_repository.dart';
 import 'package:solidcare/screens/doctor/screens/generate_bill_screen.dart';
+import 'package:solidcare/screens/encounter/component/expandable_encounter_component.dart';
 import 'package:solidcare/utils/app_common.dart';
 import 'package:solidcare/utils/colors.dart';
 import 'package:solidcare/utils/common.dart';
@@ -127,7 +127,9 @@ class _EncounterDashboardScreenState extends State<EncounterDashboardScreen> {
         );
       } else {
         await GenerateBillScreen(data: encounterData)
-            .launch(context)
+            .launch(context,
+                pageRouteAnimation: pageAnimation,
+                duration: pageAnimationDuration)
             .then((value) {
           if (value != null) {
             if (value == "paid") {
@@ -301,67 +303,66 @@ class _EncounterDashboardScreenState extends State<EncounterDashboardScreen> {
                         12.height,
                         encounterDetail(encounterData: encounterData)
                             .paddingSymmetric(vertical: 6),
-                        16.height,
+
                         //region Others
-                        buildExpandableWidget(
-                          title: PROBLEM,
-                          isExpanded: isProblem,
-                          encounterData: encounterData,
-                          encounterType: EncounterTypeEnum.OTHERS,
-                          encounterTypeValue: EncounterTypeValues.PROBLEM,
-                          onTap: () {
-                            isProblem = !isProblem;
-                            setState(() {});
-                          },
-                        ),
-                        16.height,
-                        buildExpandableWidget(
-                          title: OBSERVATION,
-                          encounterData: encounterData,
-                          isExpanded: isObservation,
-                          encounterTypeValue: EncounterTypeValues.OBSERVATION,
-                          encounterType: EncounterTypeEnum.OTHERS,
-                          onTap: () {
-                            isObservation = !isObservation;
-                            setState(() {});
-                          },
-                        ),
-                        16.height,
-                        buildExpandableWidget(
-                          title: NOTE,
-                          isExpanded: isNotes,
-                          encounterData: encounterData,
-                          encounterTypeValue: EncounterTypeValues.NOTE,
-                          encounterType: EncounterTypeEnum.OTHERS,
-                          onTap: () {
-                            isNotes = !isNotes;
-                            setState(() {});
-                          },
-                        ),
+                        if (isVisible(SharedPreferenceKey
+                            .solidCareMedicalRecordsListKey)) ...[
+                          16.height,
+                          ExpandableEncounterComponent(
+                            title: PROBLEM,
+                            isExpanded: isProblem,
+                            encounterData: encounterData,
+                            encounterType: EncounterTypeEnum.OTHERS,
+                            encounterTypeValue: EncounterTypeValues.PROBLEM,
+                            refreshCallBack: () {
+                              init();
+                            },
+                          ),
+                          16.height,
+                          ExpandableEncounterComponent(
+                            title: OBSERVATION,
+                            encounterData: encounterData,
+                            isExpanded: isObservation,
+                            encounterTypeValue: EncounterTypeValues.OBSERVATION,
+                            encounterType: EncounterTypeEnum.OTHERS,
+                            refreshCallBack: () {
+                              init();
+                            },
+                          ),
+                          16.height,
+                          ExpandableEncounterComponent(
+                            title: NOTE,
+                            isExpanded: isNotes,
+                            encounterData: encounterData,
+                            encounterTypeValue: EncounterTypeValues.NOTE,
+                            encounterType: EncounterTypeEnum.OTHERS,
+                            refreshCallBack: () {
+                              init();
+                            },
+                          )
+                        ],
                         16.height,
                         //endregion
                         //region Prescriptions
-                        buildExpandableWidget(
+                        ExpandableEncounterComponent(
                           title: PRESCRIPTION,
                           isExpanded: isPrescription,
                           encounterData: encounterData,
                           encounterType: EncounterTypeEnum.PRESCRIPTIONS,
-                          onTap: () {
-                            isPrescription = !isPrescription;
-                            setState(() {});
+                          refreshCallBack: () {
+                            init();
                           },
                         ),
                         16.height,
                         //endregion
                         //region Medical Report
-                        buildExpandableWidget(
+                        ExpandableEncounterComponent(
                           title: REPORT,
                           encounterData: encounterData,
                           encounterType: EncounterTypeEnum.REPORTS,
                           isExpanded: isMedicalReport,
-                          onTap: () {
-                            isMedicalReport = !isMedicalReport;
-                            setState(() {});
+                          refreshCallBack: () {
+                            init();
                           },
                         ),
 
@@ -369,7 +370,9 @@ class _EncounterDashboardScreenState extends State<EncounterDashboardScreen> {
                       ],
                     ),
                     if ((encounterData.status == '1') &&
-                        (isDoctor() || isReceptionist()))
+                        (isDoctor() || isReceptionist()) &&
+                        isVisible(
+                            SharedPreferenceKey.solidCarePatientBillAddKey))
                       Positioned(
                           bottom: 0,
                           right: 0,
@@ -414,7 +417,12 @@ class _EncounterDashboardScreenState extends State<EncounterDashboardScreen> {
                                       onTap: () async {
                                         await GenerateBillScreen(
                                           data: encounterData,
-                                        ).launch(context).then((value) {
+                                        )
+                                            .launch(context,
+                                                pageRouteAnimation:
+                                                    pageAnimation,
+                                                duration: pageAnimationDuration)
+                                            .then((value) {
                                           if (value != null) {
                                             if (value == "paid") {
                                               init();

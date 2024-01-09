@@ -13,6 +13,7 @@ import 'package:solidcare/network/network_utils.dart';
 import 'package:solidcare/utils/app_common.dart';
 import 'package:solidcare/utils/common.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:solidcare/utils/constants.dart';
 
 Future<List<ServiceData>> getServiceListAPI(
     {String? searchString,
@@ -46,6 +47,7 @@ Future<List<ServiceData>> getServiceListAPI(
       ?.call(res.serviceData.validate().length != (perPages ?? PER_PAGE));
 
   serviceList.addAll(res.serviceData.validate());
+  setValue(SharedPreferenceKey.cachedServiceList, res.toJson());
 
   appStore.setLoading(false);
   return serviceList;
@@ -144,6 +146,34 @@ Future<List<ServiceData>> getServiceListWithPaginationAPI(
   param.add('page=$page');
 
   if (searchString.validate().isNotEmpty) param.add('s=$searchString');
+
+  ServiceListModel res = ServiceListModel.fromJson(await handleResponse(
+      await buildHttpResponse(
+          'kivicare/api/v1/service/get-list${param.validate().join('&')}')));
+
+  if (page == 1) serviceList.clear();
+
+  lastPageCallback?.call(res.serviceData.validate().length != PER_PAGE);
+
+  serviceList.addAll(res.serviceData.validate());
+
+  appStore.setLoading(false);
+  return serviceList;
+}
+
+Future<List<ServiceData>> getClinicWiseDoctorsServiceData(
+    {String? serviceId,
+    required String serviceName,
+    String? doctorId,
+    required List<ServiceData> serviceList,
+    required int page,
+    Function(bool)? lastPageCallback}) async {
+  if (!appStore.isConnectedToInternet) return [];
+  List<String> param = [];
+  param.add('?limit=$PER_PAGE');
+  param.add('page=$page');
+  param.add('doctor_id=$doctorId');
+  param.add('s=$serviceName');
 
   ServiceListModel res = ServiceListModel.fromJson(await handleResponse(
       await buildHttpResponse(

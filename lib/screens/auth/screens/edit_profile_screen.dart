@@ -27,6 +27,7 @@ import 'package:solidcare/utils/constants.dart';
 import 'package:solidcare/utils/extensions/date_extensions.dart';
 import 'package:solidcare/utils/extensions/enums.dart';
 import 'package:solidcare/utils/extensions/string_extensions.dart';
+import 'package:solidcare/utils/extensions/widget_extentions.dart';
 import 'package:solidcare/utils/images.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:signature/signature.dart';
@@ -112,6 +113,31 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       toast(e.toString());
       appStore.setLoading(false);
       throw e;
+    });
+  }
+
+  Future<void> _chooseImage() async {
+    await showInDialog(
+      context,
+      contentPadding: EdgeInsets.symmetric(vertical: 16),
+      title: Text(locale.lblChooseAction, style: boldTextStyle()),
+      builder: (p0) {
+        return FilePickerDialog(isSelected: (false));
+      },
+    ).then((file) async {
+      if (file != null) {
+        if (file == GalleryFileTypes.CAMERA) {
+          await getCameraImage().then((value) {
+            selectedProfileImage = value;
+            setState(() {});
+          });
+        } else if (file == GalleryFileTypes.GALLERY) {
+          await getCameraImage(isCamera: false).then((value) {
+            selectedProfileImage = value;
+            setState(() {});
+          });
+        }
+      }
     });
   }
 
@@ -224,9 +250,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     if (mounted) super.setState(fn);
   }
 
-  //region Widgets
-
-  //endregion
+  @override
+  void dispose() {
+    getDisposeStatusBarColor();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -275,7 +303,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   height: 126,
                                   fit: BoxFit.cover,
                                   circle: true),
-                        ),
+                        ).appOnTap(() => _onProfileChange()),
                         Positioned(
                           bottom: -4,
                           right: 0,
@@ -287,12 +315,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 border: Border.all(color: white, width: 3)),
                             child: ic_camera.iconImage(
                                 size: 14, color: Colors.white),
-                          ).onTap(() async {
-                            _onProfileChange();
-                          },
-                              splashColor: Colors.transparent,
-                              highlightColor: Colors.transparent,
-                              borderRadius: radius()),
+                          ).appOnTap(() => _onProfileChange()),
                         )
                       ],
                     ).center().paddingBottom(24),
@@ -362,21 +385,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   : Brightness.light,
                               selectionControls: EmptyTextSelectionControls(),
                               onTap: () {
-                                datePickerComponent(
-                                  context,
-                                  isAgeVerificationRequired: true,
-                                  helpText: locale.lblSelectBirthDate,
-                                  initialDate: selectedBirthDate,
-                                  onDateSelected: (birthDate) {
-                                    if (birthDate != null) {
-                                      selectedBirthDate = birthDate;
-                                      dobCont.text = selectedBirthDate
-                                          .getFormattedDate(SAVE_DATE_FORMAT);
-                                    } else {
-                                      //
-                                    }
-                                  },
-                                );
+                                dateBottomSheet(context,
+                                    bDate: selectedBirthDate,
+                                    onBirthDateSelected: (birthDate) {
+                                  if (birthDate != null) {
+                                    dobCont.text = DateFormat(SAVE_DATE_FORMAT)
+                                        .format(birthDate);
+                                    selectedBirthDate = birthDate;
+                                    setState(() {});
+                                  }
+                                });
                               },
                             ).expand(),
                           ],

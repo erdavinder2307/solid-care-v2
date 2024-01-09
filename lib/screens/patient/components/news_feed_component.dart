@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:solidcare/components/cached_image_widget.dart';
+import 'package:solidcare/main.dart';
 import 'package:solidcare/screens/patient/models/news_model.dart';
 import 'package:solidcare/screens/patient/screens/feeds/feed_details_screen.dart';
 import 'package:solidcare/utils/common.dart';
@@ -7,6 +8,7 @@ import 'package:solidcare/utils/extensions/string_extensions.dart';
 import 'package:solidcare/utils/images.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:share/share.dart';
+import 'package:solidcare/utils/extensions/widget_extentions.dart';
 
 class NewsFeedComponent extends StatelessWidget {
   final NewsData data;
@@ -63,12 +65,11 @@ class NewsFeedComponent extends StatelessWidget {
           ),
         ),
       ],
-    ).onTap(
+    ).appOnTap(
       () {
-        FeedDetailsScreen(newsData: data).launch(context);
+        FeedDetailsScreen(newsData: data).launch(context,
+            pageRouteAnimation: pageAnimation, duration: pageAnimationDuration);
       },
-      splashColor: Colors.transparent,
-      highlightColor: Colors.transparent,
     );
   }
 }

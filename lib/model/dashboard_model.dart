@@ -8,6 +8,8 @@ class DashboardModel {
   int? totalAppointment;
   int? totalPatient;
   int? totalService;
+
+  int? totalDoctor;
   int? upcomingAppointmentTotal;
   List<UpcomingAppointmentModel>? upcomingAppointment;
   List<UserModel>? doctor;
@@ -23,6 +25,7 @@ class DashboardModel {
   DashboardModel(
       {this.totalAppointment,
       this.totalService,
+      this.totalDoctor,
       this.totalPatient,
       this.upcomingAppointment,
       this.upcomingAppointmentTotal,
@@ -54,6 +57,7 @@ class DashboardModel {
           : null,
       upcomingAppointmentTotal: json['upcoming_appointment_total'],
       totalPatient: json['total_patient'],
+      totalDoctor: json['total_doctor'],
       totalService: json['total_service'],
       currencyPrefix: json['currency_prefix'],
       currencyPostfix: json['currency_postfix'],
@@ -70,6 +74,7 @@ class DashboardModel {
 
     data['total_appointment'] = this.totalAppointment;
     data['total_patient'] = this.totalPatient;
+    data['total_doctor'] = this.totalDoctor;
     data['total_service'] = this.totalService;
     data['upcoming_appointment_total'] = this.upcomingAppointmentTotal;
     data['currency_prefix'] = this.currencyPrefix;

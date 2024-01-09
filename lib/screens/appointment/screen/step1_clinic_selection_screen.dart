@@ -15,6 +15,7 @@ import 'package:solidcare/utils/app_common.dart';
 import 'package:solidcare/utils/common.dart';
 import 'package:solidcare/utils/constants.dart';
 import 'package:solidcare/utils/extensions/string_extensions.dart';
+import 'package:solidcare/utils/extensions/widget_extentions.dart';
 import 'package:solidcare/utils/images.dart';
 import 'package:nb_utils/nb_utils.dart';
 
@@ -128,14 +129,10 @@ class _Step1ClinicSelectionScreenState
                       hintText: locale.lblSearchClinic,
                       prefixIcon: ic_search.iconImage().paddingAll(16),
                       suffixIcon: showClear
-                          ? ic_clear.iconImage().paddingAll(16).onTap(
+                          ? ic_clear.iconImage().paddingAll(16).appOnTap(
                               () {
                                 _onClearSearch();
                               },
-                              borderRadius: radius(),
-                              splashColor: Colors.transparent,
-                              highlightColor: Colors.transparent,
-                              hoverColor: Colors.transparent,
                             )
                           : Offstage(),
                     ),
@@ -144,7 +141,7 @@ class _Step1ClinicSelectionScreenState
                         showClear = false;
                         _onClearSearch();
                       } else {
-                        Timer(Duration(milliseconds: 500), () {
+                        Timer(pageAnimationDuration, () {
                           init(showLoader: true);
                         });
 
@@ -162,7 +159,7 @@ class _Step1ClinicSelectionScreenState
                     name: locale.lblChooseYourClinic,
                     currentCount: 1,
                     totalCount: isDoctor() ? 2 : 3,
-                    percentage: isDoctor() ? 0.33 : 0.50,
+                    percentage: isPatient() ? 0.33 : 0.50,
                   ),
                 ],
               ).paddingBottom(8),

@@ -2,19 +2,29 @@ import 'package:flutter/material.dart';
 import 'package:solidcare/components/cached_image_widget.dart';
 import 'package:solidcare/main.dart';
 import 'package:solidcare/screens/auth/screens/edit_profile_screen.dart';
+import 'package:solidcare/utils/common.dart';
+import 'package:solidcare/utils/constants.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class DashboardTopProfileWidget extends StatelessWidget {
   final VoidCallback? refreshCallback;
+
   DashboardTopProfileWidget({this.refreshCallback});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        EditProfileScreen().launch(context).then((value) {
-          refreshCallback?.call();
-        });
+        if ((isReceptionist() || isDoctor()) ||
+            (isPatient() &&
+                isVisible(SharedPreferenceKey.solidCarePatientProfileKey)))
+          EditProfileScreen()
+              .launch(context,
+                  pageRouteAnimation: pageAnimation,
+                  duration: pageAnimationDuration)
+              .then((value) {
+            refreshCallback?.call();
+          });
       },
       child: Container(
         decoration: boxDecorationDefault(

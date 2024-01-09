@@ -205,6 +205,182 @@ mixin _$AppStore on AppStoreBase, Store {
     });
   }
 
+  late final _$currencySymbolAtom =
+      Atom(name: 'AppStoreBase.currencySymbol', context: context);
+
+  @override
+  String get currencySymbol {
+    _$currencySymbolAtom.reportRead();
+    return super.currencySymbol;
+  }
+
+  @override
+  set currencySymbol(String value) {
+    _$currencySymbolAtom.reportWrite(value, super.currencySymbol, () {
+      super.currencySymbol = value;
+    });
+  }
+
+  late final _$currencyCodeAtom =
+      Atom(name: 'AppStoreBase.currencyCode', context: context);
+
+  @override
+  String get currencyCode {
+    _$currencyCodeAtom.reportRead();
+    return super.currencyCode;
+  }
+
+  @override
+  set currencyCode(String value) {
+    _$currencyCodeAtom.reportWrite(value, super.currencyCode, () {
+      super.currencyCode = value;
+    });
+  }
+
+  late final _$isRazorPayEnableAtom =
+      Atom(name: 'AppStoreBase.isRazorPayEnable', context: context);
+
+  @override
+  bool get isRazorPayEnable {
+    _$isRazorPayEnableAtom.reportRead();
+    return super.isRazorPayEnable;
+  }
+
+  @override
+  set isRazorPayEnable(bool value) {
+    _$isRazorPayEnableAtom.reportWrite(value, super.isRazorPayEnable, () {
+      super.isRazorPayEnable = value;
+    });
+  }
+
+  late final _$isStripePayEnableAtom =
+      Atom(name: 'AppStoreBase.isStripePayEnable', context: context);
+
+  @override
+  bool get isStripePayEnable {
+    _$isStripePayEnableAtom.reportRead();
+    return super.isStripePayEnable;
+  }
+
+  @override
+  set isStripePayEnable(bool value) {
+    _$isStripePayEnableAtom.reportWrite(value, super.isStripePayEnable, () {
+      super.isStripePayEnable = value;
+    });
+  }
+
+  late final _$isWoocommerceEnableAtom =
+      Atom(name: 'AppStoreBase.isWoocommerceEnable', context: context);
+
+  @override
+  bool get isWoocommerceEnable {
+    _$isWoocommerceEnableAtom.reportRead();
+    return super.isWoocommerceEnable;
+  }
+
+  @override
+  set isWoocommerceEnable(bool value) {
+    _$isWoocommerceEnableAtom.reportWrite(value, super.isWoocommerceEnable, () {
+      super.isWoocommerceEnable = value;
+    });
+  }
+
+  late final _$isPayOfflineAtom =
+      Atom(name: 'AppStoreBase.isPayOffline', context: context);
+
+  @override
+  bool get isPayOffline {
+    _$isPayOfflineAtom.reportRead();
+    return super.isPayOffline;
+  }
+
+  @override
+  set isPayOffline(bool value) {
+    _$isPayOfflineAtom.reportWrite(value, super.isPayOffline, () {
+      super.isPayOffline = value;
+    });
+  }
+
+  late final _$paymentRazorpayAtom =
+      Atom(name: 'AppStoreBase.paymentRazorpay', context: context);
+
+  @override
+  String get paymentRazorpay {
+    _$paymentRazorpayAtom.reportRead();
+    return super.paymentRazorpay;
+  }
+
+  @override
+  set paymentRazorpay(String value) {
+    _$paymentRazorpayAtom.reportWrite(value, super.paymentRazorpay, () {
+      super.paymentRazorpay = value;
+    });
+  }
+
+  late final _$paymentStripeAtom =
+      Atom(name: 'AppStoreBase.paymentStripe', context: context);
+
+  @override
+  String get paymentStripe {
+    _$paymentStripeAtom.reportRead();
+    return super.paymentStripe;
+  }
+
+  @override
+  set paymentStripe(String value) {
+    _$paymentStripeAtom.reportWrite(value, super.paymentStripe, () {
+      super.paymentStripe = value;
+    });
+  }
+
+  late final _$paymentWoocommerceAtom =
+      Atom(name: 'AppStoreBase.paymentWoocommerce', context: context);
+
+  @override
+  String get paymentWoocommerce {
+    _$paymentWoocommerceAtom.reportRead();
+    return super.paymentWoocommerce;
+  }
+
+  @override
+  set paymentWoocommerce(String value) {
+    _$paymentWoocommerceAtom.reportWrite(value, super.paymentWoocommerce, () {
+      super.paymentWoocommerce = value;
+    });
+  }
+
+  late final _$paymentOfflineAtom =
+      Atom(name: 'AppStoreBase.paymentOffline', context: context);
+
+  @override
+  String get paymentOffline {
+    _$paymentOfflineAtom.reportRead();
+    return super.paymentOffline;
+  }
+
+  @override
+  set paymentOffline(String value) {
+    _$paymentOfflineAtom.reportWrite(value, super.paymentOffline, () {
+      super.paymentOffline = value;
+    });
+  }
+
+  late final _$paymentModeAtom =
+      Atom(name: 'AppStoreBase.paymentMode', context: context);
+
+  @override
+  String get paymentMode {
+    _$paymentModeAtom.reportRead();
+    return super.paymentMode;
+  }
+
+  @override
+  set paymentMode(String value) {
+    _$paymentModeAtom.reportWrite(value, super.paymentMode, () {
+      super.paymentMode = value;
+    });
+  }
+
   late final _$currencyPrefixAtom =
       Atom(name: 'AppStoreBase.currencyPrefix', context: context);
 
@@ -237,22 +413,6 @@ mixin _$AppStore on AppStoreBase, Store {
     });
   }
 
-  late final _$currencyPreFixAtom =
-      Atom(name: 'AppStoreBase.currencyPreFix', context: context);
-
-  @override
-  String? get currencyPreFix {
-    _$currencyPreFixAtom.reportRead();
-    return super.currencyPreFix;
-  }
-
-  @override
-  set currencyPreFix(String? value) {
-    _$currencyPreFixAtom.reportWrite(value, super.currencyPreFix, () {
-      super.currencyPreFix = value;
-    });
-  }
-
   late final _$tempBaseUrlAtom =
       Atom(name: 'AppStoreBase.tempBaseUrl', context: context);
 
@@ -282,6 +442,22 @@ mixin _$AppStore on AppStoreBase, Store {
   set userProEnabled(bool? value) {
     _$userProEnabledAtom.reportWrite(value, super.userProEnabled, () {
       super.userProEnabled = value;
+    });
+  }
+
+  late final _$isGoogleMeetActiveAtom =
+      Atom(name: 'AppStoreBase.isGoogleMeetActive', context: context);
+
+  @override
+  bool get isGoogleMeetActive {
+    _$isGoogleMeetActiveAtom.reportRead();
+    return super.isGoogleMeetActive;
+  }
+
+  @override
+  set isGoogleMeetActive(bool value) {
+    _$isGoogleMeetActiveAtom.reportWrite(value, super.isGoogleMeetActive, () {
+      super.isGoogleMeetActive = value;
     });
   }
 
@@ -446,6 +622,83 @@ mixin _$AppStore on AppStoreBase, Store {
     });
   }
 
+  late final _$setRazorPayAsyncAction =
+      AsyncAction('AppStoreBase.setRazorPay', context: context);
+
+  @override
+  Future<void> setRazorPay(bool value) {
+    return _$setRazorPayAsyncAction.run(() => super.setRazorPay(value));
+  }
+
+  late final _$setStripePayAsyncAction =
+      AsyncAction('AppStoreBase.setStripePay', context: context);
+
+  @override
+  Future<void> setStripePay(bool value) {
+    return _$setStripePayAsyncAction.run(() => super.setStripePay(value));
+  }
+
+  late final _$setOffLinePaymentAsyncAction =
+      AsyncAction('AppStoreBase.setOffLinePayment', context: context);
+
+  @override
+  Future<void> setOffLinePayment(bool value) {
+    return _$setOffLinePaymentAsyncAction
+        .run(() => super.setOffLinePayment(value));
+  }
+
+  late final _$setPaymentModeAsyncAction =
+      AsyncAction('AppStoreBase.setPaymentMode', context: context);
+
+  @override
+  Future<void> setPaymentMode(String value) {
+    return _$setPaymentModeAsyncAction.run(() => super.setPaymentMode(value));
+  }
+
+  late final _$setWoocommerceAsyncAction =
+      AsyncAction('AppStoreBase.setWoocommerce', context: context);
+
+  @override
+  Future<void> setWoocommerce(bool value) {
+    return _$setWoocommerceAsyncAction.run(() => super.setWoocommerce(value));
+  }
+
+  late final _$setRazorPayMethodAsyncAction =
+      AsyncAction('AppStoreBase.setRazorPayMethod', context: context);
+
+  @override
+  Future<void> setRazorPayMethod(String value) {
+    return _$setRazorPayMethodAsyncAction
+        .run(() => super.setRazorPayMethod(value));
+  }
+
+  late final _$setStripePayMethodAsyncAction =
+      AsyncAction('AppStoreBase.setStripePayMethod', context: context);
+
+  @override
+  Future<void> setStripePayMethod(String value) {
+    return _$setStripePayMethodAsyncAction
+        .run(() => super.setStripePayMethod(value));
+  }
+
+  late final _$setOffLinePaymentMethodAsyncAction =
+      AsyncAction('AppStoreBase.setOffLinePaymentMethod', context: context);
+
+  @override
+  Future<void> setOffLinePaymentMethod(String value) {
+    return _$setOffLinePaymentMethodAsyncAction
+        .run(() => super.setOffLinePaymentMethod(value));
+  }
+
+  late final _$setWoocommerceMethodAsyncAction =
+      AsyncAction('AppStoreBase.setWoocommerceMethod', context: context);
+
+  @override
+  Future<void> setWoocommerceMethod(String value) {
+    return _$setWoocommerceMethodAsyncAction
+        .run(() => super.setWoocommerceMethod(value));
+  }
+
   late final _$setCurrencyPositionAsyncAction =
       AsyncAction('AppStoreBase.setCurrencyPosition', context: context);
 
@@ -543,6 +796,24 @@ mixin _$AppStore on AppStoreBase, Store {
         .run(() => super.setCurrency(value, initialize: initialize));
   }
 
+  late final _$setCurrencySymbolAsyncAction =
+      AsyncAction('AppStoreBase.setCurrencySymbol', context: context);
+
+  @override
+  Future<void> setCurrencySymbol(String val, {bool isInitializing = false}) {
+    return _$setCurrencySymbolAsyncAction.run(
+        () => super.setCurrencySymbol(val, isInitializing: isInitializing));
+  }
+
+  late final _$setCurrencyCodeAsyncAction =
+      AsyncAction('AppStoreBase.setCurrencyCode', context: context);
+
+  @override
+  Future<void> setCurrencyCode(String val, {bool isInitializing = false}) {
+    return _$setCurrencyCodeAsyncAction
+        .run(() => super.setCurrencyCode(val, isInitializing: isInitializing));
+  }
+
   late final _$setCurrencyPostfixAsyncAction =
       AsyncAction('AppStoreBase.setCurrencyPostfix', context: context);
 
@@ -612,6 +883,17 @@ mixin _$AppStore on AppStoreBase, Store {
   }
 
   @override
+  void setGoogleMeetEnabled(bool googleMeetEnable) {
+    final _$actionInfo = _$AppStoreBaseActionController.startAction(
+        name: 'AppStoreBase.setGoogleMeetEnabled');
+    try {
+      return super.setGoogleMeetEnabled(googleMeetEnable);
+    } finally {
+      _$AppStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void setInternetStatus(bool val) {
     final _$actionInfo = _$AppStoreBaseActionController.startAction(
         name: 'AppStoreBase.setInternetStatus');
@@ -648,11 +930,22 @@ mStatus: ${mStatus},
 restrictAppointmentPost: ${restrictAppointmentPost},
 restrictAppointmentPre: ${restrictAppointmentPre},
 currency: ${currency},
+currencySymbol: ${currencySymbol},
+currencyCode: ${currencyCode},
+isRazorPayEnable: ${isRazorPayEnable},
+isStripePayEnable: ${isStripePayEnable},
+isWoocommerceEnable: ${isWoocommerceEnable},
+isPayOffline: ${isPayOffline},
+paymentRazorpay: ${paymentRazorpay},
+paymentStripe: ${paymentStripe},
+paymentWoocommerce: ${paymentWoocommerce},
+paymentOffline: ${paymentOffline},
+paymentMode: ${paymentMode},
 currencyPrefix: ${currencyPrefix},
 currencyPostfix: ${currencyPostfix},
-currencyPreFix: ${currencyPreFix},
 tempBaseUrl: ${tempBaseUrl},
 userProEnabled: ${userProEnabled},
+isGoogleMeetActive: ${isGoogleMeetActive},
 globalDateFormat: ${globalDateFormat},
 globalUTC: ${globalUTC},
 selectedLanguageCode: ${selectedLanguageCode},

@@ -74,12 +74,16 @@ const ic_video = "images/icons/video.png";
 const ic_bill = "images/icons/ic_bill.png";
 const ic_reports = "images/icons/ic_reports.png";
 const ic_clinic = "images/icons/ic_clinic.png";
+const ic_clinicPlaceHolder = 'images/icons/ic_clinicPlaceHolder.png';
 const ic_location = "images/icons/ic_location.png";
 const ic_blood_group = "images/icons/ic_blood_group.png";
 const ic_delete_icon = 'images/icons/ic_delete_icon.png';
 const ic_invalidURL = 'images/icons/ic_invalid_url.png';
+const ic_no_profile = 'images/icons/ic_female_doctor.png';
+const ic_doctor = 'images/doctor.jpg';
 
 const ic_multi_select = "images/icons/icMultiSelect.png";
+const ic_googleMeet = 'images/icons/google-meets.png';
 
 //Flags
 const String flagsIcAr = 'images/flags/icAr.png';
@@ -99,3 +103,12 @@ const icTxt = "images/filesFormat/ic_txt.png";
 
 const ic_somethingWentWrong = 'images/somethingWentWrong.png';
 const ic_search = 'images/icons/ic_search.png';
+
+///Payment
+const ic_razorpay = 'images/icons/razorpay.png';
+const ic_stripePay = 'images/icons/stripe.png';
+const ic_wooCommerce = 'images/icons/woocommerce.png';
+const ic_payOffline = 'images/icons/offline_payment.png';
+
+const ic_successFullPayment = 'images/icons/success_full_payment.json';
+const ic_failedPayment = 'images/icons/payment_failed.json';

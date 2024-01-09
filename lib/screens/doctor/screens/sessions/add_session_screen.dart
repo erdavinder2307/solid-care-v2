@@ -20,6 +20,7 @@ import 'package:solidcare/utils/extensions/int_extensions.dart';
 import 'package:solidcare/utils/extensions/string_extensions.dart';
 import 'package:solidcare/utils/images.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:solidcare/utils/extensions/widget_extentions.dart';
 
 class AddSessionsScreen extends StatefulWidget {
   final SessionData? sessionData;
@@ -267,21 +268,6 @@ class _AddSessionsScreenState extends State<AddSessionsScreen> {
     appStore.setLoading(false);
   }
 
-  void deleteSession() async {
-    appStore.setLoading(true);
-
-    Map request = {"id": "${sessionData!.id}"};
-    await deleteDoctorSessionDataAPI(request).then((value) {
-      appStore.setLoading(false);
-      toast(locale.lblSessionDeleted);
-      finish(context, true);
-    }).catchError((e) {
-      appStore.setLoading(false);
-      toast(e.toString());
-    });
-    appStore.setLoading(false);
-  }
-
   @override
   void setState(fn) {
     if (mounted) super.setState(fn);
@@ -303,16 +289,14 @@ class _AddSessionsScreenState extends State<AddSessionsScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(locale.lblCancel, style: primaryTextStyle(size: 18))
-                        .onTap(
+                        .appOnTap(
                       () {
                         finish(e);
                         toast(locale.lblPleaseSelectTime);
                       },
-                      splashColor: Colors.transparent,
-                      highlightColor: Colors.transparent,
                     ),
                     Text(locale.lblDone, style: primaryTextStyle(size: 18))
-                        .onTap(
+                        .appOnTap(
                       () {
                         if ((picked!.minute % 5) == 0) {
                           if (aIsMorning ?? false) {
@@ -350,8 +334,6 @@ class _AddSessionsScreenState extends State<AddSessionsScreen> {
                           toast(locale.lblTimeShouldBeInMultiplyOf5);
                         }
                       },
-                      splashColor: Colors.transparent,
-                      highlightColor: Colors.transparent,
                     )
                   ],
                 ).paddingAll(8.0),
@@ -416,7 +398,11 @@ class _AddSessionsScreenState extends State<AddSessionsScreen> {
                       clinicId: isUpdate
                           ? widget.sessionData!.clinicId.toInt()
                           : null,
-                    ).launch(context).then((value) {
+                    )
+                        .launch(context,
+                            pageRouteAnimation: pageAnimation,
+                            duration: pageAnimationDuration)
+                        .then((value) {
                       if (value != null)
                         selectedClinic = value!;
                       else {
@@ -446,7 +432,9 @@ class _AddSessionsScreenState extends State<AddSessionsScreen> {
                   onTap: () {
                     if (!isUpdate) {
                       Step2DoctorSelectionScreen(doctorId: doctorCont?.iD)
-                          .launch(context)
+                          .launch(context,
+                              pageRouteAnimation: pageAnimation,
+                              duration: pageAnimationDuration)
                           .then((value) {
                         if (value != null) {
                           doctorCont = value;
@@ -640,26 +628,7 @@ class _AddSessionsScreenState extends State<AddSessionsScreen> {
         isUpdate ? locale.lblEditSession : locale.lblAddSession,
         textColor: Colors.white,
         systemUiOverlayStyle: defaultSystemUiOverlayStyle(context),
-        actions: [
-          if (isUpdate)
-            IconButton(
-              icon: Icon(
-                Icons.delete,
-                color: Colors.white,
-                size: 20,
-              ),
-              onPressed: () async {
-                showConfirmDialogCustom(
-                  context,
-                  title: locale.lblDoYouWantToDeleteSession,
-                  dialogType: DialogType.DELETE,
-                  onAccept: (p0) {
-                    deleteSession();
-                  },
-                );
-              },
-            ),
-        ],
+        actions: [],
       ),
       body: buildBodyWidget(),
       floatingActionButton: FloatingActionButton(

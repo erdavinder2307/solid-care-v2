@@ -53,19 +53,52 @@ abstract class AppStoreBase with Store {
   String? currency;
 
   @observable
+  String currencySymbol = '';
+
+  @observable
+  String currencyCode = '';
+
+  @observable
+  bool isRazorPayEnable = false;
+
+  @observable
+  bool isStripePayEnable = false;
+
+  @observable
+  bool isWoocommerceEnable = false;
+
+  @observable
+  bool isPayOffline = false;
+
+  @observable
+  String paymentRazorpay = '';
+
+  @observable
+  String paymentStripe = '';
+
+  @observable
+  String paymentWoocommerce = '';
+
+  @observable
+  String paymentOffline = '';
+
+  @observable
+  String paymentMode = '';
+
+  @observable
   String? currencyPrefix;
 
   @observable
   String? currencyPostfix;
 
   @observable
-  String? currencyPreFix;
-
-  @observable
   String? tempBaseUrl;
 
   @observable
   bool? userProEnabled;
+
+  @observable
+  bool isGoogleMeetActive = false;
 
   @observable
   String? globalDateFormat;
@@ -109,6 +142,56 @@ abstract class AppStoreBase with Store {
   }
 
   @action
+  void setGoogleMeetEnabled(bool googleMeetEnable) {
+    isGoogleMeetActive = googleMeetEnable;
+  }
+
+  @action
+  Future<void> setRazorPay(bool value) async {
+    isRazorPayEnable = value;
+  }
+
+  @action
+  Future<void> setStripePay(bool value) async {
+    isStripePayEnable = value;
+  }
+
+  @action
+  Future<void> setOffLinePayment(bool value) async {
+    isPayOffline = value;
+  }
+
+  @action
+  Future<void> setPaymentMode(String value) async {
+    paymentMode = value;
+  }
+
+  @action
+  Future<void> setWoocommerce(bool value) async {
+    isWoocommerceEnable = value;
+  }
+
+  @action
+  Future<void> setRazorPayMethod(String value) async {
+    paymentRazorpay = value;
+  }
+
+  @action
+  Future<void> setStripePayMethod(String value) async {
+    paymentStripe = value;
+  }
+
+  @action
+  Future<void> setOffLinePaymentMethod(String value) async {
+    paymentOffline = value;
+  }
+
+  @action
+  Future<void> setWoocommerceMethod(String value) async {
+    paymentWoocommerce = value;
+  }
+
+  @action
   Future<void> setCurrencyPosition() async {}
 
   @action
@@ -145,8 +228,7 @@ abstract class AppStoreBase with Store {
   }
 
   @action
-  Future<void> setBookedFromDashboard(bool value) async =>
-      isBookedFromDashboard = value;
+  Future<void> setBookedFromDashboard(bool value) async => isBookedFromDashboard = value;
 
   @action
   Future<void> setDemoDoctor(String value, {bool initialize = false}) async {
@@ -155,8 +237,7 @@ abstract class AppStoreBase with Store {
   }
 
   @action
-  Future<void> setDemoReceptionist(String value,
-      {bool initialize = false}) async {
+  Future<void> setDemoReceptionist(String value, {bool initialize = false}) async {
     if (initialize) setValue(DEMO_RECEPTIONIST, value);
     demoReceptionist = value;
   }
@@ -168,15 +249,13 @@ abstract class AppStoreBase with Store {
   }
 
   @action
-  Future<void> setRestrictAppointmentPost(int value,
-      {bool initialize = false}) async {
+  Future<void> setRestrictAppointmentPost(int value, {bool initialize = false}) async {
     if (initialize) setValue(RESTRICT_APPOINTMENT_POST, value);
     restrictAppointmentPost = value;
   }
 
   @action
-  Future<void> setRestrictAppointmentPre(int value,
-      {bool initialize = false}) async {
+  Future<void> setRestrictAppointmentPre(int value, {bool initialize = false}) async {
     if (initialize) setValue(RESTRICT_APPOINTMENT_PRE, value);
     restrictAppointmentPre = value;
   }
@@ -192,16 +271,26 @@ abstract class AppStoreBase with Store {
   }
 
   @action
-  Future<void> setCurrencyPostfix(String value,
-      {bool initialize = false}) async {
+  Future<void> setCurrencySymbol(String val, {bool isInitializing = false}) async {
+    currencySymbol = val;
+    if (!isInitializing) await setValue(CURRENCY_SYMBOL, val);
+  }
+
+  @action
+  Future<void> setCurrencyCode(String val, {bool isInitializing = false}) async {
+    currencyCode = val;
+    if (!isInitializing) await setValue(CURRENCY_CODE, val);
+  }
+
+  @action
+  Future<void> setCurrencyPostfix(String value, {bool initialize = false}) async {
     if (initialize) setValue(CURRENCY_POST_FIX, value);
 
     currencyPostfix = value;
   }
 
   @action
-  Future<void> setCurrencyPrefix(String value,
-      {bool initialize = false}) async {
+  Future<void> setCurrencyPrefix(String value, {bool initialize = false}) async {
     if (initialize) setValue(CURRENCY_PRE_FIX, value);
 
     currencyPrefix = value;
@@ -221,8 +310,7 @@ abstract class AppStoreBase with Store {
     userProEnabled = value;
   }
 
-  Future<void> setGlobalDateFormat(String value,
-      {bool initialize = false}) async {
+  Future<void> setGlobalDateFormat(String value, {bool initialize = false}) async {
     if (initialize) setValue(GLOBAL_DATE_FORMAT, value);
 
     globalDateFormat = value;

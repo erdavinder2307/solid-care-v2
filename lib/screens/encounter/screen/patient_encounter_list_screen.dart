@@ -10,6 +10,8 @@ import 'package:solidcare/network/encounter_repository.dart';
 import 'package:solidcare/screens/shimmer/screen/encounter_shimmer_screen.dart';
 import 'package:solidcare/utils/app_common.dart';
 import 'package:solidcare/utils/colors.dart';
+import 'package:solidcare/utils/common.dart';
+import 'package:solidcare/utils/constants.dart';
 import 'package:solidcare/utils/extensions/string_extensions.dart';
 import 'package:nb_utils/nb_utils.dart';
 
@@ -62,6 +64,14 @@ class _PatientEncounterListScreenState
     });
   }
 
+  bool get isEdit {
+    return isVisible(SharedPreferenceKey.solidCarePatientEncounterEditKey);
+  }
+
+  bool get isDelete {
+    return isVisible(SharedPreferenceKey.solidCarePatientEncounterDeleteKey);
+  }
+
   @override
   void setState(fn) {
     if (mounted) super.setState(fn);
@@ -96,7 +106,7 @@ class _PatientEncounterListScreenState
             onSuccess: (snap) {
               if (snap.isEmpty)
                 return NoDataFoundWidget(
-                    text: locale.lblNoEncounterFound.capitalizeEachWord());
+                    text: locale.lblNoEncounterFoundAtYourClinic);
               return AnimatedScrollView(
                 physics: AlwaysScrollableScrollPhysics(),
                 disposeScrollController: true,
@@ -120,10 +130,13 @@ class _PatientEncounterListScreenState
                 },
                 children: [
                   16.height,
-                  Text(locale.lblSwipeMassage,
-                          style: secondaryTextStyle(
-                              size: 10, color: appSecondaryColor))
-                      .paddingOnly(left: 20),
+                  if (isEdit || isDelete)
+                    Text(
+                            locale.lblNote.suffixText(value: ' : ') +
+                                locale.lblSwipeMassage,
+                            style: secondaryTextStyle(
+                                size: 10, color: appSecondaryColor))
+                        .paddingOnly(left: 20),
                   8.height,
                   AnimatedListView(
                     physics: NeverScrollableScrollPhysics(),
@@ -134,15 +147,18 @@ class _PatientEncounterListScreenState
                       EncounterModel data = snap[index];
                       return GestureDetector(
                         onTap: () {
-                          AddEncounterScreen(
-                                  patientEncounterData: data,
-                                  patientId: data.patientId.toInt())
-                              .launch(context)
-                              .then((value) {
-                            if (value ?? false) {
-                              init();
-                            }
-                          });
+                          if (isEdit)
+                            AddEncounterScreen(
+                                    patientEncounterData: data,
+                                    patientId: data.patientId.toInt())
+                                .launch(context,
+                                    pageRouteAnimation: pageAnimation,
+                                    duration: pageAnimationDuration)
+                                .then((value) {
+                              if (value ?? false) {
+                                init();
+                              }
+                            });
                         },
                         child: EncounterListComponent(
                           data: data,
@@ -167,7 +183,9 @@ class _PatientEncounterListScreenState
         child: Icon(Icons.add),
         onPressed: () async {
           await AddEncounterScreen(patientId: widget.patientData!.iD)
-              .launch(context)
+              .launch(context,
+                  pageRouteAnimation: pageAnimation,
+                  duration: pageAnimationDuration)
               .then((value) {
             if (value ?? false) {
               init(showLoader: true);

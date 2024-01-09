@@ -21,7 +21,7 @@ class DoctorDashboardShimmerFragment extends StatelessWidget {
             3,
             (index) => Container(
               width: context.width() / 3 - 22,
-              height: context.width() / 3,
+              height: context.width() / 3 - 12,
               child: Stack(
                 children: [
                   ShimmerComponent(
@@ -33,19 +33,18 @@ class DoctorDashboardShimmerFragment extends StatelessWidget {
                       ),
                       child: Column(
                         children: [
-                          24.height,
                           ShimmerComponent(
                             child: Container(
                               padding: EdgeInsets.symmetric(
-                                  horizontal: 40, vertical: 8),
+                                  horizontal: 40, vertical: 4),
                               decoration: boxDecorationDefault(
                                 color: primaryColor.withOpacity(0.7),
                                 boxShadow: [],
                                 borderRadius: radius(8),
                               ),
                             ),
-                          ),
-                          4.height,
+                          ).paddingTop(16),
+                          8.height,
                           ShimmerComponent(
                             child: Container(
                               padding: EdgeInsets.symmetric(

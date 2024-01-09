@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:solidcare/components/body_widget.dart';
 import 'package:solidcare/components/internet_connectivity_widget.dart';
 import 'package:solidcare/components/loader_widget.dart';
 import 'package:solidcare/main.dart';

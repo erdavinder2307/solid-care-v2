@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:149248552751:android:fa11b68faab7df2a4bfbda",
+        "mobilesdk_app_id": "1:149248552751:android:496550102224929e4bfbda",
         "android_client_info": {
-          "package_name": "com.solidevelectrosoft.solidcare"
+          "package_name": "org.solidevelectrosoft.solidcare"
         }
       },
       "oauth_client": [],

@@ -2,22 +2,18 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>CLIENT_ID</key>
-	<string>1030276386601-id2had9qtvmsvdslo57iaq1fh38615n6.apps.googleusercontent.com</string>
-	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.1030276386601-id2had9qtvmsvdslo57iaq1fh38615n6</string>
 	<key>API_KEY</key>
-	<string>AIzaSyAp5mprMMlwl5WwZKMYTvKux298Zf9g1iQ</string>
+	<string>AIzaSyDnVMCaWlwdL5mGXZbllwxHkn0aqqIF-M8</string>
 	<key>GCM_SENDER_ID</key>
-	<string>1030276386601</string>
+	<string>149248552751</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.iqonic.kivicareFlutter</string>
+	<string>org.solidevelectrosoft.solidcare</string>
 	<key>PROJECT_ID</key>
-	<string>kivicare-5d319</string>
+	<string>solidcare-2de34</string>
 	<key>STORAGE_BUCKET</key>
-	<string>kivicare-5d319.appspot.com</string>
+	<string>solidcare-2de34.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:1030276386601:ios:faa1f68b47001eb83ab138</string>
+	<string>1:149248552751:ios:823e91576f1f34804bfbda</string>
 </dict>
 </plist>

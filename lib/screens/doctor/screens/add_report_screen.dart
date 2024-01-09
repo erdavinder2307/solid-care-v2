@@ -4,7 +4,6 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:intl/intl.dart';
-import 'package:solidcare/components/body_widget.dart';
 import 'package:solidcare/components/loader_widget.dart';
 import 'package:solidcare/main.dart';
 import 'package:solidcare/model/report_model.dart';
@@ -90,7 +89,7 @@ class _AddReportScreenState extends State<AddReportScreen> {
 
       Map<String, dynamic> req = {
         "name": "${nameCont.text}",
-        "patient_id": "${widget.patientId}",
+        "patient_id": isPatient() ? userStore.userId : "${widget.patientId}",
         "date": "${current.getFormattedDate(SAVE_DATE_FORMAT)}",
       };
       if (isUpdate) {
@@ -114,7 +113,7 @@ class _AddReportScreenState extends State<AddReportScreen> {
         finish(context, true);
       }).catchError((e) {
         appStore.setLoading(false);
-        toast(e.toString());
+        toast(e.message);
       });
     } else {
       isFirstTime = !isFirstTime;
@@ -187,18 +186,17 @@ class _AddReportScreenState extends State<AddReportScreen> {
                   ),
                   16.height,
                   Container(
-                    decoration: boxDecorationDefault(),
+                    decoration: boxDecorationDefault(color: context.cardColor),
                     child: Row(
                       children: [
                         Text(
-                                isUpdate
-                                    ? file == null
-                                        ? locale.lblUploadReport
-                                        : fileCont.text
-                                    : fileCont.text,
-                                style: secondaryTextStyle())
-                            .paddingLeft(16)
-                            .expand(),
+                          isUpdate
+                              ? file == null
+                                  ? locale.lblUploadReport
+                                  : fileCont.text
+                              : fileCont.text,
+                          style: secondaryTextStyle(),
+                        ).paddingLeft(16).expand(),
                         Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -230,7 +228,8 @@ class _AddReportScreenState extends State<AddReportScreen> {
                                     style: primaryTextStyle(size: 10)),
                               ),
                             IconButton(
-                              icon: Icon(Icons.upload_file),
+                              icon: Icon(Icons.upload_file,
+                                  color: context.iconColor),
                               onPressed: () {
                                 pickSingleFile();
                               },

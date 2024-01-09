@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:solidcare/components/image_border_component.dart';
 import 'package:solidcare/model/user_model.dart';
 import 'package:solidcare/screens/receptionist/screens/doctor/doctor_details_screen.dart';
-import 'package:solidcare/utils/colors.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 import 'package:solidcare/main.dart';
@@ -24,35 +23,14 @@ class DoctorListComponent extends StatelessWidget {
       decoration: boxDecorationDefault(
         borderRadius: radius(),
         color: context.cardColor,
-        border: Border.all(
-            color: isSelected ? context.primaryColor : context.cardColor),
+        border: Border.all(color: isSelected ? context.primaryColor : context.cardColor),
       ),
       child: Stack(
         children: [
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              data.profileImage.validate().isEmptyOrNull
-                  ? GradientBorder(
-                      gradient: LinearGradient(
-                          colors: [primaryColor, appSecondaryColor],
-                          tileMode: TileMode.mirror),
-                      strokeWidth: 2,
-                      borderRadius: 42,
-                      child: PlaceHolderWidget(
-                        shape: BoxShape.circle,
-                        height: 40,
-                        width: 40,
-                        alignment: Alignment.center,
-                        child: Text(
-                            data.displayName
-                                .validate(value: 'D')[0]
-                                .capitalizeFirstLetter(),
-                            style: boldTextStyle(color: Colors.black)),
-                      ),
-                    )
-                  : ImageBorder(height: 40, src: data.profileImage.validate())
-                      .paddingTop(8),
+              ImageBorder(height: 40, src: data.profileImage.validate(), nameInitial: data.displayName.validate(value: 'D')[0]).paddingTop(8),
               16.width,
               AnimatedWrap(
                 runSpacing: 6,
@@ -73,11 +51,7 @@ class DoctorListComponent extends StatelessWidget {
                       splashColor: Colors.transparent,
                       highlightColor: Colors.transparent,
                     ).paddingTop(4),
-                  if (data.noOfExperience.validate().toInt() != 0)
-                    Text(
-                        "${data.noOfExperience.validate()} ${locale.lblYearsOfExperience}",
-                        maxLines: 2,
-                        style: secondaryTextStyle(size: 14)),
+                  if (data.noOfExperience.validate().toInt() != 0) Text("${data.noOfExperience.validate()} ${locale.lblYearsOfExperience}", maxLines: 2, style: secondaryTextStyle(size: 14)),
                 ],
               ).expand(),
             ],
@@ -99,11 +73,7 @@ class DoctorListComponent extends StatelessWidget {
                   refreshCall: () {
                     callForRefreshAfterDelete?.call();
                   },
-                )
-                    .launch(context,
-                        pageRouteAnimation: PageRouteAnimation.Fade,
-                        duration: 800.milliseconds)
-                    .then(
+                ).launch(context, pageRouteAnimation: PageRouteAnimation.Fade, duration: 800.milliseconds).then(
                   (isDoctorDeleted) {
                     if (isDoctorDeleted ?? false) {
                       callForRefreshAfterDelete?.call();

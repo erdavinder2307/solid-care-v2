@@ -1,5 +1,6 @@
 import 'package:solidcare/config.dart';
 import 'package:solidcare/main.dart';
+import 'package:solidcare/model/base_response.dart';
 import 'package:solidcare/model/patient_list_model.dart';
 import 'package:solidcare/model/user_model.dart';
 import 'package:solidcare/network/network_utils.dart';
@@ -37,8 +38,8 @@ Future<List<UserModel>> getPatientListAPI({
   List<String> params = [];
 
   if (searchString.validate().isNotEmpty) params.add('s=$searchString');
-  if (clinicId != null) params.add('clinic_id=$clinicId');
-  /*if (doctorId != null) params.add('doctor_id=$doctorId');*/
+  //if (clinicId != null) params.add('clinic_id=$clinicId');
+  if (isDoctor() && doctorId != null) params.add('doctor_id=$doctorId');
 
   PatientListModel res = PatientListModel.fromJson(await handleResponse(
       await buildHttpResponse(getEndPoint(
@@ -54,6 +55,7 @@ Future<List<UserModel>> getPatientListAPI({
 
   patientList.addAll(res.patientData.validate());
 
+  setValue(SharedPreferenceKey.cachedPatientList, res.toJson());
   appStore.setLoading(false);
 
   if (isReceptionist()) {
@@ -66,11 +68,11 @@ Future<List<UserModel>> getPatientListAPI({
 
 //Add patient
 
-Future addNewPatientDataAPI(Map request) async {
-  return await handleResponse(await buildHttpResponse(
+Future<BaseResponses> addNewUserAPI(Map request) async {
+  return BaseResponses.fromJson(await handleResponse(await buildHttpResponse(
       'kivicare/api/v1/auth/registration',
       request: request,
-      method: HttpMethod.POST));
+      method: HttpMethod.POST)));
 }
 
 Future updatePatientDataAPI(Map request) async {

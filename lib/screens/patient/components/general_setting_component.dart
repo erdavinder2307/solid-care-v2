@@ -5,6 +5,8 @@ import 'package:solidcare/screens/encounter/screen/encounter_list_screen.dart';
 import 'package:solidcare/screens/patient/screens/my_bill_records_screen.dart';
 import 'package:solidcare/screens/patient/screens/my_report_screen.dart';
 import 'package:solidcare/screens/patient/screens/patient_clinic_selection_screen.dart';
+import 'package:solidcare/utils/common.dart';
+import 'package:solidcare/utils/constants.dart';
 import 'package:solidcare/utils/images.dart';
 
 class GeneralSettingComponent extends StatelessWidget {
@@ -17,32 +19,37 @@ class GeneralSettingComponent extends StatelessWidget {
       spacing: 16,
       runSpacing: 16,
       children: [
-        AppSettingWidget(
-          name: locale.lblEncounters,
-          image: ic_services,
-          widget: EncounterListScreen(),
-          subTitle: locale.lblYourEncounters,
-        ),
-        AppSettingWidget(
-          name: locale.lblMedicalReports,
-          image: ic_reports,
-          widget: MyReportsScreen(),
-          subTitle: locale.lblYourReports,
-        ),
-        AppSettingWidget(
-          name: locale.lblBillingRecords,
-          image: ic_bill,
-          widget: MyBillRecordsScreen(),
-          subTitle: locale.lblYourBills,
-        ),
-        AppSettingWidget(
-          name: locale.lblChangeYourClinic,
-          image: ic_clinic,
-          widget: PatientClinicSelectionScreen(callback: () {
-            callBack?.call();
-          }),
-          subTitle: locale.lblChooseYourFavouriteClinic,
-        ),
+        if (isVisible(SharedPreferenceKey.solidCarePatientEncounterListKey))
+          AppSettingWidget(
+            name: locale.lblEncounters,
+            image: ic_services,
+            widget: EncounterListScreen(),
+            subTitle: locale.lblYourEncounters,
+          ),
+        if (isVisible(SharedPreferenceKey.solidCarePatientReportKey))
+          AppSettingWidget(
+            name: locale.lblMedicalReports,
+            image: ic_reports,
+            widget: MyReportsScreen(),
+            subTitle: locale.lblYourReports,
+          ),
+        if (isVisible(SharedPreferenceKey.solidCarePatientBillListKey) &&
+            isProEnabled())
+          AppSettingWidget(
+            name: locale.lblBillingRecords,
+            image: ic_bill,
+            widget: MyBillRecordsScreen(),
+            subTitle: locale.lblYourBills,
+          ),
+        if (isVisible(SharedPreferenceKey.solidCarePatientClinicKey))
+          AppSettingWidget(
+            name: locale.lblChangeYourClinic,
+            image: ic_clinic,
+            widget: PatientClinicSelectionScreen(callback: () {
+              callBack?.call();
+            }),
+            subTitle: locale.lblChooseYourFavouriteClinic,
+          ),
       ],
     );
   }

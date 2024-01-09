@@ -87,13 +87,13 @@ class _QrInfoScreenState extends State<QrInfoScreen> {
                         text: locale.lblOpenTheDemoUrlInWeb + '\n',
                         style: primaryTextStyle()),
                     TextSpan(
-                      text: 'https://demo.kivicare.io/',
+                      text: 'https://demo.solidcare.org/',
                       style: primaryTextStyle(
                           color: primaryColor,
                           decoration: TextDecoration.underline),
                       recognizer: TapGestureRecognizer()
                         ..onTap = () {
-                          commonLaunchUrl("https://demo.kivicare.io/");
+                          commonLaunchUrl("https://demo.solidcare.org/");
                         },
                     ),
                   ],
@@ -107,7 +107,7 @@ class _QrInfoScreenState extends State<QrInfoScreen> {
               ],
             ),
             64.height,
-            Text(locale.lblEnjoyTheFlawlessKivicareSystemWithEase,
+            Text(locale.lblEnjoyTheFlawlessSolidcareSystemWithEase,
                 style: primaryTextStyle(size: 20, color: primaryColor)),
           ],
         ),

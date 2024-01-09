@@ -5,11 +5,11 @@ import 'package:solidcare/model/encounter_type_model.dart';
 import 'package:solidcare/model/prescription_model.dart';
 import 'package:solidcare/model/report_model.dart';
 import 'package:solidcare/screens/doctor/screens/add_prescription_screen.dart';
-import 'package:solidcare/screens/doctor/screens/add_report_screen.dart';
 import 'package:solidcare/screens/encounter/component/encounter_functions.dart';
 import 'package:solidcare/screens/encounter/component/encounter_prescription_component.dart';
 import 'package:solidcare/screens/encounter/component/encounter_type_%20component.dart';
 import 'package:solidcare/screens/encounter/component/report_component.dart';
+import 'package:solidcare/utils/common.dart';
 import 'package:solidcare/utils/constants.dart';
 import 'package:solidcare/utils/extensions/enums.dart';
 import 'package:nb_utils/nb_utils.dart';
@@ -59,7 +59,7 @@ class _EncounterTypeListState extends State<EncounterTypeList> {
   Widget buildEncounterReportList() {
     if (widget.encounterData.reportData != null &&
         widget.encounterData.reportData.validate().isEmpty)
-      return NoDataWidget(title: locale.lblNoReportsFound);
+      return NoDataWidget(title: locale.lblNoReportsFound).paddingBottom(16);
     return AnimatedWrap(
       spacing: 16,
       runSpacing: 12,
@@ -70,7 +70,10 @@ class _EncounterTypeListState extends State<EncounterTypeList> {
         return ReportComponent(
           reportData: reportData,
           isForMyReportScreen: false,
-          isDeleteOn: widget.encounterData.status == '1',
+          refreshReportData: () {
+            widget.refreshCall?.call();
+          },
+          showDelete: widget.encounterData.status == '1',
           deleteReportData: () {
             showConfirmDialogCustom(
               context,
@@ -83,19 +86,6 @@ class _EncounterTypeListState extends State<EncounterTypeList> {
               },
             );
           },
-        ).onTap(
-          () {
-            AddReportScreen(
-              patientId: widget.encounterData.patientId.toInt(),
-              reportData: reportData,
-            ).launch(context).then((value) {
-              if (value ?? false) {
-                widget.refreshCall?.call();
-              }
-            });
-          },
-          highlightColor: Colors.transparent,
-          splashColor: Colors.transparent,
         );
       },
     ).paddingSymmetric(vertical: 8);
@@ -103,7 +93,8 @@ class _EncounterTypeListState extends State<EncounterTypeList> {
 
   Widget buildEncounterPrescriptionList() {
     if (widget.encounterData.prescription.validate().isEmpty)
-      return NoDataWidget(title: locale.lblNoPrescriptionFound);
+      return NoDataWidget(title: locale.lblNoPrescriptionFound)
+          .paddingBottom(16);
     return AnimatedWrap(
       spacing: 16,
       runSpacing: 12,
@@ -117,7 +108,9 @@ class _EncounterTypeListState extends State<EncounterTypeList> {
             AddPrescriptionScreen(
                     encounterId: prescriptionData.encounterId.toInt(),
                     prescriptionData: prescriptionData)
-                .launch(context)
+                .launch(context,
+                    pageRouteAnimation: pageAnimation,
+                    duration: pageAnimationDuration)
                 .then((value) {
               if (value ?? false) {
                 widget.refreshCall?.call();
@@ -151,7 +144,8 @@ class _EncounterTypeListState extends State<EncounterTypeList> {
     var data = getEncounterOtherTypeListData(
         encounterType: widget.encounterType,
         encounterData: widget.encounterData);
-    if (data.$1.isEmpty) return NoDataWidget(title: data.emptyText);
+    if (data.$1.isEmpty)
+      return NoDataWidget(title: data.emptyText).paddingBottom(16);
     return AnimatedWrap(
       spacing: 16,
       runSpacing: 12,
@@ -160,7 +154,8 @@ class _EncounterTypeListState extends State<EncounterTypeList> {
         EncounterType encounterData = data.$1[index];
         return EncounterTypeComponent(
           data: encounterData,
-          isDeleteOn: widget.encounterData.status == '1',
+          isDeleteOn: widget.encounterData.status == '1' &&
+              isVisible(SharedPreferenceKey.solidCareMedicalRecordsDeleteKey),
           onTap: () {
             showConfirmDialogCustom(
               context,

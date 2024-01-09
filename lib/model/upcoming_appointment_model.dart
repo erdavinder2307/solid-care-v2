@@ -1,5 +1,6 @@
 import 'package:intl/intl.dart';
 import 'package:solidcare/model/rating_model.dart';
+import 'package:solidcare/model/tax_model.dart';
 import 'package:solidcare/utils/common.dart';
 import 'package:solidcare/utils/extensions/date_extensions.dart';
 import 'package:solidcare/utils/extensions/string_extensions.dart';
@@ -34,13 +35,21 @@ class UpcomingAppointmentModel {
   String? patientProfileImg;
   bool? videoConsultation;
   RatingData? doctorRating;
+  String? paymentMethod;
   String? appointmentGlobalStartDate;
+
+  TaxModel? taxData;
+
+  String? googleMeetData;
+
   //Extra? extra;
 
   // Local Variable
 
-  String get getAppointmentDisplayDate =>
-      appointmentStartDate.validate().getFormattedDate(GLOBAL_DATE_FORMAT);
+  String get getAppointmentDisplayDate => appointmentGlobalStartDate
+      .validate()
+      .getFormattedDate(CONFIRM_APPOINTMENT_FORMAT);
+
   String get getDisplayAppointmentTime =>
       appointmentStartTime.validate().getFormattedTime() +
       " - " +
@@ -63,34 +72,38 @@ class UpcomingAppointmentModel {
   String get appointmentDateFormat =>
       "$getAppointmentStartDate   •   $getDisplayAppointmentTime";
 
-  UpcomingAppointmentModel(
-      {this.appointmentEndDate,
-      this.appointmentEndTime,
-      this.appointmentStartDate,
-      this.appointmentStartTime,
-      this.doctorRating,
-      this.clinicId,
-      this.clinicName,
-      this.createdAt,
-      this.encounterStatus,
-      this.description,
-      this.doctorId,
-      this.doctorName,
-      this.encounterId,
-      this.id,
-      this.patientId,
-      this.patientName,
-      this.status,
-      this.visitLabel,
-      this.visitType,
-      this.zoomData,
-      this.allServiceCharges,
-      this.doctorProfileImg,
-      this.patientProfileImg,
-      this.appointmentReport,
-      this.discountCode,
-      this.appointmentGlobalStartDate,
-      this.videoConsultation});
+  UpcomingAppointmentModel({
+    this.appointmentEndDate,
+    this.appointmentEndTime,
+    this.appointmentStartDate,
+    this.appointmentStartTime,
+    this.doctorRating,
+    this.clinicId,
+    this.clinicName,
+    this.createdAt,
+    this.encounterStatus,
+    this.description,
+    this.doctorId,
+    this.doctorName,
+    this.encounterId,
+    this.id,
+    this.patientId,
+    this.patientName,
+    this.status,
+    this.visitLabel,
+    this.visitType,
+    this.zoomData,
+    this.allServiceCharges,
+    this.doctorProfileImg,
+    this.patientProfileImg,
+    this.appointmentReport,
+    this.discountCode,
+    this.appointmentGlobalStartDate,
+    this.videoConsultation,
+    this.paymentMethod,
+    this.googleMeetData,
+    this.taxData,
+  });
 
   factory UpcomingAppointmentModel.fromJson(Map<String, dynamic> json) {
     return UpcomingAppointmentModel(
@@ -105,9 +118,9 @@ class UpcomingAppointmentModel {
       doctorProfileImg: json['doctor_profile_img'],
       patientProfileImg: json['patient_profile_img'],
       createdAt: json['created_at'],
-      description: json['description'].toString().validate().isNotEmpty
-          ? json['description']
-          : "NA",
+      description: json['description'],
+      taxData:
+          json['tax_data'] != null ? TaxModel.fromJson(json['tax_data']) : null,
       appointmentReport: json['appointment_report'] != null
           ? (json['appointment_report'] as List)
               .map((i) => AppointmentReport.fromJson(i))
@@ -136,6 +149,8 @@ class UpcomingAppointmentModel {
       doctorRating: json['review'] != null
           ? new RatingData.fromJson(json['review'])
           : null,
+      paymentMethod: json['payment_mode'],
+      googleMeetData: json['google_meet_data'],
     );
   }
 
@@ -162,6 +177,9 @@ class UpcomingAppointmentModel {
     data['status'] = this.status;
     data['discount_code'] = this.discountCode;
     data['start_date'] = this.appointmentGlobalStartDate;
+    data['payment_mode'] = this.paymentMethod;
+    data['google_meet_data'] = this.googleMeetData;
+    data['tax_data'] = this.taxData;
 
     if (this.appointmentReport != null) {
       data['appointment_report'] =
@@ -171,6 +189,7 @@ class UpcomingAppointmentModel {
     if (this.visitType != null) {
       data['visit_type'] = this.visitType!.map((v) => v.toJson()).toList();
     }
+
     if (this.zoomData != null) {
       data['zoom_data'] = this.zoomData!.toJson();
     }

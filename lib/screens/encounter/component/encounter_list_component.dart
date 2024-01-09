@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
-import 'package:solidcare/components/side_date_widget.dart';
 import 'package:solidcare/components/status_widget.dart';
 import 'package:solidcare/main.dart';
 import 'package:solidcare/model/encounter_model.dart';
@@ -15,6 +14,7 @@ import 'package:solidcare/utils/colors.dart';
 import 'package:solidcare/utils/common.dart';
 import 'package:solidcare/utils/constants.dart';
 import 'package:solidcare/utils/extensions/string_extensions.dart';
+import 'package:solidcare/utils/extensions/widget_extentions.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class EncounterListComponent extends StatefulWidget {
@@ -38,6 +38,18 @@ class _EncounterListComponentState extends State<EncounterListComponent> {
   @override
   void setState(fn) {
     if (mounted) super.setState(fn);
+  }
+
+  bool get isEdit {
+    return isVisible(SharedPreferenceKey.solidCarePatientEncounterEditKey);
+  }
+
+  bool get isDelete {
+    return isVisible(SharedPreferenceKey.solidCarePatientEncounterDeleteKey);
+  }
+
+  bool get showEncounter {
+    return isVisible(SharedPreferenceKey.solidCarePatientEncounterViewKey);
   }
 
   void _handleDeleteAction() {
@@ -65,7 +77,10 @@ class _EncounterListComponentState extends State<EncounterListComponent> {
     await AddEncounterScreen(
       patientEncounterData: widget.data,
       patientId: widget.patientData!.iD,
-    ).launch(context).then((value) {
+    )
+        .launch(context,
+            pageRouteAnimation: pageAnimation, duration: pageAnimationDuration)
+        .then((value) {
       if (value ?? false) widget.refreshCall?.call();
     });
   }
@@ -73,48 +88,51 @@ class _EncounterListComponentState extends State<EncounterListComponent> {
   @override
   Widget build(BuildContext context) {
     return Slidable(
+      enabled: isEdit || isDelete,
       key: ValueKey(widget.data),
       endActionPane: ActionPane(
         motion: ScrollMotion(),
         children: [
-          SlidableAction(
-            flex: 1,
-            backgroundColor: primaryColor,
-            foregroundColor: Colors.white,
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(defaultRadius),
-                bottomLeft: Radius.circular(defaultRadius)),
-            icon: Icons.edit,
-            label: locale.lblEdit,
-            onPressed: (BuildContext context) async {
-              if ((DateFormat(GLOBAL_FORMAT)
-                          .parse(widget.data.encounterDate.validate())
-                          .difference(DateFormat(SAVE_DATE_FORMAT)
-                              .parse(DateTime.now().toString()))
-                          .inDays >
-                      0 ||
-                  DateFormat(SAVE_DATE_FORMAT)
-                          .parse(DateTime.now().toString()) ==
-                      DateFormat(GLOBAL_FORMAT)
-                          .parse(widget.data.encounterDate.validate())))
-                _handleEditAction();
-              else
-                toast(locale.lblEditHolidayRestriction);
-            },
-          ),
-          SlidableAction(
-            flex: 1,
-            borderRadius: BorderRadius.only(
-                topRight: Radius.circular(defaultRadius),
-                bottomRight: Radius.circular(defaultRadius)),
-            backgroundColor: Colors.red,
-            foregroundColor: Colors.white,
-            icon: Icons.delete,
-            label: locale.lblDelete,
-            onPressed: (BuildContext context) async {
-              _handleDeleteAction();
-            },
-          ),
+          if (isEdit)
+            SlidableAction(
+              flex: 1,
+              backgroundColor: primaryColor,
+              foregroundColor: Colors.white,
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(defaultRadius),
+                  bottomLeft: Radius.circular(defaultRadius)),
+              icon: Icons.edit,
+              label: locale.lblEdit,
+              onPressed: (BuildContext context) async {
+                if ((DateFormat(GLOBAL_FORMAT)
+                            .parse(widget.data.encounterDate.validate())
+                            .difference(DateFormat(SAVE_DATE_FORMAT)
+                                .parse(DateTime.now().toString()))
+                            .inDays >
+                        0 ||
+                    DateFormat(SAVE_DATE_FORMAT)
+                            .parse(DateTime.now().toString()) ==
+                        DateFormat(GLOBAL_FORMAT)
+                            .parse(widget.data.encounterDate.validate())))
+                  _handleEditAction();
+                else
+                  toast(locale.lblEditHolidayRestriction);
+              },
+            ),
+          if (isDelete)
+            SlidableAction(
+              flex: 1,
+              borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(defaultRadius),
+                  bottomRight: Radius.circular(defaultRadius)),
+              backgroundColor: Colors.red,
+              foregroundColor: Colors.white,
+              icon: Icons.delete,
+              label: locale.lblDelete,
+              onPressed: (BuildContext context) async {
+                _handleDeleteAction();
+              },
+            ),
         ],
       ),
       child: Container(
@@ -123,7 +141,8 @@ class _EncounterListComponentState extends State<EncounterListComponent> {
             borderRadius: radius(), color: context.cardColor),
         child: Row(
           mainAxisSize: MainAxisSize.max,
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment:
+              showEncounter ? CrossAxisAlignment.start : CrossAxisAlignment.end,
           children: [
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -186,31 +205,39 @@ class _EncounterListComponentState extends State<EncounterListComponent> {
             ).expand(flex: 3),
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                FaIcon(
-                  FontAwesomeIcons.gaugeHigh,
-                  size: 20,
-                  color: appSecondaryColor,
-                ).paddingAll(8).onTap(
-                  () {
-                    if (isDoctor() || isReceptionist()) {
-                      EncounterDashboardScreen(
-                              encounterId: widget.data.encounterId)
-                          .launch(context)
-                          .then((value) {
-                        widget.refreshCall?.call();
-                      });
-                    } else
-                      PatientEncounterDashboardScreen(
-                              id: widget.data.encounterId)
-                          .launch(context);
-                  },
-                ),
-                12.height,
+                if (showEncounter)
+                  FaIcon(
+                    FontAwesomeIcons.gaugeHigh,
+                    size: 20,
+                    color: appSecondaryColor,
+                  ).paddingAll(8).appOnTap(
+                    () {
+                      if (isDoctor() || isReceptionist()) {
+                        EncounterDashboardScreen(
+                                encounterId: widget.data.encounterId)
+                            .launch(context,
+                                pageRouteAnimation: pageAnimation,
+                                duration: pageAnimationDuration)
+                            .then((value) {
+                          widget.refreshCall?.call();
+                        });
+                      } else
+                        PatientEncounterDashboardScreen(
+                          id: widget.data.encounterId,
+                          callBack: () {
+                            widget.refreshCall?.call();
+                          },
+                        ).launch(context,
+                            pageRouteAnimation: pageAnimation,
+                            duration: pageAnimationDuration);
+                    },
+                  ),
                 StatusWidget(
                   status: widget.data.status.validate(),
                   isEncounterStatus: true,
-                ),
+                ).paddingTop(8),
               ],
             ).expand(),
           ],

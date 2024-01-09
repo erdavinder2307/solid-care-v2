@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:intl/intl.dart';
 import 'package:solidcare/main.dart';
 import 'package:solidcare/utils/colors.dart';
 import 'package:solidcare/utils/constants.dart';
@@ -117,5 +118,13 @@ extension intExt on int? {
     } else {
       return ratingBarRedColor;
     }
+  }
+
+  String getFormattedCurrency({String? currencyName, int? decimalPoint}) {
+    return NumberFormat.currency(
+      name: currencyName ?? 'USD',
+      symbol: appStore.currency,
+      decimalDigits: decimalPoint ?? 0,
+    ).format(this);
   }
 }

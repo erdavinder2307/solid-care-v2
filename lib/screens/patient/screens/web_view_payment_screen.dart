@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:solidcare/components/loader_widget.dart';
 import 'package:solidcare/main.dart';
+import 'package:solidcare/network/network_utils.dart';
 import 'package:solidcare/screens/doctor/fragments/appointment_fragment.dart';
 import 'package:solidcare/utils/app_common.dart';
-import 'package:solidcare/utils/colors.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -55,7 +55,10 @@ class WebViewPaymentScreenState extends State<WebViewPaymentScreen> {
           },
         ),
       )
-      ..loadRequest(Uri.parse(widget.checkoutUrl.validate()));
+      ..loadRequest(
+        Uri.parse(widget.checkoutUrl.validate()),
+        headers: buildHeaderTokens(),
+      );
     appStore.setLoading(false);
   }
 
@@ -81,20 +84,21 @@ class WebViewPaymentScreenState extends State<WebViewPaymentScreen> {
         systemUiOverlayStyle: defaultSystemUiOverlayStyle(context),
       ),
       body: SafeArea(
-          child: Stack(
-        children: [
-          WebViewWidget(controller: controller!),
-          Observer(
-              builder: (context) =>
-                  LoaderWidget().center().visible(appStore.isLoading))
-        ],
-      )),
+        child: Stack(
+          children: [
+            WebViewWidget(controller: controller!),
+            Observer(
+                builder: (context) =>
+                    LoaderWidget().center().visible(appStore.isLoading)),
+          ],
+        ),
+      ),
     );
   }
 }
 
 Future<void> redirectionCase(BuildContext context,
-    {required String message, int finishCount = 4}) async {
+    {String? message, int finishCount = 4}) async {
   for (int i = 0; i < finishCount; i++) {
     finish(context, true);
   }
@@ -107,5 +111,7 @@ Future<void> redirectionCase(BuildContext context,
   appointmentAppStore.setSelectedTime(null);
   appointmentAppStore.setSelectedPatientId(null);
   appointmentAppStore.setSelectedDoctor(null);
+  appointmentAppStore.setPaymentMethod(null);
   appointmentAppStore.clearAll();
+  multiSelectStore.setTaxData(null);
 }

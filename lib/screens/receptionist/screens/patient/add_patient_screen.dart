@@ -14,6 +14,7 @@ import 'package:solidcare/utils/extensions/date_extensions.dart';
 import 'package:solidcare/utils/extensions/string_extensions.dart';
 import 'package:solidcare/utils/images.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:solidcare/utils/extensions/widget_extentions.dart';
 
 class AddPatientScreen extends StatefulWidget {
   final int? userId;
@@ -27,6 +28,7 @@ class AddPatientScreen extends StatefulWidget {
 class _AddPatientScreenState extends State<AddPatientScreen> {
   GlobalKey<FormState> formKey = GlobalKey();
   UniqueKey genderKey = UniqueKey();
+  GlobalKey<FormState> passwordFormKey = GlobalKey();
 
   DateTime? birthDate;
 
@@ -57,6 +59,8 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
   TextEditingController countryCont = TextEditingController();
   TextEditingController postalCodeCont = TextEditingController();
   TextEditingController genderCont = TextEditingController();
+  TextEditingController passwordCont = TextEditingController();
+  TextEditingController confirmPasswordCont = TextEditingController();
 
   FocusNode firstNameFocus = FocusNode();
   FocusNode lastNameFocus = FocusNode();
@@ -68,6 +72,8 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
   FocusNode cityFocus = FocusNode();
   FocusNode countryFocus = FocusNode();
   FocusNode postalCodeFocus = FocusNode();
+  FocusNode passwordFocus = FocusNode();
+  FocusNode confirmPasswordFocus = FocusNode();
 
   @override
   void initState() {
@@ -122,10 +128,11 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
       "country": countryCont.text.validate(),
       "postal_code": postalCodeCont.text.validate(),
       "blood_group": bloodGroup.validate(),
+      'role': UserRolePatient,
     };
     request.putIfAbsent('clinic_id', () => userStore.userClinicId.validate());
 
-    await addNewPatientDataAPI(request).then((value) {
+    await addNewUserAPI(request).then((value) {
       appStore.setLoading(false);
       toast(locale.lblNewPatientAddedSuccessfully);
       finish(context, true);
@@ -154,6 +161,7 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
       "postal_code": postalCodeCont.text.validate(),
       "blood_group": bloodGroup.validate(),
       "user_login": userLogin,
+      'role': UserRolePatient,
     };
 
     log(request);
@@ -220,14 +228,12 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(locale.lblCancel, style: boldTextStyle()).onTap(
+                    Text(locale.lblCancel, style: boldTextStyle()).appOnTap(
                       () {
                         finish(context);
                       },
-                      splashColor: Colors.transparent,
-                      highlightColor: Colors.transparent,
                     ),
-                    Text(locale.lblDone, style: boldTextStyle()).onTap(
+                    Text(locale.lblDone, style: boldTextStyle()).appOnTap(
                       () {
                         if (DateTime.now().year - birthDate!.year < 18) {
                           toast(locale.lblMinimumAgeRequired +
@@ -275,6 +281,7 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBarWidget(
+        color: Color(0xff3A86FF),
         isUpdate ? locale.lblEditPatientDetail : locale.lblAddNewPatient,
         textColor: Colors.white,
         systemUiOverlayStyle: defaultSystemUiOverlayStyle(context),
@@ -370,6 +377,13 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
                       textInputAction: TextInputAction.next,
                       textFieldType: TextFieldType.OTHER,
                       readOnly: true,
+                      isValidationRequired: true,
+                      validator: (value) {
+                        if (dOBCont.text.isEmptyOrNull)
+                          return locale.lblBirthDateIsRequired;
+                        return null;
+                      },
+                      errorThisFieldRequired: locale.lblBirthDateIsRequired,
                       decoration: inputDecoration(
                           context: context,
                           labelText: locale.lblDOB,
@@ -503,9 +517,11 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
                   LoaderWidget().visible(appStore.isLoading).center())
         ],
       ),
-      bottomNavigationBar:
-          AppButton(text: locale.lblSave, onTap: savePatientDetails)
-              .paddingAll(16),
+      bottomNavigationBar: AppButton(
+              color: Color(0xff3A86FF),
+              text: locale.lblSave,
+              onTap: savePatientDetails)
+          .paddingAll(16),
     );
   }
 }

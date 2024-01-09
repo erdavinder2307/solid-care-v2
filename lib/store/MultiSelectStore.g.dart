@@ -25,6 +25,22 @@ mixin _$MultiSelectStore on MultiSelectStoreBase, Store {
     });
   }
 
+  late final _$taxDataAtom =
+      Atom(name: 'MultiSelectStoreBase.taxData', context: context);
+
+  @override
+  TaxModel? get taxData {
+    _$taxDataAtom.reportRead();
+    return super.taxData;
+  }
+
+  @override
+  set taxData(TaxModel? value) {
+    _$taxDataAtom.reportWrite(value, super.taxData, () {
+      super.taxData = value;
+    });
+  }
+
   late final _$MultiSelectStoreBaseActionController =
       ActionController(name: 'MultiSelectStoreBase', context: context);
 
@@ -119,7 +135,8 @@ mixin _$MultiSelectStore on MultiSelectStoreBase, Store {
   @override
   String toString() {
     return '''
-selectedService: ${selectedService}
+selectedService: ${selectedService},
+taxData: ${taxData}
     ''';
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:solidcare/components/empty_error_state_component.dart';
 import 'package:solidcare/main.dart';
@@ -8,6 +10,8 @@ import 'package:solidcare/screens/doctor/components/dashboard_fragment_appointme
 import 'package:solidcare/screens/doctor/components/dashboard_fragment_chart_component.dart';
 import 'package:solidcare/screens/shimmer/screen/doctor_dashboard_shimmer_fragment.dart';
 import 'package:solidcare/utils/cached_value.dart';
+import 'package:solidcare/utils/common.dart';
+import 'package:solidcare/utils/constants.dart';
 import 'package:solidcare/utils/images.dart';
 import 'package:nb_utils/nb_utils.dart';
 
@@ -22,15 +26,28 @@ class _DashboardFragmentState extends State<DashboardFragment> {
   @override
   void initState() {
     super.initState();
+    if (getStringAsync(SharedPreferenceKey.cachedDashboardDataKey)
+        .validate()
+        .isNotEmpty) {
+      setState(() {
+        cachedDoctorDashboardModel = DashboardModel.fromJson(jsonDecode(
+            getStringAsync(SharedPreferenceKey.cachedDashboardDataKey)));
+      });
+    }
     init();
   }
 
   void init() async {
-    appStore.setLoading(true);
+    if (getStringAsync(SharedPreferenceKey.cachedDashboardDataKey)
+        .validate()
+        .isNotEmpty) {
+      appStore.setLoading(false);
+    } else {
+      appStore.setLoading(true);
+    }
     future = getUserDashBoardAPI().then((value) {
       setState(() {});
       appStore.setLoading(false);
-
       return value;
     }).catchError((e) {
       appStore.setLoading(false);
@@ -54,7 +71,7 @@ class _DashboardFragmentState extends State<DashboardFragment> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SnapHelperWidget<DashboardModel>(
-        initialData: cachedDashboardModel,
+        initialData: cachedDoctorDashboardModel,
         future: future,
         errorBuilder: (error) {
           return NoDataWidget(
@@ -68,14 +85,17 @@ class _DashboardFragmentState extends State<DashboardFragment> {
         onSuccess: (data) {
           return AnimatedScrollView(
             children: [
-              DashboardFragmentAnalyticsComponent(data: data),
+              DashboardFragmentAnalyticsComponent(data: data)
+                  .center()
+                  .paddingSymmetric(vertical: 16, horizontal: 16),
               DashboardFragmentChartComponent(data: data),
-              DashboardFragmentAppointmentComponent(
-                data: data,
-                callback: () {
-                  init();
-                },
-              ),
+              if (isVisible(SharedPreferenceKey.solidCareAppointmentListKey))
+                DashboardFragmentAppointmentComponent(
+                  data: data,
+                  callback: () {
+                    init();
+                  },
+                ),
             ],
           ).visible(!appStore.isLoading,
               defaultWidget:

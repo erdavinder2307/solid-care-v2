@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:solidcare/components/loader_widget.dart';
 import 'package:solidcare/components/no_data_found_widget.dart';
@@ -9,27 +8,22 @@ import 'package:solidcare/main.dart';
 import 'package:solidcare/model/clinic_list_model.dart';
 import 'package:solidcare/network/clinic_repository.dart';
 import 'package:solidcare/screens/appointment/components/clinic_list_component.dart';
-// ignore: unused_import
-import 'package:solidcare/screens/patient/components/clinic_component.dart';
 import 'package:solidcare/screens/shimmer/components/clinic_shimmer_component.dart';
 import 'package:solidcare/utils/app_common.dart';
 import 'package:solidcare/utils/common.dart';
 import 'package:solidcare/utils/extensions/string_extensions.dart';
+import 'package:solidcare/utils/extensions/widget_extentions.dart';
 import 'package:solidcare/utils/images.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class MultiSelectClinicDropDown extends StatefulWidget {
-  final int? clinicId;
   final List<int>? selectedClinicIds;
-  final Function(int)? refreshMappingTableIdsList;
+  final int? selectedClinicId;
 
   final Function(List<Clinic> selectedDoctor)? onSubmit;
 
   MultiSelectClinicDropDown(
-      {this.clinicId,
-      this.refreshMappingTableIdsList,
-      this.selectedClinicIds,
-      this.onSubmit});
+      {this.selectedClinicIds, this.selectedClinicId, this.onSubmit});
 
   @override
   _MultiSelectClinicDropDownState createState() =>
@@ -43,10 +37,12 @@ class _MultiSelectClinicDropDownState extends State<MultiSelectClinicDropDown> {
   List<Clinic> clinicList = [];
 
   int page = 1;
+  int selectedIndex = -1;
 
   bool isLastPage = false;
   bool isFirst = true;
   bool showClear = false;
+  bool isUpdate = false;
 
   @override
   void initState() {
@@ -58,13 +54,17 @@ class _MultiSelectClinicDropDownState extends State<MultiSelectClinicDropDown> {
     if (showLoader) {
       appStore.setLoading(true);
     }
-
+    isUpdate = widget.selectedClinicId != null;
     future = getClinicListAPI(
       page: page,
       clinicList: clinicList,
       searchString: searchCont.text,
       lastPageCallback: (p0) => isLastPage = p0,
     ).then((value) {
+      if (isUpdate) {
+        selectedIndex = value.indexWhere(
+            (element) => element.id.toInt() == widget.selectedClinicId);
+      }
       if (searchCont.text.isNotEmpty) {
         showClear = true;
       } else {
@@ -84,7 +84,7 @@ class _MultiSelectClinicDropDownState extends State<MultiSelectClinicDropDown> {
     hideKeyboard(context);
 
     searchCont.clear();
-    init(showLoader: true);
+    init();
   }
 
   @override
@@ -115,13 +115,10 @@ class _MultiSelectClinicDropDownState extends State<MultiSelectClinicDropDown> {
                 prefixIcon: ic_search.iconImage().paddingAll(16),
                 suffixIcon: !showClear
                     ? Offstage()
-                    : ic_clear.iconImage().paddingAll(16).onTap(
+                    : ic_clear.iconImage().paddingAll(16).appOnTap(
                         () async {
                           _onSearchClear();
                         },
-                        borderRadius: radius(),
-                        splashColor: Colors.transparent,
-                        highlightColor: Colors.transparent,
                       ),
               ),
               onChanged: (newValue) {
@@ -129,8 +126,8 @@ class _MultiSelectClinicDropDownState extends State<MultiSelectClinicDropDown> {
                   showClear = false;
                   _onSearchClear();
                 } else {
-                  Timer(Duration(milliseconds: 500), () {
-                    init(showLoader: true);
+                  Timer(pageAnimationDuration, () {
+                    init();
                   });
                   showClear = true;
                 }
@@ -138,7 +135,7 @@ class _MultiSelectClinicDropDownState extends State<MultiSelectClinicDropDown> {
               },
               onFieldSubmitted: (searchString) {
                 hideKeyboard(context);
-                init(showLoader: true);
+                init();
               },
             ).paddingOnly(left: 16, right: 16, top: 16),
             SnapHelperWidget<List<Clinic>>(
@@ -153,13 +150,16 @@ class _MultiSelectClinicDropDownState extends State<MultiSelectClinicDropDown> {
                 ),
               ),
               onSuccess: (snap) {
-                if (widget.selectedClinicIds != null && isFirst) {
-                  snap.forEach((element) {
-                    if (widget.selectedClinicIds!.contains(element.id)) {
-                      element.isCheck = true;
-                    }
-                  });
-                  isFirst = false;
+                if (!isUpdate) {
+                  if (widget.selectedClinicIds != null && isFirst) {
+                    snap.forEach((element) {
+                      if (widget.selectedClinicIds!
+                          .contains(element.id.toInt())) {
+                        element.isCheck = true;
+                      }
+                    });
+                    isFirst = false;
+                  }
                 }
 
                 if (snap.isEmpty && !appStore.isLoading) {
@@ -174,6 +174,7 @@ class _MultiSelectClinicDropDownState extends State<MultiSelectClinicDropDown> {
                 return AnimatedListView(
                   itemCount: snap.length,
                   padding: EdgeInsets.only(bottom: 90),
+                  physics: AlwaysScrollableScrollPhysics(),
                   shrinkWrap: true,
                   onNextPage: () async {
                     if (!isLastPage) {
@@ -181,21 +182,34 @@ class _MultiSelectClinicDropDownState extends State<MultiSelectClinicDropDown> {
                         page++;
                         isFirst = true;
                       });
-                      init(showLoader: true);
+                      init();
                       await 1.seconds.delay;
                     }
+                  },
+                  onSwipeRefresh: () async {
+                    setState(() {
+                      page = 1;
+                    });
+                    init(showLoader: false);
+                    await 1.seconds.delay;
                   },
                   itemBuilder: (context, index) {
                     Clinic clinicData = snap[index];
 
                     return GestureDetector(
                       onTap: () {
-                        clinicData.isCheck = !clinicData.isCheck.validate();
+                        if (isUpdate) {
+                          selectedIndex = index;
+                        } else {
+                          clinicData.isCheck = !clinicData.isCheck.validate();
+                        }
                         setState(() {});
                       },
                       child: ClinicListComponent(
                         data: clinicData,
-                        isSelected: clinicData.isCheck.validate(),
+                        isSelected: isUpdate
+                            ? selectedIndex == index
+                            : clinicData.isCheck.validate(),
                       ),
                     );
                   },
@@ -209,8 +223,12 @@ class _MultiSelectClinicDropDownState extends State<MultiSelectClinicDropDown> {
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.done),
         onPressed: () async {
-          widget.onSubmit!.call(
-              clinicList.where((element) => element.isCheck == true).toList());
+          if (!isUpdate)
+            widget.onSubmit?.call(clinicList
+                .where((element) => element.isCheck == true)
+                .toList());
+          else
+            widget.onSubmit?.call([clinicList[selectedIndex]]);
           finish(context);
         },
       ),

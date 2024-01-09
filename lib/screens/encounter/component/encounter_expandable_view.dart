@@ -1,20 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:solidcare/components/loader_widget.dart';
 import 'package:solidcare/components/role_widget.dart';
+import 'package:solidcare/main.dart';
 import 'package:solidcare/model/encounter_model.dart';
+import 'package:solidcare/network/encounter_repository.dart';
 import 'package:solidcare/network/prescription_repository.dart';
 import 'package:solidcare/network/report_repository.dart';
 import 'package:solidcare/screens/doctor/screens/add_prescription_screen.dart';
 import 'package:solidcare/screens/doctor/screens/add_report_screen.dart';
 import 'package:solidcare/screens/encounter/component/encounter_type_list_component.dart';
 import 'package:solidcare/utils/colors.dart';
+import 'package:solidcare/utils/common.dart';
 import 'package:solidcare/utils/constants.dart';
 import 'package:solidcare/utils/extensions/enums.dart';
+import 'package:solidcare/utils/extensions/widget_extentions.dart';
 import 'package:nb_utils/nb_utils.dart';
-import 'package:solidcare/main.dart';
-import 'package:solidcare/network/encounter_repository.dart';
-import 'package:solidcare/utils/common.dart';
 
 class EncounterExpandableView extends StatefulWidget {
   final String encounterType;
@@ -150,6 +149,21 @@ class _EncounterExpandableViewState extends State<EncounterExpandableView> {
     setState(() {});
   }
 
+  bool get showAddPrescription {
+    return isVisible(SharedPreferenceKey.solidCarePrescriptionAddKey) &&
+        widget.encounterData.status.getBoolInt();
+  }
+
+  bool get showAddReport {
+    return isVisible(SharedPreferenceKey.solidCarePatientReportAddKey) &&
+        widget.encounterData.status.getBoolInt();
+  }
+
+  bool get showAddOtherType {
+    return isVisible(SharedPreferenceKey.solidCareMedicalRecordsAddKey) &&
+        widget.encounterData.status.getBoolInt();
+  }
+
   @override
   Widget build(BuildContext context) {
     return AnimatedScrollView(
@@ -175,60 +189,80 @@ class _EncounterExpandableViewState extends State<EncounterExpandableView> {
                       onPressed: _handleSendEmailPrescriptionData,
                       child: Text(locale.lblSendPrescriptionOnMail,
                           style: primaryTextStyle(color: Colors.green))),
-                Icon(
-                  showAdd ? Icons.remove : Icons.add,
-                  color: showAdd ? Colors.red : primaryColor,
-                ).onTap(
-                  () {
-                    if (showAdd) {
-                      hideKeyboard(context);
-                      descriptionCont.clear();
-                    }
-                    if (!showAdd && widget.encounterType == PRESCRIPTION)
-                      AddPrescriptionScreen(
-                              encounterId:
-                                  widget.encounterData.encounterId.toInt())
-                          .launch(context)
-                          .then((value) {
-                        if (value ?? false) {
-                          showAdd = !showAdd;
-                          setState(() {});
-                          widget.callForRefresh?.call();
-                        } else {
-                          setState(() {
+                if (widget.encounterType == PRESCRIPTION && showAddPrescription)
+                  Icon(
+                    showAdd ? Icons.remove : Icons.add,
+                    color: showAdd ? Colors.red : primaryColor,
+                  ).appOnTap(
+                    () {
+                      if (showAdd) {
+                        hideKeyboard(context);
+                        descriptionCont.clear();
+                      }
+                      if (!showAdd && widget.encounterType == PRESCRIPTION)
+                        AddPrescriptionScreen(
+                                encounterId:
+                                    widget.encounterData.encounterId.toInt())
+                            .launch(context,
+                                pageRouteAnimation: pageAnimation,
+                                duration: pageAnimationDuration)
+                            .then((value) {
+                          if (value ?? false) {
                             showAdd = !showAdd;
-                          });
-                        }
-                      });
-                    if (!showAdd && widget.encounterType == REPORT)
-                      AddReportScreen(
-                              patientId: widget.encounterData.patientId.toInt())
-                          .launch(context)
-                          .then((value) {
-                        if (value ?? false) {
-                          showAdd = !showAdd;
-                          setState(() {});
-                          widget.callForRefresh?.call();
-                        } else {
-                          setState(() {
-                            showAdd = !showAdd;
-                          });
-                        }
-                      });
+                            setState(() {});
+                            widget.callForRefresh?.call();
+                          } else {
+                            setState(() {
+                              showAdd = !showAdd;
+                            });
+                          }
+                        });
 
-                    showAdd = !showAdd;
-                    setState(() {});
-                  },
-                  splashColor: Colors.transparent,
-                  highlightColor: Colors.transparent,
-                )
+                      showAdd = !showAdd;
+                      setState(() {});
+                    },
+                  ),
+                if (widget.encounterType == REPORT && showAddReport)
+                  Icon(
+                    showAdd ? Icons.remove : Icons.add,
+                    color: showAdd ? Colors.red : primaryColor,
+                  ).appOnTap(
+                    () {
+                      if (showAdd) {
+                        hideKeyboard(context);
+                        descriptionCont.clear();
+                      }
+
+                      if (!showAdd && widget.encounterType == REPORT)
+                        AddReportScreen(
+                                patientId:
+                                    widget.encounterData.patientId.toInt())
+                            .launch(context,
+                                pageRouteAnimation: pageAnimation,
+                                duration: pageAnimationDuration)
+                            .then((value) {
+                          if (value ?? false) {
+                            showAdd = !showAdd;
+                            setState(() {});
+                            widget.callForRefresh?.call();
+                          } else {
+                            setState(() {
+                              showAdd = !showAdd;
+                            });
+                          }
+                        });
+
+                      showAdd = !showAdd;
+                      setState(() {});
+                    },
+                  ),
               ],
             ).paddingOnly(top: 4, bottom: 16, right: 8),
           ),
-        if (showAdd &&
-            (widget.encounterType == PROBLEM ||
+        if ((widget.encounterType == PROBLEM ||
                 widget.encounterType == OBSERVATION ||
-                widget.encounterType == NOTE))
+                widget.encounterType == NOTE) &&
+            showAddOtherType)
           Form(
             key: formKey,
             child: AppTextField(

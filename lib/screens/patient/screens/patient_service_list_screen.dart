@@ -10,7 +10,7 @@ import 'package:solidcare/utils/common.dart';
 import 'package:solidcare/utils/extensions/string_extensions.dart';
 import 'package:solidcare/utils/images.dart';
 import 'package:nb_utils/nb_utils.dart';
-
+import 'package:solidcare/utils/extensions/widget_extentions.dart';
 import 'package:solidcare/components/loader_widget.dart';
 import 'package:solidcare/components/no_data_found_widget.dart';
 import 'package:solidcare/main.dart';
@@ -65,10 +65,6 @@ class _PatientServiceListScreenState extends State<PatientServiceListScreen> {
       }
       setState(() {});
       return value;
-    }).catchError((e) {
-      appStore.setLoading(false);
-      setState(() {});
-      throw e;
     });
   }
 
@@ -107,12 +103,10 @@ class _PatientServiceListScreenState extends State<PatientServiceListScreen> {
                 prefixIcon: ic_search.iconImage().paddingAll(16),
                 suffixIcon: !showClear
                     ? Offstage()
-                    : ic_clear.iconImage().paddingAll(16).onTap(
+                    : ic_clear.iconImage().paddingAll(16).appOnTap(
                         () {
                           _onClearSearch();
                         },
-                        splashColor: Colors.transparent,
-                        highlightColor: Colors.transparent,
                       ),
               ),
               onChanged: (newValue) {
@@ -120,7 +114,7 @@ class _PatientServiceListScreenState extends State<PatientServiceListScreen> {
                   showClear = false;
                   _onClearSearch();
                 } else {
-                  Timer(Duration(milliseconds: 500), () {
+                  Timer(pageAnimationDuration, () {
                     init(showLoader: true);
                   });
                   showClear = true;
@@ -199,7 +193,9 @@ class _PatientServiceListScreenState extends State<PatientServiceListScreen> {
                               onTap: () {
                                 ViewServiceDetailScreen(
                                         serviceData: serviceData)
-                                    .launch(context);
+                                    .launch(context,
+                                        pageRouteAnimation: pageAnimation,
+                                        duration: pageAnimationDuration);
                               },
                               child: CategoryWidget(
                                   data: serviceData, hideMoreButton: false),

@@ -52,7 +52,6 @@ Future<List<EncounterModel>> getPatientEncounterList({
           page: page,
           params: param))));
 
-  cachedEncounterList = res.patientEncounterData.validate();
   getTotalPatient?.call(res.total.validate().toInt());
 
   if (page == 1) encounterList.clear();

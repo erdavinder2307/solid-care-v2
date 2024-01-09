@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:solidcare/components/empty_error_state_component.dart';
 import 'package:solidcare/components/internet_connectivity_widget.dart';
@@ -10,6 +12,8 @@ import 'package:solidcare/screens/patient/components/dashboard_fragment_upcoming
 import 'package:solidcare/screens/patient/screens/patient_service_list_screen.dart';
 import 'package:solidcare/screens/shimmer/screen/patient_dashboard_shimmer_screen.dart';
 import 'package:solidcare/utils/cached_value.dart';
+import 'package:solidcare/utils/common.dart';
+import 'package:solidcare/utils/constants.dart';
 import 'package:solidcare/utils/images.dart';
 import 'package:nb_utils/nb_utils.dart';
 
@@ -27,7 +31,14 @@ class _PatientDashBoardFragmentState extends State<PatientDashBoardFragment> {
   @override
   void initState() {
     super.initState();
-
+    if (getStringAsync(SharedPreferenceKey.cachedDashboardDataKey)
+        .validate()
+        .isNotEmpty) {
+      setState(() {
+        cachedPatientDashboardModel = DashboardModel.fromJson(jsonDecode(
+            getStringAsync(SharedPreferenceKey.cachedDashboardDataKey)));
+      });
+    }
     init();
   }
 
@@ -42,6 +53,10 @@ class _PatientDashBoardFragmentState extends State<PatientDashBoardFragment> {
       toast(e.toString());
       throw e;
     });
+  }
+
+  bool get showAppointment {
+    return isVisible(SharedPreferenceKey.solidCareAppointmentListKey);
   }
 
   @override
@@ -63,7 +78,7 @@ class _PatientDashBoardFragmentState extends State<PatientDashBoardFragment> {
       },
       child: SnapHelperWidget<DashboardModel>(
         future: future,
-        initialData: cachedDashboardModel,
+        initialData: cachedPatientDashboardModel,
         errorBuilder: (error) {
           return NoDataWidget(
             imageWidget:
@@ -84,7 +99,8 @@ class _PatientDashBoardFragmentState extends State<PatientDashBoardFragment> {
               DashboardFragmentDoctorServiceComponent(
                   service: getRemovedDuplicateServiceList(
                       snap.serviceList.validate())),
-              if (snap.upcomingAppointment.validate().isNotEmpty)
+              if (snap.upcomingAppointment.validate().isNotEmpty &&
+                  showAppointment)
                 DashBoardFragmentUpcomingAppointmentComponent(
                     upcomingAppointment: snap.upcomingAppointment.validate()),
               16.height,

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:solidcare/components/internet_connectivity_widget.dart';
+import 'package:solidcare/components/loader_widget.dart';
 import 'package:solidcare/components/no_data_found_widget.dart';
 import 'package:solidcare/main.dart';
 import 'package:solidcare/model/rating_model.dart';
@@ -7,6 +9,7 @@ import 'package:solidcare/network/review_repository.dart';
 import 'package:solidcare/screens/patient/screens/review/component/review_widget.dart';
 import 'package:solidcare/screens/shimmer/screen/review_rating_shimmer_screen.dart';
 import 'package:solidcare/utils/app_common.dart';
+import 'package:solidcare/utils/colors.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class RatingViewAllScreen extends StatefulWidget {
@@ -32,7 +35,8 @@ class _RatingViewAllScreenState extends State<RatingViewAllScreen> {
     init();
   }
 
-  void init() async {
+  void init({bool showLoader = false}) async {
+    if (showLoader) appStore.setLoading(true);
     future = doctorReviewsListAPI(
       ratingList: ratingList,
       doctorId: widget.doctorId.validate(),
@@ -54,6 +58,7 @@ class _RatingViewAllScreenState extends State<RatingViewAllScreen> {
 
   @override
   void dispose() {
+    getDisposeStatusBarColor();
     super.dispose();
   }
 
@@ -69,24 +74,56 @@ class _RatingViewAllScreenState extends State<RatingViewAllScreen> {
         retryCallback: () {
           init();
         },
-        child: SnapHelperWidget<List<RatingData>>(
-          future: future,
-          loadingWidget: ReviewRatingShimmerScreen(),
-          onSuccess: (data) {
-            if (data.isNotEmpty) {
-              return AnimatedListView(
-                shrinkWrap: true,
-                padding: EdgeInsets.all(16),
-                itemCount: data.length,
-                itemBuilder: (context, index) =>
-                    ReviewWidget(data: data[index]),
-              );
-            } else {
-              return NoDataFoundWidget(
-                text: locale.lblNoReviewsFound,
-              ).center();
-            }
-          },
+        child: Stack(
+          children: [
+            SnapHelperWidget<List<RatingData>>(
+              future: future,
+              loadingWidget: ReviewRatingShimmerScreen(),
+              onSuccess: (data) {
+                if (data.isNotEmpty) {
+                  return AnimatedListView(
+                    shrinkWrap: true,
+                    padding: EdgeInsets.all(16),
+                    itemCount: data.length,
+                    itemBuilder: (context, index) => ReviewWidget(
+                      data: data[index],
+                      callDelete: () async {
+                        appStore.setLoading(true);
+                        await deleteReviewAPI(
+                                id: data[index].id.validate().toInt())
+                            .then((value) {
+                          toast(value.message);
+                          init();
+                          appStore.setLoading(false);
+                        }).catchError((e) {
+                          appStore.setLoading(false);
+                          toast(e.toString());
+                        });
+                      },
+                    ),
+                  );
+                } else {
+                  return NoDataFoundWidget(
+                    text: locale.lblNoReviewsFound,
+                  ).center();
+                }
+              },
+            ).paddingTop(20),
+            Positioned(
+              top: 16,
+              left: 16,
+              right: 16,
+              child: Text(
+                ///Todo add language key
+                'Note : Swipe right to delete',
+                style: secondaryTextStyle(color: appSecondaryColor, size: 12),
+              ),
+            ),
+            Observer(
+              builder: (context) =>
+                  LoaderWidget().center().visible(appStore.isLoading),
+            )
+          ],
         ),
       ),
     );

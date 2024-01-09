@@ -5,12 +5,14 @@ import 'package:solidcare/components/status_widget.dart';
 import 'package:solidcare/main.dart';
 import 'package:solidcare/model/encounter_model.dart';
 import 'package:solidcare/screens/doctor/screens/bill_details_screen.dart';
+import 'package:solidcare/screens/encounter/screen/add_encounter_screen.dart';
 import 'package:solidcare/screens/encounter/screen/encounter_dashboard_screen.dart';
 import 'package:solidcare/screens/encounter/screen/patient_encounter_dashboard_screen.dart';
 import 'package:solidcare/utils/app_common.dart';
 import 'package:solidcare/utils/colors.dart';
 import 'package:solidcare/utils/common.dart';
 import 'package:solidcare/utils/constants.dart';
+import 'package:solidcare/utils/extensions/widget_extentions.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class EncounterComponent extends StatelessWidget {
@@ -21,50 +23,125 @@ class EncounterComponent extends StatelessWidget {
   EncounterComponent(
       {required this.data, this.deleteEncounter, this.callForRefresh});
 
+  bool get showEncounterDashboard {
+    return isVisible(SharedPreferenceKey.solidCarePatientEncounterViewKey);
+  }
+
+  bool get showEncounterEdit {
+    return isVisible(SharedPreferenceKey.solidCarePatientEncounterEditKey) &&
+        data.status.getBoolInt() &&
+        !isPatient();
+  }
+
+  bool get showDeleteEncounter {
+    return isVisible(SharedPreferenceKey.solidCarePatientEncounterDeleteKey);
+  }
+
+  bool get showBillDetails {
+    return data.status == ClosedEncounterStatusInt.toString() &&
+        isVisible(SharedPreferenceKey.solidCarePatientBillViewKey);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Slidable(
       key: ValueKey(data.encounterId),
       endActionPane: ActionPane(
-        extentRatio: 0.7,
+        extentRatio: 0.6,
         motion: ScrollMotion(),
         children: [
-          if (data.status == ClosedEncounterStatusInt.toString())
+          if (showEncounterEdit)
             SlidableAction(
+              onPressed: (BuildContext context) {
+                AddEncounterScreen(
+                        patientId: data.patientId.validate().toInt(),
+                        patientEncounterData: data)
+                    .launch(context,
+                        pageRouteAnimation: pageAnimation,
+                        duration: pageAnimationDuration)
+                    .then((value) {
+                  if (value ?? false) callForRefresh?.call();
+                });
+              },
               backgroundColor: primaryColor,
+              padding: EdgeInsets.all(6),
               foregroundColor: Colors.white,
               borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(defaultRadius),
-                  bottomLeft: Radius.circular(defaultRadius)),
+                topLeft: Radius.circular(defaultRadius),
+                bottomLeft: Radius.circular(defaultRadius),
+                topRight: showBillDetails || showDeleteEncounter
+                    ? Radius.zero
+                    : Radius.circular(defaultRadius),
+                bottomRight: showBillDetails || showDeleteEncounter
+                    ? Radius.zero
+                    : Radius.circular(defaultRadius),
+              ),
+              icon: Icons.edit,
+              label: locale.lblEdit,
+            ),
+          if (showBillDetails)
+            SlidableAction(
+              backgroundColor:
+                  showEncounterEdit ? appSecondaryColor : appPrimaryColor,
+              foregroundColor: Colors.white,
+              padding: EdgeInsets.all(6),
+              borderRadius: BorderRadius.only(
+                topLeft: showEncounterEdit || showDeleteEncounter
+                    ? Radius.circular(defaultRadius)
+                    : Radius.zero,
+                bottomLeft: showEncounterEdit || showDeleteEncounter
+                    ? Radius.circular(defaultRadius)
+                    : Radius.zero,
+                topRight: showEncounterEdit || showDeleteEncounter
+                    ? Radius.zero
+                    : Radius.circular(defaultRadius),
+                bottomRight: showEncounterEdit || showDeleteEncounter
+                    ? Radius.zero
+                    : Radius.circular(defaultRadius),
+              ),
               icon: FontAwesomeIcons.moneyBill,
               label: locale.lblBillDetails,
               onPressed: (BuildContext context) {
                 BillDetailsScreen(
-                        encounterId: data.encounterId.validate().toInt())
-                    .launch(context);
+                        encounterId: data.encounterId.validate().toInt(),
+                        callBack: () {
+                          callForRefresh?.call();
+                        })
+                    .launch(context,
+                        pageRouteAnimation: pageAnimation,
+                        duration: pageAnimationDuration);
               },
             ),
-          SlidableAction(
-            borderRadius: BorderRadius.only(
+          if (showDeleteEncounter)
+            SlidableAction(
+              borderRadius: BorderRadius.only(
+                topLeft: showEncounterEdit || showBillDetails
+                    ? Radius.zero
+                    : Radius.circular(defaultRadius),
+                bottomLeft: showEncounterEdit || showBillDetails
+                    ? Radius.zero
+                    : Radius.circular(defaultRadius),
                 topRight: Radius.circular(defaultRadius),
-                bottomRight: Radius.circular(defaultRadius)),
-            backgroundColor: Colors.red,
-            foregroundColor: Colors.white,
-            icon: Icons.delete,
-            label: locale.lblDelete,
-            onPressed: (BuildContext context) {
-              showConfirmDialogCustom(
-                context,
-                dialogType: DialogType.DELETE,
-                title: locale.lblDoYouWantToDeleteEncounterDetailsOf,
-                onAccept: (p0) {
-                  ifTester(context, () {
-                    deleteEncounter?.call(data.encounterId.toInt());
-                  }, userEmail: data.patientEmail);
-                },
-              );
-            },
-          ),
+                bottomRight: Radius.circular(defaultRadius),
+              ),
+              backgroundColor: Colors.red,
+              foregroundColor: Colors.white,
+              icon: Icons.delete,
+              padding: EdgeInsets.all(6),
+              label: locale.lblDelete,
+              onPressed: (BuildContext context) {
+                showConfirmDialogCustom(
+                  context,
+                  dialogType: DialogType.DELETE,
+                  title: locale.lblDoYouWantToDeleteEncounterDetailsOf,
+                  onAccept: (p0) {
+                    ifTester(context, () {
+                      deleteEncounter?.call(data.encounterId.toInt());
+                    }, userEmail: data.patientEmail);
+                  },
+                );
+              },
+            ),
         ],
       ),
       child: Container(
@@ -72,27 +149,25 @@ class EncounterComponent extends StatelessWidget {
         decoration: boxDecorationDefault(
             color: context.cardColor, borderRadius: radius()),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: showEncounterDashboard
+              ? CrossAxisAlignment.start
+              : CrossAxisAlignment.end,
           children: [
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if ((isDoctor() || isReceptionist()))
-                  Text(data.patientName.validate(),
-                      style: boldTextStyle(size: 18)),
-                4.height,
-                if (isPatient() || isDoctor())
-                  RichTextWidget(list: [
-                    if (isDoctor())
-                      TextSpan(
-                          text: locale.lblClinic + ' : ',
-                          style: secondaryTextStyle(size: 14)),
-                    TextSpan(
-                        text: data.clinicName.validate().capitalizeEachWord(),
-                        style: isPatient()
-                            ? boldTextStyle()
-                            : primaryTextStyle(size: 14)),
-                  ])
-                else
+                if (isDoctor() || isReceptionist())
+                  Text(data.patientName.capitalizeEachWord(),
+                      style: boldTextStyle()),
+                if (isDoctor() || isPatient())
+                  Marquee(
+                    child: Text(
+                      data.clinicName.validate().capitalizeEachWord(),
+                      style: isPatient() ? boldTextStyle() : primaryTextStyle(),
+                    ),
+                  ),
+                if (isReceptionist() || isPatient())
                   RichTextWidget(list: [
                     TextSpan(
                         text: locale.lblDoctor + ' : ',
@@ -100,67 +175,64 @@ class EncounterComponent extends StatelessWidget {
                     TextSpan(
                         text: 'Dr. ' +
                             data.doctorName.validate().capitalizeEachWord(),
-                        style: primaryTextStyle(size: 14)),
+                        style: primaryTextStyle()),
                   ]),
                 4.height,
-                if (isPatient())
-                  RichTextWidget(list: [
+                RichTextWidget(
+                  list: [
                     TextSpan(
-                        text: 'Dr. ' +
-                            data.doctorName.validate().capitalizeEachWord(),
-                        style:
-                            primaryTextStyle(size: 14, color: appPrimaryColor)),
-                  ]),
-                4.height,
-                RichTextWidget(list: [
-                  TextSpan(
-                      text: locale.lblDate + " : ",
-                      style: secondaryTextStyle(size: 14)),
-                  TextSpan(
-                      text: data.encounterDate.validate(),
-                      style: primaryTextStyle(size: 14)),
-                ]),
-                if (data.description.validate().isNotEmpty) 4.height,
-                if (data.description.validate().isNotEmpty)
-                  RichTextWidget(list: [
-                    TextSpan(
-                        text: locale.lblDescription + " : ",
+                        text: locale.lblDate + " : ",
                         style: secondaryTextStyle(size: 14)),
                     TextSpan(
-                        text: data.description,
+                        text: data.encounterDate.validate(),
                         style: primaryTextStyle(size: 14)),
-                  ]),
+                  ],
+                ),
+                if (data.description.validate().isNotEmpty) 4.height,
+                if (data.description.validate().isNotEmpty)
+                  ReadMoreText(
+                    data.description.validate(),
+                    trimMode: TrimMode.Length,
+                    trimLength: 30,
+                    colorClickableText: Colors.black,
+                  ),
               ],
             ).expand(flex: 3),
-            4.width,
             Column(
+              mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.end,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                FaIcon(FontAwesomeIcons.gaugeHigh,
-                        color: appSecondaryColor, size: 20)
-                    .withWidth(20)
-                    .onTap(
-                  () {
-                    if (isPatient()) {
-                      PatientEncounterDashboardScreen(
-                              id: data.encounterId,
-                              isPaymentDone: data.status == '0' ? true : false)
-                          .launch(context);
-                    } else {
-                      EncounterDashboardScreen(encounterId: data.encounterId)
-                          .launch(context)
-                          .then((value) {
-                        if (value ?? false) {
+                if (showEncounterDashboard)
+                  FaIcon(FontAwesomeIcons.gaugeHigh,
+                          color: appSecondaryColor, size: 20)
+                      .withWidth(20)
+                      .appOnTap(
+                    () {
+                      if (isPatient()) {
+                        PatientEncounterDashboardScreen(
+                          id: data.encounterId,
+                          isPaymentDone: data.status == '0' ? true : false,
+                          callBack: () {
+                            callForRefresh?.call();
+                          },
+                        ).launch(context,
+                            pageRouteAnimation: pageAnimation,
+                            duration: pageAnimationDuration);
+                      } else {
+                        EncounterDashboardScreen(encounterId: data.encounterId)
+                            .launch(context,
+                                pageRouteAnimation: pageAnimation,
+                                duration: pageAnimationDuration)
+                            .then((value) {
                           callForRefresh?.call();
-                        }
-                      });
-                    }
-                  },
-                  splashColor: Colors.transparent,
-                  highlightColor: Colors.transparent,
-                ),
-                36.height,
+                        });
+                      }
+                    },
+                  ),
+                if (showEncounterDashboard) 16.height,
+                if (data.description.validate().isNotEmpty &&
+                    data.encounterDate.validate().isNotEmpty)
+                  28.height,
                 StatusWidget(
                   status: data.status.validate(),
                   padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -170,7 +242,41 @@ class EncounterComponent extends StatelessWidget {
             ).expand()
           ],
         ),
-      ),
+      ).appOnTap(() {
+        if (showEncounterEdit)
+          AddEncounterScreen(
+                  patientId: data.patientId.validate().toInt(),
+                  patientEncounterData: data)
+              .launch(context,
+                  pageRouteAnimation: pageAnimation,
+                  duration: pageAnimationDuration)
+              .then((value) {
+            if (value ?? false) callForRefresh?.call();
+          });
+        else {
+          if (showEncounterDashboard) {
+            if (isPatient()) {
+              PatientEncounterDashboardScreen(
+                id: data.encounterId,
+                isPaymentDone: data.status == '0' ? true : false,
+                callBack: () => callForRefresh,
+              ).launch(context,
+                  pageRouteAnimation: pageAnimation,
+                  duration: pageAnimationDuration);
+            } else {
+              EncounterDashboardScreen(encounterId: data.encounterId)
+                  .launch(context,
+                      pageRouteAnimation: pageAnimation,
+                      duration: pageAnimationDuration)
+                  .then((value) {
+                if (value ?? false) {
+                  callForRefresh?.call();
+                }
+              });
+            }
+          }
+        }
+      }),
     ).paddingSymmetric(vertical: 8);
   }
 }
